@@ -3316,121 +3316,334 @@ document.getElementById("runDissolve").onclick = () => {
   });
 })();
 
-// DATABASE CONNECTION FUNCTIONS - COMPLETE WITH COMPACT MODAL STYLING
+// DATABASE CONNECTION FUNCTIONS - COMPACT & DRAGGABLE
 const API_BASE = 'http://localhost/gis-map/api';
 
 // Apply compact styling to modals
 function applyCompactModalStyle() {
-  
+  // Database Connect Modal - Ultra Compact
   const dbModal = document.querySelector('#dbConnectModal .modal-dialog');
   if (dbModal) {
-    dbModal.style.maxWidth = '450px';
-    dbModal.style.margin = '1.75rem auto';
+    dbModal.style.maxWidth = '420px';
+    dbModal.style.margin = '2rem auto';
   }
   
   const dbModalContent = document.querySelector('#dbConnectModal .modal-content');
   if (dbModalContent) {
-    dbModalContent.style.borderRadius = '8px';
-    dbModalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+    dbModalContent.style.borderRadius = '10px';
+    dbModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+    dbModalContent.style.position = 'relative';
+    dbModalContent.style.minHeight = 'auto';
+    dbModalContent.style.maxHeight = '85vh';
+    dbModalContent.style.overflow = 'hidden';
   }
   
   const dbHeader = document.querySelector('#dbConnectModal .modal-header');
   if (dbHeader) {
-    dbHeader.style.padding = '12px 20px';
+    dbHeader.style.padding = '10px 18px';
     dbHeader.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
     dbHeader.style.borderBottom = 'none';
+    dbHeader.style.borderRadius = '10px 10px 0 0';
   }
   
   const dbTitle = document.querySelector('#dbConnectModal .modal-title');
   if (dbTitle) {
-    dbTitle.style.fontSize = '18px';
+    dbTitle.style.fontSize = '16px';
     dbTitle.style.fontWeight = '600';
     dbTitle.style.color = '#fff';
   }
   
   const dbBody = document.querySelector('#dbConnectModal .modal-body');
   if (dbBody) {
-    dbBody.style.padding = '15px 20px';
+    dbBody.style.padding = '12px 18px';
+    dbBody.style.overflowY = 'auto';
+    dbBody.style.maxHeight = 'calc(85vh - 120px)';
   }
   
   const dbFooter = document.querySelector('#dbConnectModal .modal-footer');
   if (dbFooter) {
-    dbFooter.style.padding = '10px 20px';
+    dbFooter.style.padding = '8px 18px';
+    dbFooter.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+    dbFooter.style.background = 'rgba(0,0,0,0.1)';
   }
   
+  // Compact all form groups
+  document.querySelectorAll('#dbConnectModal .mb-3').forEach(group => {
+    group.style.marginBottom = '8px';
+  });
   
   // Make all inputs compact
   document.querySelectorAll('#dbConnectModal .form-control, #dbConnectModal .form-select').forEach(input => {
-    input.style.padding = '6px 10px';
-    input.style.fontSize = '14px';
-    input.style.height = '36px';
+    input.style.padding = '5px 10px';
+    input.style.fontSize = '13px';
+    input.style.height = '32px';
     input.style.borderRadius = '4px';
+    input.style.border = '1px solid #555';
+    input.style.background = '#2a2a2a';
+    input.style.color = '#fff';
   });
   
   // Make all labels compact
   document.querySelectorAll('#dbConnectModal label').forEach(label => {
-    label.style.fontSize = '13px';
+    label.style.fontSize = '12px';
     label.style.fontWeight = '500';
-    label.style.marginBottom = '4px';
+    label.style.marginBottom = '3px';
+    label.style.color = '#00d4ff';
   });
   
   // Make buttons compact
   document.querySelectorAll('#dbConnectModal .btn').forEach(btn => {
-    btn.style.padding = '6px 16px';
-    btn.style.fontSize = '14px';
+    btn.style.padding = '5px 14px';
+    btn.style.fontSize = '13px';
     btn.style.borderRadius = '4px';
+    btn.style.fontWeight = '500';
   });
   
-  // Table Select Modal - Compact Size
+  // Status div compact
+  const statusDiv = document.getElementById('dbStatus');
+  if (statusDiv) {
+    statusDiv.style.marginTop = '8px';
+    statusDiv.style.padding = '6px 10px';
+    statusDiv.style.fontSize = '12px';
+  }
+  
+  // Table Select Modal - Compact
   const tableModal = document.querySelector('#tableSelectModal .modal-dialog');
   if (tableModal) {
-    tableModal.style.maxWidth = '500px';
+    tableModal.style.maxWidth = '420px';
+    tableModal.style.margin = '2rem auto';
+  }
+  
+  const tableModalContent = document.querySelector('#tableSelectModal .modal-content');
+  if (tableModalContent) {
+    tableModalContent.style.borderRadius = '10px';
+    tableModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
   }
   
   const tableHeader = document.querySelector('#tableSelectModal .modal-header');
   if (tableHeader) {
-    tableHeader.style.padding = '12px 20px';
+    tableHeader.style.padding = '10px 18px';
     tableHeader.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+    tableHeader.style.borderRadius = '10px 10px 0 0';
   }
   
   const tableTitle = document.querySelector('#tableSelectModal .modal-title');
   if (tableTitle) {
-    tableTitle.style.fontSize = '18px';
+    tableTitle.style.fontSize = '16px';
     tableTitle.style.color = '#fff';
+    tableTitle.style.fontWeight = '600';
   }
   
   const tableBody = document.querySelector('#tableSelectModal .modal-body');
   if (tableBody) {
-    tableBody.style.padding = '15px 20px';
+    tableBody.style.padding = '12px 18px';
   }
   
   const tableFooter = document.querySelector('#tableSelectModal .modal-footer');
   if (tableFooter) {
-    tableFooter.style.padding = '10px 20px';
+    tableFooter.style.padding = '8px 18px';
+    tableFooter.style.borderTop = '1px solid rgba(255,255,255,0.1)';
   }
   
   document.querySelectorAll('#tableSelectModal .form-select').forEach(select => {
-    select.style.padding = '6px 10px';
-    select.style.fontSize = '14px';
-    select.style.height = '36px';
+    select.style.padding = '5px 10px';
+    select.style.fontSize = '13px';
+    select.style.height = '32px';
+    select.style.background = '#2a2a2a';
+    select.style.color = '#fff';
+    select.style.border = '1px solid #555';
   });
   
   document.querySelectorAll('#tableSelectModal label').forEach(label => {
-    label.style.fontSize = '13px';
+    label.style.fontSize = '12px';
     label.style.fontWeight = '500';
-    label.style.marginBottom = '4px';
+    label.style.marginBottom = '3px';
+    label.style.color = '#00d4ff';
   });
   
   const columnSelectors = document.getElementById('columnSelectors');
   if (columnSelectors) {
-    columnSelectors.style.background = '#f8f9fa';
-    columnSelectors.style.padding = '12px';
-    columnSelectors.style.borderRadius = '4px';
-    columnSelectors.style.marginTop = '10px';
+    columnSelectors.style.background = 'rgba(255,255,255,0.05)';
+    columnSelectors.style.padding = '10px';
+    columnSelectors.style.borderRadius = '6px';
+    columnSelectors.style.marginTop = '8px';
+    columnSelectors.style.border = '1px solid rgba(255,255,255,0.1)';
   }
 }
+
+// Make Database Modal Draggable
+function makeModalDraggable() {
+  const modal = document.getElementById('dbConnectModal');
+  const modalDialog = modal?.querySelector('.modal-dialog');
+  const modalHeader = modal?.querySelector('.modal-header');
+  
+  if (!modal || !modalDialog || !modalHeader) return;
+  
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+  
+  modalHeader.style.cursor = 'move';
+  
+  modalHeader.addEventListener('mousedown', function(e) {
+    if (e.target.closest('.btn-close')) return;
+    
+    isDragging = true;
+    modal.classList.add('dragging');
+    
+    const rect = modalDialog.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    
+    modalDialog.style.position = 'fixed';
+    modalDialog.style.margin = '0';
+    modalDialog.style.left = initialLeft + 'px';
+    modalDialog.style.top = initialTop + 'px';
+    
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    let newLeft = initialLeft + deltaX;
+    let newTop = initialTop + deltaY;
+    
+    const modalWidth = modalDialog.offsetWidth;
+    const modalHeight = modalDialog.offsetHeight;
+    
+    newLeft = Math.max(10, Math.min(newLeft, window.innerWidth - modalWidth - 10));
+    newTop = Math.max(10, Math.min(newTop, window.innerHeight - modalHeight - 10));
+    
+    modalDialog.style.left = newLeft + 'px';
+    modalDialog.style.top = newTop + 'px';
+    
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mouseup', function() {
+    if (isDragging) {
+      isDragging = false;
+      modal.classList.remove('dragging');
+    }
+  });
+}
+
+// Make Database Modal Resizable
+function makeModalResizable() {
+  const modal = document.getElementById('dbConnectModal');
+  const modalContent = modal?.querySelector('.modal-content');
+  
+  if (!modal || !modalContent) return;
+  
+  let resizeHandle = modalContent.querySelector('.resize-handle');
+  if (!resizeHandle) {
+    resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+    resizeHandle.style.cssText = `
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      cursor: se-resize;
+      z-index: 9999;
+    `;
+    resizeHandle.innerHTML = '<div style="position:absolute;bottom:2px;right:2px;color:rgba(255,255,255,0.5);font-size:16px;font-weight:bold;">⋱</div>';
+    modalContent.appendChild(resizeHandle);
+  }
+  
+  let isResizing = false;
+  let startX = 0;
+  let startY = 0;
+  let startWidth = 0;
+  let startHeight = 0;
+  
+  resizeHandle.addEventListener('mousedown', function(e) {
+    isResizing = true;
+    
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = modalContent.offsetWidth;
+    startHeight = modalContent.offsetHeight;
+    
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  
+  document.addEventListener('mousemove', function(e) {
+    if (!isResizing) return;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    let newWidth = startWidth + deltaX;
+    let newHeight = startHeight + deltaY;
+    
+    newWidth = Math.max(380, Math.min(newWidth, window.innerWidth - 40));
+    newHeight = Math.max(400, Math.min(newHeight, window.innerHeight - 40));
+    
+    modalContent.style.width = newWidth + 'px';
+    modalContent.style.height = newHeight + 'px';
+    modalContent.style.maxWidth = 'none';
+    
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mouseup', function() {
+    if (isResizing) {
+      isResizing = false;
+    }
+  });
+}
+
+// Double-click to reset
+function setupModalReset() {
+  const dbHeader = document.querySelector('#dbConnectModal .modal-header');
+  if (dbHeader) {
+    dbHeader.addEventListener('dblclick', function() {
+      const modalDialog = document.querySelector('#dbConnectModal .modal-dialog');
+      const modalContent = document.querySelector('#dbConnectModal .modal-content');
+      
+      if (modalDialog && modalContent) {
+        modalDialog.style.position = 'relative';
+        modalDialog.style.left = 'auto';
+        modalDialog.style.top = 'auto';
+        modalDialog.style.margin = '2rem auto';
+        
+        modalContent.style.width = '420px';
+        modalContent.style.height = 'auto';
+        modalContent.style.maxWidth = '420px';
+        
+        const originalBg = dbHeader.style.background;
+        dbHeader.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+        setTimeout(() => { dbHeader.style.background = originalBg; }, 300);
+      }
+    });
+    
+    dbHeader.title = 'Drag to move | Double-click to reset | Resize from corner';
+  }
+}
+
 // Apply styles when page loads
-document.addEventListener('DOMContentLoaded', applyCompactModalStyle);
+document.addEventListener('DOMContentLoaded', () => {
+  applyCompactModalStyle();
+  setupModalReset();
+});
+
+// Initialize on modal show
+document.getElementById('dbConnectModal')?.addEventListener('shown.bs.modal', function() {
+  makeModalDraggable();
+  makeModalResizable();
+  applyCompactModalStyle();
+});
 
 // Connect to Database Button
 document.getElementById('connectDbBtn').onclick = () => {
@@ -3438,6 +3651,7 @@ document.getElementById('connectDbBtn').onclick = () => {
   const modal = new bootstrap.Modal(document.getElementById('dbConnectModal'));
   modal.show();
 };
+
 // Auto-fill port based on database type
 document.getElementById('dbType').onchange = (e) => {
   const port = document.getElementById('dbPort');
@@ -3458,14 +3672,8 @@ document.getElementById('testDbConnection').onclick = async () => {
     password: document.getElementById('dbPassword').value
   };
   
-  console.log('Testing connection...');
-  
   statusDiv.style.display = 'block';
-  statusDiv.style.padding = '8px 12px';
-  statusDiv.style.fontSize = '13px';
-  statusDiv.style.borderRadius = '4px';
-  statusDiv.style.marginTop = '10px';
-  statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing connection...';
+  statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
   statusDiv.style.background = '#ffc107';
   statusDiv.style.color = '#000';
   
@@ -3479,12 +3687,9 @@ document.getElementById('testDbConnection').onclick = async () => {
       body: JSON.stringify(credentials)
     });
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
     const result = await response.json();
-    console.log('Connection result:', result);
     
     if (result.success) {
       statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
@@ -3492,11 +3697,9 @@ document.getElementById('testDbConnection').onclick = async () => {
       statusDiv.style.color = '#fff';
       confirmBtn.disabled = false;
       
-      // Store credentials in window and localStorage
       const credsToStore = result.data?.credentials || credentials;
       localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
       window.dbCredentials = credsToStore;
-      console.log('Credentials stored successfully');
       
     } else {
       statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + result.message;
@@ -3505,8 +3708,7 @@ document.getElementById('testDbConnection').onclick = async () => {
       confirmBtn.disabled = true;
     }
   } catch (err) {
-    console.error('Error:', err);
-    statusDiv.innerHTML = '<i class="fas fa-times-circle"></i> Connection failed: ' + err.message;
+    statusDiv.innerHTML = '<i class="fas fa-times-circle"></i> Failed: ' + err.message;
     statusDiv.style.background = '#dc3545';
     statusDiv.style.color = '#fff';
     confirmBtn.disabled = true;
