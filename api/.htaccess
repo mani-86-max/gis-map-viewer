@@ -1,0 +1,29 @@
+
+# .htaccess - Security Configuration
+
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
+
+Options -Indexes
+
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<FilesMatch "\.(php)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+<FilesMatch "\.(log|txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log php-errors.log

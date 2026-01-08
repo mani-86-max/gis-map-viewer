@@ -1,0 +1,3800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Map Viewer </title>
+
+<!-- OpenLayers -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.7.0/ol.css">
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+html, body { 
+  margin: 0; 
+  height: 100%; 
+  font-family: Arial, sans-serif; 
+  overflow: hidden; 
+}
+.map { 
+  width: 100%; 
+  height: 100vh; 
+  position: relative; 
+  z-index: 1; 
+}
+
+/* Header & Footer */
+.app-header {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 56px; 
+  background: rgba(0,0,0,0.85); 
+  backdrop-filter: blur(6px); 
+  color: #fff; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 0 20px; 
+  z-index: 300;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.header-center { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  position: absolute; 
+  left: 50%; 
+  transform: translateX(-50%); 
+}
+.app-header .logo { 
+  width: 40px; 
+  height: 40px; 
+  border-radius: 6px; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 20px; 
+  font-weight: bold; 
+  color: white;
+}
+.app-header .app-title {
+   font-size: 20px; 
+   font-weight: 700; 
+   letter-spacing: 0.5px; 
+  }
+
+.app-footer {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 38px;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); color: #fff;
+  display: flex; justify-content: center; align-items: center; z-index: 300; font-size: 13px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+}
+/* Drawer - FIXED */
+.drawer { 
+    position: fixed; 
+    top: 70px; 
+    left: 12px; 
+    z-index: 300; 
+}
+.drawer-toggle { 
+  font-size: 20px; 
+  background: #ffffff;
+  border: none; 
+  padding: 10px 12px; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  box-shadow: 0 2px 8px #05934a26; 
+  transition: all 0.3s;
+}
+.drawer-toggle:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 12px rgba(71, 170, 24, 0.2); 
+}
+
+.drawer-content { 
+  display: none; 
+  flex-direction: column; 
+  background: #4b919f;
+  padding: 12px;
+  margin-top: 8px; 
+  border-radius: 8px; 
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); 
+  min-width: 50px;
+  max-width: 250px;
+  height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+/* Scrollbar styling for drawer */
+.drawer-content::-webkit-scrollbar {
+  width: 10px;
+}
+.drawer-content::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  margin: 4px 0;
+}
+.drawer-content::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.4);
+  border-radius: 4px;
+}
+.drawer-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.5);
+}
+.drawer-content hr { 
+    margin: 8px 0; 
+    border: none; 
+    border-top: 1px solid #bbb6b6; 
+}
+
+/* Icon buttons - FIXED LAYOUT */
+.icon-btn { 
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start;
+  gap: 10px; 
+  padding: 10px 12px; 
+  border-radius: 6px;
+  background: #f8f9fa; 
+  cursor: pointer; 
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s;
+  font-size: 14px; 
+  color: #1c0f95; 
+  margin: 2px 0;
+  width: 100%;
+  text-align: left;
+}
+.icon-btn i { 
+  width: 10px; 
+  text-align: center; 
+  flex-shrink: 0;
+}
+.icon-btn:hover { 
+    background: #77c5ee; 
+    transform: translateX(3px); 
+}
+.icon-btn.active { 
+    background: #ecf3eca8; 
+    color: #e06b6b; 
+    border-color: #e40813; 
+}
+
+.upload-section, .basemap-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+}
+/* Attribute Box */
+.attribute-box { 
+  display: none; 
+  position: fixed; 
+  bottom: 50px; 
+  right: 15px; 
+  width: 500px; 
+  max-height: 50vh;
+  background: #1d0404d8; 
+  color: #1d0e0e; 
+  border-radius: 10px; 
+  padding: 12px; 
+  z-index: 500;
+  flex-direction: column; 
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
+  resize: both; 
+  overflow: auto;
+  min-width: 350px; 
+  min-height: 200px;
+}
+.attribute-box.minimized { 
+    height: 50px !important; 
+    max-height: 50px !important; 
+    overflow: hidden; 
+    resize: none; 
+}
+.attribute-box.minimized .table-wrapper, .attribute-box.minimized .attr-footer { 
+    display: none !important; 
+}
+.attribute-box .box-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 5px;
+  cursor: grab; 
+  padding-bottom: 5px; 
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.attribute-box .box-header:active { 
+    cursor: grabbing; 
+}
+.attribute-box h5 { 
+    margin: 0; 
+    font-size: 16px; 
+    color: #00e5ff; 
+    font-weight: 600; 
+}
+.attr-small-btn { 
+  background: none; 
+  border: none; 
+  color: #e4dfdf; 
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 8px; 
+  padding: 4px 8px; 
+  border-radius: 4px; 
+  transition: all 0.2s;
+}
+.attr-small-btn:hover { 
+    background: rgba(53, 14, 195, 0.1); 
+}
+
+.table-wrapper { 
+    overflow: auto; 
+    fle:1;
+    border-radius: 8px; 
+    margin-bottom: 10px; 
+    min-height: 150px;
+}
+.table-wrapper table { 
+    margin-bottom: 0; 
+}
+.table-wrapper td[contenteditable="true"] { 
+  background: rgba(255,255,255,0.05); 
+  color: #dad6dfdb; 
+  cursor: text; 
+  min-width: 80px;
+}
+.table-wrapper td[contenteditable="true"]:focus { 
+    background: rgba(255,255,255,0.1); 
+    outline: 1px solid #00e5ff; 
+}
+.table-wrapper .table { 
+    color: #f3e9e9; 
+}
+.table-wrapper .table thead th { 
+    background: rgba(0,0,0,0.5); 
+    border-color: rgba(255,255,255,0.1); 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    font-size: 13px; 
+}
+.table-wrapper .table tbody tr:hover { 
+    background: rgba(255,255,255,0.05);
+ }
+.table-wrapper .table tbody tr.table-active { 
+    background: rgba(13,110,253,0.3) !important; 
+}
+.table-wrapper .table tbody td {
+     font-size: 13px; 
+    }
+
+
+    /* Attribute Table Buttons */
+.table-wrapper .btn-focus {
+    background-color: #0d6efd; /* Blue for Center */
+    color: #fff;
+    border: 1px solid #0d6efd;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.table-wrapper .btn-focus:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.table-wrapper .btn-del-feature {
+    background-color: #dc3545; /* Red for Delete */
+    color: #fff;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.table-wrapper .btn-delete {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff !important;
+    border: 1px solid #dc3545 !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.table-wrapper .btn-delete:hover {
+    background-color: #a71d2a !important;
+    border-color: #a71d2a !important;
+}
+
+
+/* Special column types */
+.table-wrapper input[type="checkbox"] { 
+    cursor: pointer; 
+    width: 18px; 
+    height: 18px; 
+}
+/* NEW: Checkbox styles for row selection */
+.select-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0d6efd;
+}
+
+.select-all-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #00e5ff;
+}
+.table-wrapper select.form-select-sm { 
+    font-size: 12px; 
+    padding: 2px 6px; 
+    background: rgba(255,255,255,0.1); 
+    color: #f6f3f3; 
+    border: 1px solid rgba(255,255,255,0.2); 
+}
+.table-wrapper .image-cell { 
+    max-width: 100px; 
+    max-height: 60px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+
+.attr-footer { 
+  display: flex; 
+  gap: 8px; 
+  justify-content: flex-end; 
+  padding-top: 8px; 
+  border-top: 1px solid rgba(255,255,255,0.1); 
+  flex-wrap: wrap; 
+}
+.attr-footer .btn { 
+  font-size: 13px; 
+  font-weight: 500; 
+}
+
+/* Editor Box */
+.editor-box { 
+  display: none; 
+  position: fixed; 
+  bottom: 50px; 
+  left: 15px; 
+  background: rgba(214, 227, 97, 0.98);
+  padding: 12px; 
+  border-radius: 10px; 
+  z-index: 500; 
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
+  min-width: 220px;
+}
+.editor-box .box-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid rgba(0,0,0,0.1); 
+}
+.editor-buttons { display: flex; 
+    gap: 8px; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+}
+.editor-btn { 
+  width: 48px; 
+  height: 48px; 
+  border: none; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-size: 18px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: #0d6efd; color: #fff;
+  transition: all 0.2s; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.editor-btn:hover { 
+  opacity: 0.9; 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+}
+.editor-btn.active { 
+  background: #198754; 
+}
+/* Geoprocessing Box*/
+.geoprocessing-box {
+  position: fixed;
+  top: 120px;
+  right: 15px;
+  width: 320px;
+  max-height: 70vh;
+  background: rgba(26, 26, 26, 0.98);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 400;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  overflow-y: auto;
+}
+
+.geoprocessing-box .box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  cursor: grab;
+}
+.geoprocessing-box .box-header:active {
+  cursor: grabbing;
+}
+
+.geoprocessing-box h6 {
+  margin: 0;
+  font-size: 16px;
+  color: #00e5ff;
+  font-weight: 600;
+}
+/*buttons*/
+.geo-main-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.geo-main-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.geo-main-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.geo-main-btn.buffer-btn { background: #28a745; }
+.geo-main-btn.intersect-btn { background: #fd7e14; }
+.geo-main-btn.dissolve-btn { background: #6f42c1; }
+
+/* Tool Details Section*/
+.geo-tool-details {
+  display: none;
+  margin-top: 0;
+  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  border-left: 4px solid #00e5ff;
+  overflow-y: auto;
+  max-height: calc(70vh - 100px);
+}
+
+.geo-tool-details h6 {
+  font-size: 14px;
+  margin: 0 0 10px 0;
+  color: #00e5ff;
+  font-weight: 600;
+}
+
+.geo-tool-details p {
+  font-size: 12px;
+  color: #fff;
+  margin: 0 0 15px 0;
+}
+.geo-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.geo-input-group label {
+  font-size: 12px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.geo-input-group input,
+.geo-input-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  font-size: 13px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.geo-input-group select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.geo-btn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.geo-btn i {
+  margin-right: 5px;
+}
+
+.geo-btn-buffer { background: #28a745; }
+.geo-btn-buffer:hover { 
+  background: #218838; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.geo-btn-intersect { background: #fd7e14; }
+.geo-btn-intersect:hover { 
+  background: #e8690d; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3);
+}
+
+.geo-btn-dissolve { background: #6f42c1; }
+.geo-btn-dissolve:hover { 
+  background: #5a32a3; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+}
+
+.geo-back-btn {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6c757d;
+  background: white;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.geo-back-btn:hover {
+  background: #6c757d;
+  color: white;
+}
+
+.geo-back-btn i {
+  margin-right: 5px;
+}
+
+/* Search */
+.search-bar { 
+  position: fixed; 
+  top: 70px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: 450; 
+}
+.search-bar input { 
+  width: 400px; 
+  padding: 12px 20px; 
+  border-radius: 25px; 
+  border: 1px solid #ddd;
+  background: #fff; 
+  font-size: 15px; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+  transition: all 0.3s;
+}
+.search-bar input:focus { 
+  outline: none; 
+  border-color: #121416; 
+  box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+ }
+
+.suggestion-box { 
+  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 400px;
+  max-height: 300px; overflow-y: auto; background: #fff; border: 1px solid #ddd; border-radius: 12px;
+  z-index: 460; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.suggestion-item { 
+  padding: 12px 16px; 
+  cursor: pointer; 
+  font-size: 14px; 
+  border-bottom: 1px solid rgba(0,0,0,0.06); 
+  transition: all 0.2s; 
+}
+.suggestion-item:last-child { 
+  border-bottom: none; 
+}
+.suggestion-item:hover, .suggestion-item.active { 
+  background: #0d6efd; 
+  color: #fff; 
+}
+/* Popup */
+.popup { 
+  display: none; 
+  position: absolute; 
+  background: rgba(0,0,0,0.9); 
+  color: #fff;
+  padding: 8px 12px; 
+  border-radius: 6px; 
+  font-size: 13px; 
+  z-index: 470;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4); 
+  max-width: 300px; 
+  pointer-events: none;
+}
+
+/* Zoom Controls */
+.zoom-controls { 
+  position: fixed; 
+  top: 70px; 
+  right: 15px; 
+  z-index: 310; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; }
+.zoom-btn { 
+  width: 40px; 
+  height: 40px; 
+  border-radius: 8px; 
+  border: none; 
+  cursor: pointer; 
+  background: #f6f4f4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s; font-size: 16px; color: #333;
+}
+.zoom-btn:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+}
+
+/* Custom Magnetic North Arrow */
+.north-arrow {
+  position: fixed;
+  bottom: 50px;
+  left: 15px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 310;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #c62828;
+  border: 2px solid rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.north-arrow::before {
+  content: "N";
+  font-size: 16px;
+  font-weight: 900;
+  color: #c62828;
+  margin-bottom: -2px;
+}
+
+.north-arrow::after {
+  content: "▲";
+  font-size: 20px;
+  color: #c62828;
+  margin-top: -6px;
+}
+
+.north-arrow-inner {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 20px solid #c62828;
+  top: 18px;
+}
+
+.north-arrow-tail {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 14px solid #666;
+  bottom: 12px;
+}
+
+/* Scale Line Control with Unit Selector */
+.scale-container {
+  position: fixed;
+  bottom: 50px;
+  right: 15px;
+  z-index: 310;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.scale-unit-selector {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  gap: 4px;
+}
+
+.scale-unit-btn {
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.scale-unit-btn:hover {
+  background: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.scale-unit-btn.active {
+  background: #0d6efd;
+  color: white;
+}
+
+.ol-scale-line {
+  position: relative !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  border: none !important;
+  min-width: 140px !important;
+}
+
+.ol-scale-line-inner {
+  border: 3px solid #333 !important;
+  border-top: none !important;
+  color: #333 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  padding: 5px 10px 3px 10px !important;
+  font-family: Arial, sans-serif !important;
+  line-height: 1.3 !important;
+  background: white !important;
+}
+
+/* Modal for adding attributes with types */
+.modal-backdrop.show { 
+  opacity: 0.5; 
+}
+.modal-content { 
+  background: #1a1a1a; 
+  color: #fff; 
+}
+.modal-header { 
+  border-bottom-color: rgba(255,255,255,0.1); 
+}
+.modal-footer { 
+  border-top-color: rgba(61, 60, 61, 0.1); 
+}
+.modal-body .form-control, .modal-body .form-select { 
+  background: rgba(255,255,255,0.1); 
+  color: #fff; 
+  border-color: rgba(255,255,255,0.2); 
+}
+.modal-body .form-control:focus, .modal-body .form-select:focus { 
+  background: rgba(255,255,255,0.15); 
+  color: #fff; 
+  border-color: #00e5ff; 
+}
+.modal-body label { 
+  color: #00e5ff; 
+  font-weight: 500; 
+  margin-top: 10px; 
+}
+/* Light placeholder color for modal inputs */
+#addAttrModal .form-control::placeholder {
+  color: #d0d0d0 !important;
+  opacity: 1;
+}
+#addAttrModal .form-control::-webkit-input-placeholder {
+  color: #d0d0d0 !important;
+}
+#addAttrModal .form-control::-moz-placeholder {
+  color: #d0d0d0 !important;
+  opacity: 1;
+}
+#addAttrModal .form-control:-ms-input-placeholder {
+  color: #d0d0d0 !important;
+}
+
+/* Fix for dropdown visibility */
+#addAttrModal .modal-dialog {
+  overflow: visible;
+  margin-top: 5vh;
+}
+#attrType {
+  margin-bottom: 20px;
+}
+#selectOptionsDiv {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+/* FORCE DROPDOWN TO BE VISIBLE */
+.modal-dialog {
+  overflow: visible !important;
+}
+
+.modal-content {
+  overflow: visible !important;
+}
+
+.modal-body {
+  overflow: visible !important;
+  min-height: 450px !important;
+  padding-bottom: 50px !important;
+}
+
+/* Make the select dropdown expand properly */
+#attrType {
+  overflow: visible !important;
+  margin-bottom: 30px !important;
+}
+
+/* Ensure dropdown menu appears above everything */
+.modal {
+  overflow: visible !important;
+}
+
+.modal.show .modal-dialog {
+  overflow: visible !important;
+}
+
+@media(max-width: 768px) {
+  .search-bar input { 
+    width: 250px; 
+    padding: 10px 16px; 
+  }
+  .suggestion-box { 
+    width: 250px; 
+  }
+  .attribute-box { 
+    width: 90%; 
+    right: 5%; 
+    left: 5%; 
+    bottom: 50px;
+   }
+  .editor-box { 
+    left: 5%; 
+    right: 5%; 
+    width: auto; 
+  }
+  .app-title { 
+    font-size: 16px !important; 
+  }
+}
+
+/* Left resizer */
+.resizer-left {
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  cursor: sw-resize;
+  border-left: 3px solid rgba(255,255,255,0.4);
+  border-bottom: 3px solid rgba(255,255,255,0.4);
+  z-index: 10;
+}
+
+/* Custom Select Dropdown */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.custom-select-display {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.custom-select-display:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #00e5ff;
+}
+
+.custom-select-display i {
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.custom-select-wrapper.open .custom-select-display i {
+  transform: rotate(180deg);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  margin-top: 4px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.custom-select-wrapper.open .custom-select-options {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.custom-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.custom-option:last-child {
+  border-bottom: none;
+}
+
+.custom-option:hover {
+  background: rgba(0,229,255,0.2);
+  color: #00e5ff;
+}
+
+.custom-option.selected {
+  background: rgba(0,229,255,0.3);
+  color: #00e5ff;
+}
+
+/* LAYERS PANEL STYLES */
+.layers-panel {
+  position: fixed;
+  top: 120px;
+  right: 15px;
+  width: 320px;
+  max-height: 60vh;
+  background: rgba(26, 26, 26, 0.98);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 400;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.layers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 10px;
+}
+
+.layers-header h6 {
+  margin: 0;
+  font-size: 16px;
+  color: #00e5ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.layers-list {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 5px;
+}
+
+.layer-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: move;
+  transition: all 0.2s;
+}
+
+.layer-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(0,229,255,0.3);
+}
+
+.layer-item.dragging {
+  opacity: 0.5;
+}
+
+.layer-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.layer-visibility-check {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #00e5ff;
+}
+
+.layer-drag-handle {
+  cursor: move;
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+}
+
+.layer-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.layer-count-badge {
+  background: #0d6efd;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.layer-delete-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: all 0.2s;
+}
+
+.layer-delete-btn:hover {
+  color: #ff5555;
+}
+
+.layer-opacity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.layer-opacity-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  min-width: 60px;
+}
+
+.layer-opacity-slider {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.2);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.layer-opacity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00e5ff;
+  cursor: pointer;
+}
+
+.layer-opacity-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00e5ff;
+  cursor: pointer;
+  border: none;
+}
+
+.layer-opacity-value {
+  font-size: 12px;
+  color: #00e5ff;
+  min-width: 35px;
+  text-align: right;
+} 
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-center">
+    <img src="images/logo.png" class="logo" alt="Logo">
+    <strong class="app-title">Map Viewer</strong>
+  </div>
+</header>
+
+<!-- MAP -->
+<div id="map" class="map"></div>
+
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+  background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center; flex-direction:column;">
+  <div style="background:#fff; padding:20px; border-radius:8px; text-align:center; width:300px;">
+    <div id="loaderText">Loading...</div>
+    <div style="width:100%; background:#eee; height:10px; margin-top:10px; border-radius:5px;">
+      <div id="loaderProgress" style="width:0%; height:100%; background:#0d6efd; border-radius:5px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div id="drawer" class="drawer">
+  <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
+  <div class="drawer-content">
+    <button id="homeBtn" class="icon-btn" title="Home">
+      <i class="fas fa-home"></i> 
+    </button>
+    <hr>
+    <div class="upload-section">
+      <button id="uploadShpBtn" class="icon-btn" title="Upload Shapefile">
+        <i class="fas fa-file-zipper"></i>
+      </button>
+      <button id="uploadGeoJsonBtn" class="icon-btn" title="Upload GeoJSON">
+        <i class="fas fa-file-code"></i> 
+      </button>
+      <button id="uploadKmlBtn" class="icon-btn" title="Upload KML">
+        <i class="fas fa-map-pin"></i> 
+      </button>
+      
+     <input type="file" id="fileInput" style="display:none" multiple>
+
+
+
+    </div>
+    <hr>
+    <div class="basemap-group">
+      <button id="osmBtn" class="icon-btn active" title="OpenStreetMap">
+        <i class="fas fa-globe"></i>
+      </button>
+      <button id="topoBtn" class="icon-btn" title="Topographic">
+        <i class="fas fa-mountain"></i> 
+      </button>
+      <button id="cartoBtn" class="icon-btn" title="Light Map">
+        <i class="fas fa-map-marked"></i> 
+      </button>
+      <button id="esriBtn" class="icon-btn" title="Satellite">
+        <i class="fas fa-satellite"></i> 
+      </button>
+    </div>
+    <hr>
+    <button id="toggleAttributes" class="icon-btn" title="Attributes">
+      <i class="fas fa-table"></i>
+    </button>
+    <hr>
+
+    <button id="toggleLayers" class="icon-btn" title="Layers">
+      <i class="fas fa-layer-group"></i>
+    </button>
+    <hr>
+
+    <button id="toggleEditor" class="icon-btn" title="Editor Tools">
+      <i class="fas fa-pencil-alt"></i> 
+    </button>
+
+    <hr>
+    <button id="toggleGeoprocessing" class="icon-btn" title="Geoprocessing Tools">
+    <i class="fas fa-project-diagram"></i>
+    </button>
+    <hr>
+    <button id="connectDbBtn" class="icon-btn" title="Connect Database">
+  <i class="fas fa-database"></i>
+</button>
+  </div>
+</div>
+<!-- ATTRIBUTE BOX -->
+<div id="attributeContainer" class="attribute-box">
+  <div class="box-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <h5>Attributes</h5>
+      <button id="addAttrBtn" class="attr-small-btn" title="Add Custom Attribute"><i class="fas fa-plus"></i></button>
+    </div>
+    <div>
+      <button id="minimizeAttr" class="attr-small-btn" title="Minimize"><i class="fas fa-minus"></i></button>
+      <button id="closeAttributes" class="attr-small-btn" title="Close"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table id="attributeTable" class="table table-sm table-dark table-striped">
+      <thead id="attrHead"></thead>
+      <tbody id="attrBody"></tbody>
+    </table>
+  </div>
+  <div class="attr-footer">
+    <button id="saveChangesBtn" class="btn btn-sm btn-primary">Save</button>
+    <button id="deleteSelectedBtn" class="btn btn-sm btn-danger">Delete</button>
+    <button id="centerSelectedBtn" class="btn btn-sm btn-info">Center</button>
+    <button id="exportAllBtn" class="btn btn-sm btn-success">Export</button>
+  </div>
+</div>
+
+<!--LAYERS PANEL-->
+<div id="layersPanel" class="layers-panel">
+  <div class="layers-header">
+    <h6><i class="fas fa-layer-group"></i> Layers</h6>
+    <button id="closeLayersPanel" class="attr-small-btn" title="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div id="layersList" class="layers-list">
+  </div>
+</div>
+<!-- EDITOR BOX -->
+<div id="editorContainer" class="editor-box">
+  <div class="box-header">
+    <h6 style="margin:0; color:#333;">Editor Tools</h6>
+    <button id="closeEditor" class="attr-small-btn" style="color:#333;" title="Close"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="editor-buttons">
+    <button id="drawPoint" class="editor-btn" title="Draw Point"><i class="fas fa-circle"></i></button>
+    <button id="drawLine" class="editor-btn" title="Draw Line"><i class="fas fa-grip-lines"></i></button>
+    <button id="drawPolygon" class="editor-btn" title="Draw Polygon"><i class="fas fa-vector-square"></i></button>
+    <button id="modifyFeature" class="editor-btn" title="Modify"><i class="fas fa-edit"></i></button>
+    <button id="deleteFeature" class="editor-btn" title="Delete"><i class="fas fa-trash"></i></button>
+    <button id="exportDrawing" class="editor-btn" title="Export Drawing Only"><i class="fas fa-download"></i></button>
+  </div>
+</div>
+
+<!-- GEOPROCESSING BOX -->
+<div id="geoprocessingContainer" class="geoprocessing-box">
+  <div class="box-header">
+    <h6>Geoprocessing Tools</h6>
+    <button id="closeGeoprocessing" class="attr-small-btn" style="color:#333;" title="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+ <!-- MAIN 3 BUTTONS -->
+  <div class="geo-main-buttons" id="geoMainButtons">
+    <button class="geo-main-btn buffer-btn" id="showBufferTool" title="Buffer">
+      <i class="fas fa-circle-notch"></i>
+    </button>
+    <button class="geo-main-btn intersect-btn" id="showIntersectTool" title="Intersect">
+      <i class="fas fa-compress-arrows-alt"></i>
+    </button>
+    <button class="geo-main-btn dissolve-btn" id="showDissolveTool" title="Dissolve">
+      <i class="fas fa-object-group"></i>
+    </button>
+  </div>
+
+  <!-- BUFFER DETAILS  -->
+  <div id="bufferDetails" class="geo-tool-details">
+    <h6><i class="fas fa-circle-notch"></i> Buffer Tool</h6>
+    <p>Create a buffer zone around selected features</p>
+    <div class="geo-input-group">
+      <label>Distance:</label>
+      <input type="number" id="bufferDistance" value="100" min="1">
+    </div>
+    <div class="geo-input-group">
+      <label>Unit:</label>
+      <select id="bufferUnit">
+        <option value="meters">Meters</option>
+        <option value="kilometers">Kilometers</option>
+        <option value="feet">Feet</option>
+        <option value="miles">Miles</option>
+      </select>
+    </div>
+    <button id="runBuffer" class="geo-btn geo-btn-buffer">
+      <i class="fas fa-play"></i> Create Buffer
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>
+
+  <!-- INTERSECT DETAILS  -->
+  <div id="intersectDetails" class="geo-tool-details">
+    <h6><i class="fas fa-compress-arrows-alt"></i> Intersect Tool</h6>
+    <p>Find the overlapping area between 2+ features</p>
+    <p style="font-size:11px; color:#28a745; background:#d4edda; padding:6px; border-radius:4px;">
+      Select 2+ overlapping features from attribute table first
+    </p>
+    <button id="runIntersect" class="geo-btn geo-btn-intersect">
+      <i class="fas fa-play"></i> Find Intersection
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>
+
+  <!-- DISSOLVE DETAILS -->
+  <div id="dissolveDetails" class="geo-tool-details">
+    <h6><i class="fas fa-object-group"></i> Dissolve Tool</h6>
+    <p>Merge selected features into one</p>
+    <div class="geo-input-group">
+      <label>Field:</label>
+      <select id="dissolveField">
+        <option value="_all_">Dissolve All</option>
+      </select>
+    </div>
+    <button id="runDissolve" class="geo-btn geo-btn-dissolve">
+      <i class="fas fa-play"></i> Dissolve Features
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+ 
+<!-- DATABASE CONNECTION MODAL -->
+<div class="modal fade" id="dbConnectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Connect to Database</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>Database Type</label>
+        <select id="dbType" class="form-control mb-3">
+          <option value="mysql">MySQL</option>
+          <option value="postgresql">PostgreSQL</option>
+        </select>
+        
+        <label>Host</label>
+        <input type="text" id="dbHost" class="form-control mb-3" placeholder="localhost" value="localhost">
+        
+        <label>Port</label>
+        <input type="number" id="dbPort" class="form-control mb-3" placeholder="3306" value="3306">
+        
+        <label>Database Name</label>
+        <input type="text" id="dbName" class="form-control mb-3" placeholder="gis_data" value="gis_data">
+        
+        <label>Username</label>
+        <input type="text" id="dbUsername" class="form-control mb-3" placeholder="root" value="root">
+        
+        <label>Password</label>
+        <input type="password" id="dbPassword" class="form-control mb-3" placeholder="">
+        
+        <div id="dbStatus" style="display:none; padding:10px; border-radius:6px; margin-top:10px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="testDbConnection">Test Connection</button>
+        <button type="button" class="btn btn-success" id="confirmDbConnect" disabled>Connect & Load Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE SELECTION MODAL -->
+<div class="modal fade" id="tableSelectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Table & Columns</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label>Select Table</label>
+        <select id="dbTableSelect" class="form-control mb-3">
+          <option value="">-- Select Table --</option>
+        </select>
+        
+        <div id="columnSelectors" style="display:none;">
+          <label>Latitude Column</label>
+          <select id="latColumn" class="form-control mb-3"></select>
+          
+          <label>Longitude Column</label>
+          <select id="lngColumn" class="form-control mb-3"></select>
+          
+          <label>Name Column (Optional)</label>
+          <select id="nameColumn" class="form-control mb-3">
+            <option value="">-- None --</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="loadDbData">Load Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NORTH ARROW -->
+<div class="north-arrow" title="Magnetic North">
+  <div class="north-arrow-inner"></div>
+  <div class="north-arrow-tail"></div>
+</div>
+
+<!-- SCALE CONTAINER -->
+<div class="scale-container">
+  <div class="scale-unit-selector">
+    <button class="scale-unit-btn active" data-unit="metric" title="Metric (m/km)">m/km</button>
+    <button class="scale-unit-btn" data-unit="imperial" title="Imperial (ft/mi)">ft/mi</button>
+    <button class="scale-unit-btn" data-unit="nautical" title="Nautical Miles">nm</button>
+    <button class="scale-unit-btn" data-unit="us" title="US Units">US</button>
+  </div>+
+  <div id="scaleLineControl"></div>
+</div>
+
+<!-- ZOOM + LOCATION -->
+<div class="zoom-controls">
+  <button id="zoomIn" class="zoom-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
+  <button id="zoomOut" class="zoom-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
+  <button id="locationBtn" class="zoom-btn" title="My Location"><i class="fas fa-location-arrow"></i></button>
+</div>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search location...">
+  <div id="suggestionBox" class="suggestion-box"></div>
+</div>
+
+<!-- POPUP -->
+<div id="popup" class="popup"></div>
+
+<!-- FOOTER -->
+<footer class="app-footer">© <span id="year"></span> Map Viewer - Enhanced GIS</footer>
+
+<!-- ADD ATTRIBUTE MODAL -->
+<div class="modal fade" id="addAttrModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Custom Attribute</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" style="min-height: 350px;">
+
+        <label>Attribute Name</label>
+        <input type="text" id="attrName" class="form-control" placeholder="e.g., status, priority">
+
+        <label style="margin-top: 20px;">Data Type</label>
+        <div class="custom-select-wrapper">
+          <div class="custom-select-display" id="attrTypeDisplay">
+            <span>Text</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="custom-select-options" id="attrTypeOptions">
+            <div class="custom-option" data-value="text">Text</div>
+            <div class="custom-option" data-value="number">Number</div>
+            <div class="custom-option" data-value="checkbox">Checkbox</div>
+            <div class="custom-option" data-value="select">Dropdown</div>
+            <div class="custom-option" data-value="date">Date</div>
+            <div class="custom-option" data-value="image">Image</div>
+          </div>
+        </div>
+
+        <input type="hidden" id="attrType" value="text">
+
+        <!-- DROPDOWN OPTIONS -->
+        <div id="selectOptionsDiv" style="display:none; margin-top:20px;">
+          <label>Dropdown Options (comma-separated)</label>
+          <input type="text" id="selectOptions" class="form-control" placeholder="e.g., Low, Medium, High">
+        </div>
+
+        <!-- DATE FORMAT FIELD -->
+        <div id="dateFormatDiv" style="display:none; margin-top:20px;">
+          <label>Date Format (optional)</label>
+          <input type="text" id="dateFormat" class="form-control" placeholder="e.g., YYYY-MM-DD">
+        </div>
+
+        <!-- IMAGE URL FIELD -->
+        <div id="imageUrlDiv" style="display:none; margin-top:20px;">
+          <label>Image URL</label>
+          <input type="text" id="imageUrl" class="form-control" placeholder="Paste image URL">
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmAddAttr">Add Attribute</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/ol@10.7.0/dist/ol.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@7.1.0/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/shpjs@latest/dist/shp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+   window.addEventListener("load", () => {
+    localStorage.removeItem("savedFeatures");
+});
+  document.getElementById('year').innerText = new Date().getFullYear();
+
+//MAP INITIALIZATION
+// Base Layers with updated URLs
+const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM(), visible: true });
+const topoLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: "https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png" }), visible: false });
+const cartoLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: "https://{a-d}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" }), visible: false });
+const esriLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" }), visible: false });
+
+// Vector Layers (GeoJSON z=20, Shapefile z=30, KML z=25, User z=40)
+const geojsonLayer = new ol.layer.Vector({ source: new ol.source.Vector(), zIndex: 20 });
+const kmlLayer = new ol.layer.Vector({ source: new ol.source.Vector(), zIndex: 25 });
+const shapefileLayer = new ol.layer.Vector({ source: new ol.source.Vector(), zIndex: 30 });
+const vectorSource = new ol.source.Vector();
+const vectorLayer = new ol.layer.Vector({ source: vectorSource, zIndex: 40 });
+const userSource = new ol.source.Vector();
+const userLayer = new ol.layer.Vector({ source: userSource, zIndex: 50 });
+
+// Feature Styling
+function featureStyle(feature) {
+  const geom = feature.getGeometry && feature.getGeometry();
+  const baseColor = feature.get('color') || '#0d6efd';
+  if (geom && geom.getType && geom.getType() === 'Point') {
+    return new ol.style.Style({ image: new ol.style.Circle({ radius: 7, fill: new ol.style.Fill({ color: baseColor }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+  }
+  return new ol.style.Style({ fill: new ol.style.Fill({ color: baseColor + '33' }), stroke: new ol.style.Stroke({ color: baseColor, width: 2 }) });
+}
+
+vectorLayer.setStyle(featureStyle);
+shapefileLayer.setStyle(featureStyle);
+geojsonLayer.setStyle(featureStyle);
+kmlLayer.setStyle(featureStyle);
+
+// Map
+const map = new ol.Map({
+  target: "map",
+  layers: [osmLayer, topoLayer, cartoLayer, esriLayer, geojsonLayer, kmlLayer, shapefileLayer, vectorLayer, userLayer],
+  view: new ol.View({ center: ol.proj.fromLonLat([72.8777, 19.0760]), zoom: 12 }),
+  controls: []
+});
+
+// Add Scale Line Control
+const scaleControl = new ol.control.ScaleLine({
+  units: 'metric',
+  bar: true,
+  steps: 2,
+  text: true,
+  minWidth: 100,
+  target: document.getElementById('scaleLineControl')
+});
+map.addControl(scaleControl);
+// Unit Selector Function
+document.querySelectorAll('.scale-unit-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.scale-unit-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    
+    const unit = this.dataset.unit;
+    scaleControl.setUnits(unit);
+  });
+});
+
+  // North Arrow Ro 
+const northArrow = document.querySelector('.north-arrow');
+
+if (northArrow) {
+  // Rotate arrow when map rot
+  map.getView().on('change:rotation', function() {
+    const rotation = map.getView().getRotation();
+    const degrees = (rotation * 180 / Math.PI);
+    northArrow.style.transform = `rotate(${-degrees}deg)`;
+  });
+
+  // Click on north 
+  northArrow.addEventListener('click', function() {
+    const currentRotation = map.getView().getRotation();
+    map.getView().animate({ 
+      rotation: currentRotation + (Math.PI / 4), // Rotate 45° clockwise
+      duration: 600 
+    });
+  });
+
+  // Optional: Right-click to reset rotation to north
+  northArrow.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    map.getView().animate({ 
+      rotation: 0, // Reset to north
+      duration: 600 
+    });
+  });
+}
+
+// Utilities
+function randomColor() { return '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'); }
+function safeId(p='fid') { return `${p}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`; }
+function escapeHtml(t) { return (t+'').replace(/[&<>"'`=\/]/g, s => '&#'+s.charCodeAt(0)+';'); }
+// Custom attributes with types
+let customAttributes = [];
+let attributeTypes = {};
+try { 
+  customAttributes = JSON.parse(localStorage.getItem('customAttributes')||'[]')||[]; 
+  attributeTypes = JSON.parse(localStorage.getItem('attributeTypes')||'{}')|| {};
+} catch(e) { customAttributes = []; attributeTypes = {}; }
+//POPUP
+const popup = document.getElementById("popup");
+const overlay = new ol.Overlay({ element: popup, positioning: "bottom-center", stopEvent: false, offset: [0,-12] });
+map.addOverlay(overlay);
+
+function openPopupForFeature(f) {
+  const geom = f.getGeometry && f.getGeometry();
+  if (!geom) return;
+  const coord = geom.getType&&geom.getType()==='Point' ? geom.getCoordinates() : ol.extent.getCenter(geom.getExtent());
+  overlay.setPosition(coord);
+  const props = Object.assign({}, f.getProperties());
+  delete props.geometry;
+  popup.innerHTML = Object.entries(props).map(([k,v])=>{
+    if (attributeTypes[k] === 'image' && v) {
+      return `<b>${escapeHtml(k)}</b>: <br><img src="${escapeHtml(v)}" style="max-width:150px; max-height:100px; border-radius:4px;">`;
+    }
+    return `<b>${escapeHtml(k)}</b>: ${escapeHtml(String(v||''))}`;
+  }).join('<br>');
+  popup.style.display = 'block';
+}
+
+function hidePopup() { popup.style.display = 'none'; overlay.setPosition(undefined); }
+
+function showTempPopup(msg, dur=2500) {
+  popup.innerText = msg; popup.style.display = 'block'; popup.style.position = 'fixed';
+  popup.style.top = '50%'; popup.style.left = '50%'; popup.style.transform = 'translate(-50%,-50%)'; popup.style.zIndex = '99999';
+  setTimeout(()=>{ popup.style.display='none'; popup.style.position='absolute'; popup.style.transform='none'; }, dur);
+}
+//ELEMENTS & CONTROLS
+const drawerToggle = document.getElementById("drawerToggle");
+const drawerContent = document.querySelector(".drawer-content");
+const fileInput = document.getElementById("fileInput");
+const attributeBox = document.getElementById("attributeContainer");
+const attrHead = document.getElementById("attrHead");
+const attrBody = document.getElementById("attrBody");
+const editorBox = document.getElementById("editorContainer");
+
+drawerToggle.onclick = () => {
+  const isOpen = drawerContent.style.display === "flex";
+  drawerContent.style.display = isOpen ? "none" : "flex";
+  if (isOpen) { attributeBox.style.display = "none"; editorBox.style.display = "none"; }
+};
+
+document.getElementById("toggleAttributes").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const isVis = attributeBox.style.display === "flex";
+  if (isVis) attributeBox.style.display = "none"; else { buildAttributeTable(); attributeBox.style.display = "flex"; }
+};
+document.getElementById("toggleEditor").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const geoBox = document.getElementById("geoprocessingContainer");
+  if (geoBox.style.display === "flex") geoBox.style.display = "none";
+  editorBox.style.display = editorBox.style.display === "flex" ? "none" : "flex";
+};
+
+document.getElementById("toggleGeoprocessing").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const geoBox = document.getElementById("geoprocessingContainer");
+  if (editorBox.style.display === "flex") editorBox.style.display = "none";
+  
+  if (geoBox.style.display === "flex") {
+    geoBox.style.display = "none";
+  } else {
+    geoBox.style.display = "flex";
+    if (!geoBox.style.left || geoBox.style.left === 'auto') {
+      geoBox.style.top = "120px";
+      geoBox.style.left = "50%";
+      geoBox.style.transform = "translateX(-50%)";
+      geoBox.style.right = "auto";
+    }
+    document.getElementById("geoMainButtons").style.display = "flex";
+    document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+  }
+};
+document.getElementById("showBufferTool").onclick = () => {
+  document.getElementById("geoMainButtons").style.display = "none";
+  document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+  document.getElementById("bufferDetails").style.display = "block";
+  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
+};
+
+document.getElementById("showIntersectTool").onclick = () => {
+  document.getElementById("geoMainButtons").style.display = "none";
+  document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+  document.getElementById("intersectDetails").style.display = "block";
+  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
+};
+
+document.getElementById("showDissolveTool").onclick = () => {
+  document.getElementById("geoMainButtons").style.display = "none";
+  document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+  document.getElementById("dissolveDetails").style.display = "block";
+  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
+  
+  // Populate dissolve field dropdown
+  const dissolveField = document.getElementById("dissolveField");
+  dissolveField.innerHTML = '<option value="_all_">Dissolve All</option>';
+  const allFeatures = getAllFeatures();
+  if (allFeatures.length > 0) {
+    const fields = new Set();
+    allFeatures.forEach(f => {
+      Object.keys(f.getProperties()).forEach(k => {
+        if (k !== 'geometry' && k !== 'color') fields.add(k);
+      });
+    });
+    fields.forEach(field => {
+      const opt = document.createElement('option');
+      opt.value = field;
+      opt.textContent = field;
+      dissolveField.appendChild(opt);
+    });
+  }
+};
+
+// Back buttons
+document.querySelectorAll(".geo-back-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+    document.getElementById("geoMainButtons").style.display = "flex";
+    document.querySelector(".geoprocessing-box .box-header").style.display = "flex";
+  };
+});
+
+document.getElementById("closeGeoprocessing").onclick = () => {
+  document.getElementById("geoprocessingContainer").style.display = "none";
+};
+
+document.getElementById("toggleLayers").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const layersPanel = document.getElementById("layersPanel");
+  const isVis = layersPanel.style.display === "flex";
+  if (isVis) {
+    layersPanel.style.display = "none";
+  } else {
+    buildLayersPanel();
+    layersPanel.style.display = "flex";
+  }
+};
+
+document.getElementById("closeLayersPanel").onclick = () => {
+  document.getElementById("layersPanel").style.display = "none";
+};
+document.getElementById("closeAttributes").onclick = () => attributeBox.style.display = "none";
+document.getElementById("closeEditor").onclick = () => { editorBox.style.display = "none"; removeInteractions(); };
+document.getElementById("closeGeoprocessing").onclick = () => {
+  document.getElementById("geoprocessingContainer").style.display = "none";
+};
+document.getElementById("minimizeAttr").onclick = () => {
+  attributeBox.classList.toggle("minimized");
+  const icon = document.getElementById("minimizeAttr").querySelector('i');
+  icon.className = attributeBox.classList.contains("minimized") ? "fas fa-window-maximize" : "fas fa-minus";
+};
+
+// Home & Basemaps
+document.getElementById("homeBtn").onclick = () => map.getView().animate({ center: ol.proj.fromLonLat([72.8777,19.0760]), zoom: 12, duration: 600 });
+
+function setBase(layer) {
+  [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === layer));
+  document.querySelectorAll('.basemap-group .icon-btn').forEach(b => b.classList.remove('active'));
+}
+
+document.getElementById("osmBtn").onclick = () => { setBase(osmLayer); document.getElementById("osmBtn").classList.add('active'); };
+document.getElementById("topoBtn").onclick = () => { setBase(topoLayer); document.getElementById("topoBtn").classList.add('active'); };
+document.getElementById("cartoBtn").onclick = () => { setBase(cartoLayer); document.getElementById("cartoBtn").classList.add('active'); };
+document.getElementById("esriBtn").onclick = () => { setBase(esriLayer); document.getElementById("esriBtn").classList.add('active'); };
+
+// Zoom
+document.getElementById("zoomIn").onclick = () => map.getView().setZoom(map.getView().getZoom()+1);
+document.getElementById("zoomOut").onclick = () => map.getView().setZoom(map.getView().getZoom()-1);
+//SEARCH
+const searchInput = document.getElementById("searchInput");
+const suggestionBox = document.getElementById("suggestionBox");
+let suggestionIndex = -1, currentSuggestions = [];
+
+function closeSuggestions() {
+  suggestionBox.style.display = 'none'; suggestionBox.innerHTML = ''; suggestionIndex = -1; currentSuggestions = [];
+}
+
+searchInput.addEventListener("input", async () => {
+  const q = searchInput.value.trim();
+  if (!q) { closeSuggestions(); return; }
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);
+    const data = await res.json();
+    suggestionBox.innerHTML = ''; currentSuggestions = data||[];
+    if (!currentSuggestions.length) { closeSuggestions(); return; }
+    currentSuggestions.forEach((item,idx) => {
+      const div = document.createElement('div');
+      div.className = 'suggestion-item'; div.dataset.idx = idx; div.textContent = item.display_name;
+      div.onclick = (ev) => {
+        ev.stopPropagation(); searchInput.value = item.display_name;
+        map.getView().animate({ center: ol.proj.fromLonLat([+item.lon,+item.lat]), zoom: 14 }); closeSuggestions();
+      };
+      suggestionBox.appendChild(div);
+    });
+    suggestionBox.style.display = 'block';
+  } catch(err) { closeSuggestions(); }
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  const items = suggestionBox.querySelectorAll('.suggestion-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); suggestionIndex = (suggestionIndex+1)%items.length; items.forEach(it=>it.classList.remove('active')); items[suggestionIndex].classList.add('active'); items[suggestionIndex].scrollIntoView({block:'nearest'}); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); suggestionIndex = (suggestionIndex-1+items.length)%items.length; items.forEach(it=>it.classList.remove('active')); items[suggestionIndex].classList.add('active'); items[suggestionIndex].scrollIntoView({block:'nearest'}); }
+  else if (e.key === 'Enter' && suggestionIndex >= 0 && items[suggestionIndex]) { e.preventDefault(); items[suggestionIndex].click(); }
+  else if (e.key === 'Escape') closeSuggestions();
+});
+document.addEventListener('click', (e) => { if (!suggestionBox.contains(e.target) && e.target !== searchInput) closeSuggestions(); });
+//USER LOCATION
+document.getElementById("locationBtn").onclick = () => {
+  if (!navigator.geolocation) { alert("Geolocation not supported"); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const coords = [pos.coords.longitude, pos.coords.latitude];
+    const point = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(coords)));
+    point.setStyle(new ol.style.Style({ image: new ol.style.Circle({ radius:8, fill: new ol.style.Fill({ color:'#00e676' }), stroke: new ol.style.Stroke({ color:'#fff', width:2 }) }) }));
+    userSource.clear(); userSource.addFeature(point);
+    map.getView().animate({ center: ol.proj.fromLonLat(coords), zoom: 15, duration: 600 });
+  }, ()=>alert("Unable to get location"));
+};
+//FILE UPLOAD (SHP/JSON/KML) 
+document.getElementById("uploadShpBtn").onclick = () => {
+  fileInput.accept = '.zip';
+  fileInput.dataset.type = 'shapefile';
+  fileInput.click();
+};
+
+document.getElementById("uploadGeoJsonBtn").onclick = () => {
+  fileInput.accept = '.geojson,.json';
+  fileInput.dataset.type = 'geojson';
+  fileInput.click();
+};
+
+document.getElementById("uploadKmlBtn").onclick = () => {
+  fileInput.accept = '.kml';
+  fileInput.dataset.type = 'kml';
+  fileInput.click();
+};
+fileInput.onchange = async (e) => {
+  const files = e.target.files;
+  if (!files || !files.length) return;
+
+   const MAX_SIZE = 50 * 1024 * 1024; // 50 MB limit file validation
+  for (let file of files) {
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+    if (file.size > MAX_SIZE) {
+      alert(`File too large!\n\nFile: ${file.name}\nSize: ${sizeMB} MB\nMax allowed: 50 MB\n\n💡 Tip: Split your shapefile into smaller parts`);
+      fileInput.value = "";
+      return;
+    }
+  }
+
+  const loader = document.getElementById('loader');
+  const loaderText = document.getElementById('loaderText');
+  const loaderProgress = document.getElementById('loaderProgress');
+  loader.style.display = 'flex';
+
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    const name = f.name.toLowerCase();
+    loaderText.innerText = `Loading ${f.name} (${i+1}/${files.length})... 0%`;
+    loaderProgress.style.width = '0%';
+    
+    try {
+      let features;
+
+      if (name.endsWith('.zip')) {
+        const arrayBuffer = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onprogress = (ev) => {
+            if (ev.lengthComputable) {
+              const percent = Math.round((ev.loaded / ev.total) * 100);
+              loaderText.innerText = `Loading ${f.name} (${i+1}/${files.length})... ${percent}%`;
+              loaderProgress.style.width = percent + '%';
+            }
+          };
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsArrayBuffer(f);
+        });
+        const geo = await shp(arrayBuffer);
+        features = [].concat(...geo.map(g => new ol.format.GeoJSON().readFeatures(g, { featureProjection: 'EPSG:3857' })));
+      } else if (name.endsWith('.geojson') || name.endsWith('.json')) {
+        const text = await f.text();
+        const jsonData = JSON.parse(text);
+        features = new ol.format.GeoJSON().readFeatures(jsonData, { 
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857' 
+  });
+      } else if (name.endsWith('.kml')) {
+        const text = await f.text();
+        features = new ol.format.KML().readFeatures(text, { featureProjection: 'EPSG:3857' });
+      } else {
+        alert("Unsupported file: " + f.name);
+        continue;
+      }
+
+      // Assign ID and color
+      features.forEach((feat, idx) => {
+        if (!feat.getId()) feat.setId(`feat-${Date.now()}-${Math.random().toString(36).slice(2,8)}-${idx}`);
+        if (!feat.get('color')) feat.set('color', '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'));
+      });
+
+      //fraturr limit check
+      const MAX_FEATURES = 10000;
+      const originalCount = features.length;
+      
+      if (features.length > MAX_FEATURES) {
+        const proceed = confirm(
+          `Large dataset detected!\n\n` +
+          `Total features: ${originalCount.toLocaleString()}\n` +
+          `Browser limit: ${MAX_FEATURES.toLocaleString()}\n\n` +
+          `Only first ${MAX_FEATURES.toLocaleString()} features will be loaded.\n\n` +
+          `Click OK to continue or Cancel to abort.`
+        );
+        
+        if (!proceed) {
+          loader.style.display = 'none';
+          fileInput.value = "";
+          continue;
+        }
+        
+        features = features.slice(0, MAX_FEATURES);
+        showTempPopup(`Loaded ${MAX_FEATURES.toLocaleString()} of ${originalCount.toLocaleString()} features`);
+      }
+
+      // Create separate layer for each file
+      const layerName = f.name.replace(/\.(zip|geojson|json|kml)$/i, '');
+      const newLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({ features }),
+        zIndex: 50 + map.getLayers().getLength(),
+        style: featureStyle
+      });
+      
+      newLayer.set('layerName', layerName);
+      newLayer.set('fileType', name.endsWith('.zip') ? 'shapefile' : name.endsWith('.kml') ? 'kml' : 'geojson');
+      newLayer.set('featureCount', features.length);
+      
+      map.addLayer(newLayer);
+      
+      if (!window.uploadedLayers) window.uploadedLayers = [];
+      window.uploadedLayers.push(newLayer);
+
+      // Fit map to all features loaded so far
+      const extent = newLayer.getSource().getExtent();
+      if (extent && extent.every(v => isFinite(v))) {
+        map.getView().fit(extent, { padding: [50,50,50,50], duration: 700, maxZoom: 16 });
+      }
+
+      showTempPopup(`Loaded ${features.length} features from ${f.name}`);
+     
+    } catch (err) {
+      console.error(err);
+      let errorMsg = `Failed to load: ${f.name}\n\n`;
+      const fileSizeMB = (f.size / (1024 * 1024)).toFixed(2);
+      
+      if (err.message && (err.message.includes('memory') || err.message.includes('heap'))) {
+        errorMsg += `MEMORY ERROR\n\n`;
+        errorMsg += `File size: ${fileSizeMB} MB\n`;
+        errorMsg += `This file is too large for your browser to handle.\n\n`;
+        errorMsg += `Solutions:\n`;
+        errorMsg += `Use a smaller file (< 20 MB recommended)\n`;
+        errorMsg += `Simplify geometry in QGIS/ArcGIS\n`;
+        errorMsg += ` Split into multiple files\n`;
+        errorMsg += ` Use desktop GIS software for large files`;
+      } else if (f.size > 30 * 1024 * 1024) {
+        errorMsg += `LARGE FILE WARNING\n\n`;
+        errorMsg += `File size: ${fileSizeMB} MB\n`;
+        errorMsg += `Large files may cause browser issues.\n\n`;
+        errorMsg += `Error: ${err.message || err}`;
+      } else {
+        errorMsg += `Error details: ${err.message || err}\n\n`;
+        errorMsg += ` Check if file format is correct:\n`;
+        errorMsg += ` Shapefile: Must be .zip with .shp, .shx, .dbf\n`;
+        errorMsg += ` GeoJSON: Valid JSON format\n`;
+        errorMsg += ` KML: Valid XML format`;
+      }
+      
+      alert(errorMsg);
+    }
+  }
+
+
+  // Show attribute table and layers panel after all files loaded
+  buildAttributeTable();
+  document.getElementById("attributeContainer").style.display = "flex";
+  
+  buildLayersPanel();
+  document.getElementById("layersPanel").style.display = "flex";
+
+  loader.style.display = 'none';
+  fileInput.value = "";
+};
+let selectedFeature = null;
+const selectInteraction = new ol.interaction.Select({
+  filter: function(feature, layer) {
+    if (layer === vectorLayer || 
+        layer === shapefileLayer || 
+        layer === geojsonLayer || 
+        layer === kmlLayer) {
+      return true;
+    }
+    
+    if (window.uploadedLayers && window.uploadedLayers.includes(layer)) {
+      return true;
+    }
+    
+    if (window.multiFileLayer && layer === window.multiFileLayer) {
+      return true;
+    }
+    
+    if (layer instanceof ol.layer.Vector) {
+      return true;
+    }
+    
+    return false;
+  },
+  style: new ol.style.Style({
+    stroke: new ol.style.Stroke({ color: '#ffcc00', width: 4 }),
+    fill: new ol.style.Fill({ color: '#ffcc0033' }),
+    image: new ol.style.Circle({ radius:9, fill: new ol.style.Fill({ color:'#ffcc00' }), stroke: new ol.style.Stroke({ color:'#fff', width:2 }) })
+  })
+});
+
+map.addInteraction(selectInteraction);
+
+selectInteraction.on('select', (evt) => {
+  const f = (evt.selected && evt.selected[0]) ? evt.selected[0] : null;
+  if (f) {
+    selectedFeature = f;
+    highlightRowForFeature(f);
+    openPopupForFeature(f);
+  } else {
+    selectedFeature = null;
+    removeRowHighlights();
+    hidePopup();
+  }
+});
+function findFeatureSource(feature) {
+  if (!feature) return null;
+  
+  const fid = feature.getId();
+  
+  if (vectorSource.getFeatureById(fid)) return vectorSource;
+  if (shapefileLayer.getSource().getFeatureById(fid)) return shapefileLayer.getSource();
+  if (geojsonLayer.getSource().getFeatureById(fid)) return geojsonLayer.getSource();
+  if (kmlLayer.getSource().getFeatureById(fid)) return kmlLayer.getSource();
+  
+  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
+    for (let layer of window.uploadedLayers) {
+      if (layer && layer.getSource) {
+        const src = layer.getSource();
+        if (src && src.getFeatureById && src.getFeatureById(fid)) {
+          return src;
+        }
+        if (src && src.getFeatures && src.getFeatures().includes(feature)) {
+          return src;
+        }
+      }
+    }
+  }
+  
+  if (window.multiFileLayer && window.multiFileLayer.getSource) {
+    const src = window.multiFileLayer.getSource();
+    if (src) {
+      if (src.getFeatureById && src.getFeatureById(fid)) return src;
+      if (src.getFeatures && src.getFeatures().includes(feature)) return src;
+    }
+  }
+  
+  if (vectorSource.getFeatures().includes(feature)) return vectorSource;
+  if (shapefileLayer.getSource().getFeatures().includes(feature)) return shapefileLayer.getSource();
+  if (geojsonLayer.getSource().getFeatures().includes(feature)) return geojsonLayer.getSource();
+  if (kmlLayer.getSource().getFeatures().includes(feature)) return kmlLayer.getSource();
+  
+  let foundSource = null;
+  map.getLayers().forEach(layer => {
+    if (foundSource) return;
+    if (layer instanceof ol.layer.Vector) {
+      const src = layer.getSource();
+      if (src && src.getFeatures) {
+        if (src.getFeatureById && src.getFeatureById(fid)) {
+          foundSource = src;
+        } else if (src.getFeatures().includes(feature)) {
+          foundSource = src;
+        }
+      }
+    }
+  });
+  
+  return foundSource;
+}
+function findByIdAcrossSources(id) {
+  if (!id) return null;
+  
+  let f = vectorSource.getFeatureById(id);
+  if (f) return f;
+  f = shapefileLayer.getSource().getFeatureById(id);
+  if (f) return f;
+  f = geojsonLayer.getSource().getFeatureById(id);
+  if (f) return f;
+  f = kmlLayer.getSource().getFeatureById(id);
+  if (f) return f;
+  
+  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
+    for (let layer of window.uploadedLayers) {
+      if (layer && layer.getSource) {
+        const src = layer.getSource();
+        if (src && src.getFeatureById) {
+          f = src.getFeatureById(id);
+          if (f) return f;
+        }
+      }
+    }
+  }
+  
+  if (window.multiFileLayer && window.multiFileLayer.getSource) {
+    const src = window.multiFileLayer.getSource();
+    if (src && src.getFeatureById) {
+      f = src.getFeatureById(id);
+      if (f) return f;
+    }
+  }
+  
+  let foundFeature = null;
+  map.getLayers().forEach(layer => {
+    if (foundFeature) return;
+    if (layer instanceof ol.layer.Vector) {
+      const src = layer.getSource();
+      if (src && src.getFeatureById) {
+        const feat = src.getFeatureById(id);
+        if (feat) foundFeature = feat;
+      }
+    }
+  });
+  
+  return foundFeature;
+}
+//GET ALL FEATURES        
+function getAllFeatures() {
+  let allFeatures = [];
+  
+  allFeatures = allFeatures.concat(vectorSource.getFeatures());
+  allFeatures = allFeatures.concat(shapefileLayer.getSource().getFeatures());
+  allFeatures = allFeatures.concat(geojsonLayer.getSource().getFeatures());
+  allFeatures = allFeatures.concat(kmlLayer.getSource().getFeatures());
+  
+  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
+    window.uploadedLayers.forEach(layer => {
+      if (layer && layer.getSource && typeof layer.getSource === 'function') {
+        const source = layer.getSource();
+        if (source && source.getFeatures && typeof source.getFeatures === 'function') {
+          allFeatures = allFeatures.concat(source.getFeatures());
+        }
+      }
+    });
+  }
+  
+  if (window.multiFileLayer && window.multiFileLayer.getSource) {
+    const source = window.multiFileLayer.getSource();
+    if (source && source.getFeatures) {
+      allFeatures = allFeatures.concat(source.getFeatures());
+    }
+  }
+  
+  map.getLayers().forEach(layer => {
+    if (layer instanceof ol.layer.Vector && 
+        layer !== vectorLayer && 
+        layer !== shapefileLayer && 
+        layer !== geojsonLayer && 
+        layer !== kmlLayer &&
+        layer !== window.multiFileLayer) {
+      
+      const source = layer.getSource();
+      if (source && source.getFeatures) {
+        const features = source.getFeatures();
+        features.forEach(f => {
+          if (!allFeatures.some(existing => existing.getId() === f.getId())) {
+            allFeatures.push(f);
+          }
+        });
+      }
+    }
+  });
+  
+  return allFeatures;
+}
+  function buildAttributeTable() {
+
+  attrHead.innerHTML = "";
+  attrBody.innerHTML = "";
+
+  const feats = getAllFeatures();
+
+  if (!feats.length) {
+    attrHead.innerHTML = "<tr><th>No features</th></tr>";
+    attributeBox.style.display = "none";
+    return;
+  }
+
+const ROWS_PER_PAGE = 100;
+  if (!window.attrTablePage) window.attrTablePage = 0;
+  
+  const totalPages = Math.ceil(feats.length / ROWS_PER_PAGE);
+  const startIdx = window.attrTablePage * ROWS_PER_PAGE;
+  const endIdx = Math.min(startIdx + ROWS_PER_PAGE, feats.length);
+  const displayFeats = feats.slice(startIdx, endIdx);
+  
+  // Add pagination controls if needed
+  if (feats.length > ROWS_PER_PAGE) {
+    const paginationDiv = document.createElement('div');
+    paginationDiv.style.cssText = 'padding:10px; background:rgba(0,229,255,0.15); border-radius:6px; margin-bottom:10px; text-align:center; color:#00e5ff; font-weight:500;';
+    paginationDiv.innerHTML = `
+      📊 Showing ${startIdx + 1}-${endIdx} of ${feats.length} features | 
+      <button style="margin:0 5px; padding:4px 12px; background:#0d6efd; color:white; border:none; border-radius:4px; cursor:pointer;" 
+        onclick="window.attrTablePage=Math.max(0,${window.attrTablePage}-1); buildAttributeTable();" 
+        ${window.attrTablePage === 0 ? 'disabled' : ''}>◀ Previous</button>
+      <span style="padding:0 15px;">Page ${window.attrTablePage + 1} / ${totalPages}</span>
+      <button style="margin:0 5px; padding:4px 12px; background:#0d6efd; color:white; border:none; border-radius:4px; cursor:pointer;" 
+        onclick="window.attrTablePage=Math.min(${totalPages - 1},${window.attrTablePage}+1); buildAttributeTable();" 
+        ${window.attrTablePage === totalPages - 1 ? 'disabled' : ''}>Next ▶</button>
+    `;
+    
+    const tableWrapper = document.querySelector('.table-wrapper');
+    if (tableWrapper) {
+      const existingPagination = tableWrapper.previousElementSibling;
+      if (existingPagination && existingPagination.innerHTML.includes('Showing')) {
+        existingPagination.remove();
+      }
+      tableWrapper.parentNode.insertBefore(paginationDiv, tableWrapper);
+    }
+  }
+
+  const keySet = new Set();
+  feats.forEach(f =>
+    Object.keys(f.getProperties()).forEach(k => {
+      if (k !== "geometry") keySet.add(k);
+    })
+  );
+  customAttributes.forEach(k => keySet.add(k));
+
+  const keys = Array.from(keySet);
+  if (!keys.includes("name")) keys.unshift("name");
+
+  attrHead.innerHTML =
+    `<tr>
+       <th><input type="checkbox" id="selectAllCheckbox"></th>
+       ${keys.map(k => `<th>${k}</th>`).join("")}
+       <th>Actions</th>
+     </tr>`;
+
+  displayFeats.forEach(f => {
+    if (!f.getId()) f.setId(safeId());
+    const fid = f.getId();
+    const tr = document.createElement("tr");
+    tr.dataset.fid = fid;
+
+    const tdCheck = document.createElement("td");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.classList.add("select-checkbox");
+    cb.dataset.fid = fid;
+    tdCheck.appendChild(cb);
+    tr.appendChild(tdCheck);
+
+    keys.forEach(col => {
+      const td = document.createElement("td");
+      let val = f.get(col);
+      if (typeof val === "object") val = JSON.stringify(val);
+
+      let type = "text";
+      if (col.toLowerCase().includes("date")) type = "date";
+      else if (!isNaN(val) && val !== "" && val !== null) type = "number";
+      else if (val === true || val === false) type = "checkbox";
+
+      let input = document.createElement("input");
+      input.classList.add("attr-input");
+
+      if (type === "date") {
+        input.type = "date";
+        input.value = val ? new Date(val).toISOString().split("T")[0] : "";
+        input.onchange = () => f.set(col, input.value);
+      }
+
+      else if (type === "number") {
+        input.type = "number";
+        input.value = val ?? "";
+        input.oninput = () => {
+          if (input.value === "" || isNaN(input.value)) input.style.border = "2px solid red";
+          else { input.style.border = ""; f.set(col, Number(input.value)); }
+        };
+      }
+
+      else if (type === "checkbox") {
+        input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = !!val;
+        input.onchange = () => f.set(col, input.checked);
+      }
+
+      else {
+        input.type = "text";
+        input.value = val ?? "";
+        input.oninput = () => {
+          if (input.value.trim() === "") input.style.border = "2px solid red";
+          else { input.style.border = ""; f.set(col, input.value); }
+        };
+      }
+
+      td.appendChild(input);
+      tr.appendChild(td);
+    });
+
+    const actionTd = document.createElement("td");
+    actionTd.innerHTML = `
+       <button class="btn-focus" title="Center"><i class="fas fa-crosshairs"></i></button>
+  <button class="btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
+ <!-- <button class="btn-export" title="Export"><i class="fas fa-download"></i></button>-->
+    `;
+    tr.appendChild(actionTd);
+
+    attrBody.appendChild(tr);
+  });
+
+  document.querySelectorAll(".btn-focus").forEach(btn => {
+    btn.onclick = function (ev) {
+      ev.stopPropagation();
+      const fid = this.closest("tr").dataset.fid;
+      const f = findByIdAcrossSources(fid);
+      if (!f) return;
+      const geom = f.getGeometry();
+      const center = geom.getType() === "Point"
+        ? geom.getCoordinates()
+        : ol.extent.getCenter(geom.getExtent());
+      map.getView().animate({ center, zoom: 15, duration: 600 });
+    };
+  });
+
+  document.querySelectorAll(".btn-delete").forEach(btn => {
+    btn.onclick = function (ev) {
+      ev.stopPropagation();
+      const fid = this.closest("tr").dataset.fid;
+      const f = findByIdAcrossSources(fid);
+      if (!f || !confirm("Delete this feature?")) return;
+      const src = findFeatureSource(f);
+      if (src) src.removeFeature(f);
+      buildAttributeTable();
+      saveToLocal();
+    };
+  });
+
+  document.getElementById("selectAllCheckbox").onchange = (ev) => {
+    const checked = ev.target.checked;
+    document.querySelectorAll(".select-checkbox").forEach(c => c.checked = checked);
+  };
+
+}
+// ADD THIS NEW FUNCTION RIGHT AFTER buildAttributeTable
+function setupCheckboxListeners() {
+  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+  if (selectAllCheckbox) {
+    selectAllCheckbox.addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('.select-checkbox');
+      checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+  }
+}
+//BUILD LAYERS PANEL
+function buildLayersPanel() {
+  const layersList = document.getElementById('layersList');
+  if (!layersList) return;
+  
+  layersList.innerHTML = '';
+  
+  if (!window.uploadedLayers) window.uploadedLayers = [];
+  
+  if (window.uploadedLayers.length === 0) {
+    layersList.innerHTML = '<div style="text-align:center; padding:20px; color:rgba(255,255,255,0.5);">No layers loaded</div>';
+    return;
+  }
+  
+  const sortedLayers = [...window.uploadedLayers].sort((a,b) => b.getZIndex() - a.getZIndex());
+  
+  sortedLayers.forEach((layer, index) => {
+    const layerName = layer.get('layerName') || `Layer ${index+1}`;
+    const featureCount = layer.getSource().getFeatures().length;
+    const opacity = layer.getOpacity();
+    const visible = layer.getVisible();
+    
+    const layerDiv = document.createElement('div');
+    layerDiv.className = 'layer-item';
+    layerDiv.draggable = true;
+    layerDiv.dataset.layerId = layer.ol_uid;
+    
+    layerDiv.innerHTML = `
+      <div class="layer-header-row">
+        <i class="fas fa-grip-vertical layer-drag-handle"></i>
+        <input type="checkbox" class="layer-visibility-check" ${visible ? 'checked' : ''}>
+        <span class="layer-name">${escapeHtml(layerName)}</span>
+        <span class="layer-count-badge">${featureCount}</span>
+        <button class="layer-delete-btn" title="Delete Layer">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      <div class="layer-opacity-row">
+        <span class="layer-opacity-label">Opacity</span>
+        <input type="range" class="layer-opacity-slider" min="0" max="100" value="${Math.round(opacity*100)}">
+        <span class="layer-opacity-value">${Math.round(opacity*100)}%</span>
+      </div>
+    `;
+    
+    layersList.appendChild(layerDiv);
+    
+    const checkbox = layerDiv.querySelector('.layer-visibility-check');
+    checkbox.onchange = () => {
+      layer.setVisible(checkbox.checked);
+    };
+    
+    const slider = layerDiv.querySelector('.layer-opacity-slider');
+    const valueSpan = layerDiv.querySelector('.layer-opacity-value');
+    slider.oninput = () => {
+      const val = slider.value / 100;
+      layer.setOpacity(val);
+      valueSpan.textContent = slider.value + '%';
+    };
+    
+    const deleteBtn = layerDiv.querySelector('.layer-delete-btn');
+    deleteBtn.onclick = () => {
+      if (confirm(`Delete layer "${layerName}"?`)) {  // ← FIXED: Added parentheses
+        map.removeLayer(layer);
+        window.uploadedLayers = window.uploadedLayers.filter(l => l !== layer);
+        buildLayersPanel();
+        buildAttributeTable();
+      }
+    };
+    
+    layerDiv.addEventListener('dragstart', (e) => {
+      layerDiv.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', layer.ol_uid);
+    });
+    
+    layerDiv.addEventListener('dragend', () => {
+      layerDiv.classList.remove('dragging');
+    });
+    
+    layerDiv.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+    
+    layerDiv.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const draggedId = e.dataTransfer.getData('text/plain');
+      const draggedLayer = window.uploadedLayers.find(l => l.ol_uid == draggedId);
+      const targetLayer = layer;
+      
+      if (draggedLayer && draggedLayer !== targetLayer) {
+        const dragZ = draggedLayer.getZIndex();
+        const targetZ = targetLayer.getZIndex();
+        draggedLayer.setZIndex(targetZ);
+        targetLayer.setZIndex(dragZ);
+        buildLayersPanel();
+      }
+    });
+  });
+}
+
+function setupCheckboxListeners() {
+  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+  if (selectAllCheckbox) {
+    selectAllCheckbox.addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('.select-checkbox');
+      checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+  }
+}
+function highlightRowForFeature(f) {
+  removeRowHighlights();
+  const row = attrBody.querySelector(`tr[data-fid="${f.getId()}"]`); 
+  if (row) row.classList.add('table-active');
+}
+
+function removeRowHighlights() {
+  attrBody.querySelectorAll('tr').forEach(r => r.classList.remove('table-active'));
+}
+//SAVE/DELETE/CENTER/EXP  
+document.getElementById("saveChangesBtn").onclick = () => {
+  const rows = Array.from(attrBody.querySelectorAll('tr[data-fid]'));
+  rows.forEach(row => {
+    const fid = row.getAttribute('data-fid');
+    const f = findByIdAcrossSources(fid);
+    if (!f) return;
+    const cells = Array.from(row.querySelectorAll('td[data-key]'));
+    cells.forEach(td => {
+      const key = td.dataset.key;
+      const attrType = attributeTypes[key] || 'text';
+      
+      if (attrType === 'checkbox') {
+        const checkbox = td.querySelector('input[type="checkbox"]');
+        if (checkbox) f.set(key, checkbox.checked);
+      } else if (attrType === 'select') {
+        const select = td.querySelector('select');
+        if (select) f.set(key, select.value);
+      } else {
+        f.set(key, td.innerText.trim());
+      }
+    });
+  });
+  showTempPopup('All edits saved');
+  buildAttributeTable();
+  saveToLocal();
+};
+
+document.getElementById("deleteSelectedBtn").onclick = () => {
+  const checkedBoxes = document.querySelectorAll('.select-checkbox:checked');
+  
+  if (checkedBoxes.length === 0) {
+    alert('Please select at least one feature to delete');
+    return;
+  }
+  
+  if (!confirm(`Delete ${checkedBoxes.length} selected feature(s)?`)) return;
+  
+  let deletedCount = 0;
+  checkedBoxes.forEach(checkbox => {
+    const fid = checkbox.dataset.fid;
+    const f = findByIdAcrossSources(fid);
+    if (f) {
+      const src = findFeatureSource(f);
+      if (src) {
+        src.removeFeature(f);
+        deletedCount++;
+      }
+    }
+  });
+  
+  selectedFeature = null;
+  selectInteraction.getFeatures().clear();
+  buildAttributeTable();
+  saveToLocal();
+  showTempPopup(`Deleted ${deletedCount} feature(s)`);
+};
+
+  // **Editor Delete button**
+document.getElementById("deleteFeature").onclick = () => {
+  if (!selectedFeature) {
+    alert('Select a feature first to delete.');
+    return;
+  }
+  if (!confirm('Delete the selected feature?')) return;
+
+  const src = findFeatureSource(selectedFeature);
+  if (src) src.removeFeature(selectedFeature);
+
+  selectedFeature = null;
+  selectInteraction.getFeatures().clear();
+  buildAttributeTable();
+  saveToLocal();
+  showTempPopup('Feature deleted');
+};
+ 
+
+document.getElementById("centerSelectedBtn").onclick = () => {
+  if (!selectedFeature) return alert('Select a feature first.');
+  const geom = selectedFeature.getGeometry();
+  const center = geom.getType&&geom.getType()==='Point' ? geom.getCoordinates() : ol.extent.getCenter(geom.getExtent());
+  map.getView().animate({ center, zoom: 14, duration: 600 });
+};
+ document.getElementById("exportAllBtn").onclick = () => {
+  const fmt = new ol.format.GeoJSON();
+  const allFeatures = getAllFeatures();
+  
+  if (!allFeatures.length) {
+    alert('No features to export!');
+    return;
+  }
+  
+  const data = JSON.stringify(
+    fmt.writeFeaturesObject(allFeatures, { 
+      featureProjection: 'EPSG:3857',
+      dataProjection: 'EPSG:4326'
+    }), 
+    null, 
+    2
+  );
+  
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `all-features-${Date.now()}.geojson`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  
+  showTempPopup(`✅ Exported ${allFeatures.length} feature(s)!`);
+}; 
+/*DRAW / MODIFY*/
+let drawInteraction = null;
+let modifyInteraction = null;
+
+function removeInteractions() {
+  if (drawInteraction) { map.removeInteraction(drawInteraction); drawInteraction = null; }
+  if (modifyInteraction) { map.removeInteraction(modifyInteraction); modifyInteraction = null; }
+  document.querySelectorAll('.editor-btn').forEach(btn => btn.classList.remove('active'));
+}
+
+function addDraw(type, button) {
+  removeInteractions();
+  drawInteraction = new ol.interaction.Draw({ source: vectorSource, type });
+  if (button) button.classList.add('active');
+  map.addInteraction(drawInteraction);
+  drawInteraction.on('drawend', e => {
+    const f = e.feature;
+    if (!f.get('name')) f.set('name', `Feature ${vectorSource.getFeatures().length}`);
+    if (!f.get('color')) f.set('color', randomColor());
+    if (!f.getId()) f.setId(safeId());
+    customAttributes.forEach(k => { if (f.get(k) === undefined) f.set(k, ''); });
+    
+    setTimeout(() => {
+      const sel = selectInteraction.getFeatures();
+      sel.clear();
+      sel.push(f);
+      selectedFeature = f;
+      if (attributeBox.style.display !== 'flex') attributeBox.style.display = 'flex';
+      buildAttributeTable();
+      
+      try {
+        const name = prompt('Enter name (optional):', f.get('name') || '');
+        if (name !== null && name.trim()) f.set('name', name.trim());
+        const date = prompt('Enter date YYYY-MM-DD (optional):', '');
+        if (date !== null && date.trim()) f.set('date', date.trim());
+        const addr = prompt('Enter address (optional):', '');
+        if (addr !== null && addr.trim()) f.set('address', addr.trim());
+        const author = prompt('Created by (optional):', '');
+        if (author !== null && author.trim()) f.set('created_by', author.trim());
+        buildAttributeTable();
+      } catch(err) {}
+      
+      saveToLocal();
+    }, 100);
+    
+    removeInteractions();
+  });
+}
+  function startModify() {
+  removeInteractions();
+  const modifySource = new ol.Collection();
+  
+  const allFeatures = getAllFeatures();
+  allFeatures.forEach(f => modifySource.push(f));
+  
+  modifyInteraction = new ol.interaction.Modify({ features: modifySource });
+
+  map.addInteraction(modifyInteraction);
+  modifyInteraction.on('modifyend', () => { buildAttributeTable(); saveToLocal(); });
+  const btn = document.getElementById('modifyFeature');
+  if (btn) btn.classList.add('active');
+  showTempPopup('Modify mode active - drag features to edit');
+}
+
+document.getElementById('drawPoint').onclick = function() { addDraw('Point', this); };
+document.getElementById('drawLine').onclick = function() { addDraw('LineString', this); };
+document.getElementById('drawPolygon').onclick = function() { addDraw('Polygon', this); };
+document.getElementById('modifyFeature').onclick = startModify;
+// Export only drawn features (from vectorSource)
+document.getElementById('exportDrawing').onclick = () => {
+  const fmt = new ol.format.GeoJSON();
+  const drawnFeatures = vectorSource.getFeatures();
+  
+  if (!drawnFeatures.length) {
+    alert('No drawn features to export! Draw something first.');
+    return;
+  }
+  
+  const data = JSON.stringify(
+    fmt.writeFeaturesObject(drawnFeatures, { 
+      featureProjection: 'EPSG:3857',
+      dataProjection: 'EPSG:4326'
+    }), 
+    null, 
+    2
+  );
+  
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `my-drawing-${Date.now()}.geojson`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  
+  showTempPopup(`✅ Exported ${drawnFeatures.length} drawn feature(s)!`);
+};
+/*   LOCAL STORAGE           */
+
+function saveToLocal() {
+  try {
+    const fmt = new ol.format.GeoJSON();
+    const data = {
+      vectorFeatures: fmt.writeFeaturesObject(vectorSource.getFeatures(), { featureProjection: 'EPSG:3857' }),
+      shapefileFeatures: fmt.writeFeaturesObject(shapefileLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
+      geojsonFeatures: fmt.writeFeaturesObject(geojsonLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
+      kmlFeatures: fmt.writeFeaturesObject(kmlLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' })
+    };
+    localStorage.setItem("savedFeatures", JSON.stringify(data));
+    localStorage.setItem("customAttributes", JSON.stringify(customAttributes||[]));
+    localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
+  } catch(e) { console.error('Save error', e); }
+}
+
+function loadFromLocal() {
+  try {
+    customAttributes = JSON.parse(localStorage.getItem('customAttributes')||'[]')||[];
+    attributeTypes = JSON.parse(localStorage.getItem('attributeTypes')||'{}')||{};
+  } catch(e) { customAttributes = []; attributeTypes = {}; }
+  
+  const data = localStorage.getItem("savedFeatures");
+  if (!data) return;
+  
+  try {
+    const fmt = new ol.format.GeoJSON();
+    const parsed = JSON.parse(data);
+    
+    if (parsed.vectorFeatures && parsed.vectorFeatures.features) {
+      const feats = fmt.readFeatures(parsed.vectorFeatures, { featureProjection: 'EPSG:3857' });
+      feats.forEach(f => customAttributes.forEach(k => { if (f.get(k) === undefined) f.set(k, ''); }));
+      vectorSource.addFeatures(feats);
+    }
+    if (parsed.shapefileFeatures && parsed.shapefileFeatures.features) {
+      const feats = fmt.readFeatures(parsed.shapefileFeatures, { featureProjection: 'EPSG:3857' });
+      feats.forEach(f => customAttributes.forEach(k => { if (f.get(k) === undefined) f.set(k, ''); }));
+      shapefileLayer.getSource().addFeatures(feats);
+    }
+    if (parsed.geojsonFeatures && parsed.geojsonFeatures.features) {
+      const feats = fmt.readFeatures(parsed.geojsonFeatures, { featureProjection: 'EPSG:3857' });
+      feats.forEach(f => customAttributes.forEach(k => { if (f.get(k) === undefined) f.set(k, ''); }));
+      geojsonLayer.getSource().addFeatures(feats);
+    }
+    if (parsed.kmlFeatures && parsed.kmlFeatures.features) {
+      const feats = fmt.readFeatures(parsed.kmlFeatures, { featureProjection: 'EPSG:3857' });
+      feats.forEach(f => customAttributes.forEach(k => { if (f.get(k) === undefined) f.set(k, ''); }));
+      kmlLayer.getSource().addFeatures(feats);
+    }
+  } catch(e) { console.error('Load error', e); }
+}
+
+loadFromLocal();
+// HELPER FUNCTIONS FOR LAYER-AWARE GEOPROCESSING
+function getFeatureLayer(feature) {
+  if (!feature) return vectorSource;
+  
+  const fid = feature.getId();
+  if (vectorSource.getFeatureById(fid)) return vectorSource;
+  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
+    for (let layer of window.uploadedLayers) {
+      if (layer && layer.getSource) {
+        const src = layer.getSource();
+        if (src && src.getFeatureById && src.getFeatureById(fid)) {
+          return src;
+        }
+      }
+    }
+  }
+  
+  // Check standard layers
+  if (shapefileLayer.getSource().getFeatureById(fid)) return shapefileLayer.getSource();
+  if (geojsonLayer.getSource().getFeatureById(fid)) return geojsonLayer.getSource();
+  if (kmlLayer.getSource().getFeatureById(fid)) return kmlLayer.getSource();
+  return vectorSource;//default fall back
+}
+
+//Get geometry type from feature
+function getGeometryType(feature) {
+  const geom = feature.getGeometry();
+  if (!geom || !geom.getType) return null;
+  const type = geom.getType();
+  
+  //geometry types
+  if (type === 'Point' || type === 'MultiPoint') return 'Point';
+  if (type === 'LineString' || type === 'MultiLineString') return 'Line';
+  if (type === 'Polygon' || type === 'MultiPolygon') return 'Polygon';
+  
+  return type;
+}
+// GEOPROCESSING FUNCTIONS
+function olFeatureToTurf(olFeature) {
+  const format = new ol.format.GeoJSON();
+  const geom = olFeature.getGeometry();
+  const clonedGeom = geom.clone();
+  const geoJsonGeom = format.writeGeometryObject(clonedGeom, {
+    featureProjection: 'EPSG:3857',
+    dataProjection: 'EPSG:4326'
+  });
+  return turf.feature(geoJsonGeom);
+}
+function convertToKilometers(distance, unit) {
+  const conversions = {
+    'meters': 0.001,
+    'kilometers': 1,
+    'feet': 0.0003048,
+    'miles': 1.60934
+  };
+  return distance * (conversions[unit] || 0.001);
+}
+
+// Convert Open Layer Feature to Turf Feature
+function olFeatureToTurf(olFeature) {
+  const format = new ol.format.GeoJSON();
+  const geom = olFeature.getGeometry();
+  
+  // Clone geometry to avoid 
+  const clonedGeom = geom.clone();
+  
+  const geoJsonGeom = format.writeGeometryObject(clonedGeom, {
+    featureProjection: 'EPSG:3857',
+    dataProjection: 'EPSG:4326'
+  });
+  
+  return turf.feature(geoJsonGeom);
+}
+
+// Helper: Convert Turf Geometry to OL Geometry
+function turfToOlGeometry(turfGeometry) {
+  const format = new ol.format.GeoJSON();
+  return format.readGeometry(turfGeometry, {
+    dataProjection: 'EPSG:4326',
+    featureProjection: 'EPSG:3857'
+  });
+}
+//select features from attribute box
+function getSelectedFeaturesFromTable() {
+  const selected = [];
+  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+  checkboxes.forEach(cb => {
+    const fid = cb.dataset.fid;
+    const feature = findByIdAcrossSources(fid);
+    if (feature) selected.push(feature);
+  });
+  return selected;
+}
+// buffer tools
+document.getElementById("runBuffer").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one feature from the attribute table!');
+    return;
+  }
+
+  const distance = parseFloat(document.getElementById("bufferDistance").value);
+  const unit = document.getElementById("bufferUnit").value;
+  
+  if (!distance || distance <= 0) {
+    alert('Please enter a valid distance!');
+    return;
+  }
+  
+  const distanceInKm = convertToKilometers(distance, unit);
+  
+  let bufferedCount = 0;
+  const bufferedExtents = [];
+  
+  selectedFeatures.forEach(feature => {
+    try {
+      const turfFeature = olFeatureToTurf(feature);
+      const buffered = turf.buffer(turfFeature, distanceInKm, {units: 'kilometers'});
+      
+      if (buffered && buffered.geometry) {
+        const bufferedGeom = turfToOlGeometry(buffered.geometry);
+        
+        const newFeature = new ol.Feature({
+          geometry: bufferedGeom,
+          name: `Buffer_${feature.get('name') || 'Feature'}`,
+          buffer_distance: `${distance} ${unit}`,
+          source_feature: feature.get('name') || feature.getId(),
+          color: randomColor()
+        });
+        
+        newFeature.setId(safeId('buffer'));
+        const sourceLayer = getFeatureLayer(feature);
+        sourceLayer.addFeature(newFeature);
+        bufferedCount++;
+        bufferedExtents.push(bufferedGeom.getExtent());
+      }
+    } catch (err) {
+      console.error('Buffer error:', err);
+      alert('Buffer creation failed: ' + err.message);
+    }
+  });
+  
+  if (bufferedCount > 0) {
+    // for zoom of all buffers
+     if (bufferedExtents.length > 0) {
+      const combinedExtent = bufferedExtents.reduce((acc, extent) => {
+        return ol.extent.extend(acc, extent);
+      });
+      map.getView().fit(combinedExtent, { 
+        padding: [50, 50, 50, 50], 
+        duration: 600,
+        maxZoom: 16
+      });
+    }
+   showTempPopup(`Created ${bufferedCount} buffer zone(s)!`);
+   buildAttributeTable();
+   buildLayersPanel();
+   saveToLocal();
+  } else {
+    alert('Failed to create buffer. Please try again.');
+  }
+};
+//INTERSECT 
+document.getElementById("runIntersect").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length < 2) {
+    alert('Please select at least 2 features to find intersection!');
+    return;
+  }
+  
+  try {
+    // Convert all features to Turf and clean them
+    const turfFeatures = selectedFeatures.map(f => {
+      const tf = olFeatureToTurf(f);
+      try {
+        return turf.cleanCoords(tf);
+      } catch (e) {
+        return tf;
+      }
+    });
+    let intersection = turfFeatures[0];
+    for (let i = 1; i < turfFeatures.length; i++) {
+      try {
+        const result = turf.intersect(
+          turf.featureCollection([intersection, turfFeatures[i]])
+        );
+        
+        if (!result) {
+          // If direct intersect fails, try booleanIntersect
+          const hasIntersection = turf.booleanIntersects(intersection, turfFeatures[i]);
+          if (!hasIntersection) {
+            alert('No intersection found between selected features!');
+            return;
+          }
+          alert('Geometries are too complex. Try simpler features or buffers.');
+          return;
+        }
+        
+        intersection = result;
+      } catch (err) {
+        console.error('Intersect error:', err);
+        alert('Cannot intersect these features: ' + err.message);
+        return;
+      }
+    }
+    
+    // Convert back to OpenLayers geometry
+    const intersectGeom = turfToOlGeometry(intersection.geometry);
+    
+    const newFeature = new ol.Feature({
+      geometry: intersectGeom,
+      name: `Intersection_${Date.now()}`,
+      source_count: selectedFeatures.length,
+      color: '#ff00ff'
+    });
+    
+    newFeature.setId(safeId('intersect'));
+    const sourceLayer = getFeatureLayer(selectedFeatures[0]);
+    sourceLayer.addFeature(newFeature);
+    // Zoom to intersection
+    const extent = intersectGeom.getExtent();
+    map.getView().fit(extent, { 
+      padding: [50, 50, 50, 50], 
+      duration: 600,
+      maxZoom: 16
+    });
+    
+    showTempPopup('Intersection created successfully!');
+    buildAttributeTable();
+    buildLayersPanel();
+    saveToLocal();
+    
+  } catch (err) {
+    console.error('Intersect error:', err);
+    alert('Failed to create intersection: ' + err.message);
+  }
+};
+//DISSOLVE TOOL
+document.getElementById("runDissolve").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length < 2) {
+    alert('Please select at least 2 features to dissolve!');
+    return;
+  }
+  
+  const dissolveField = document.getElementById("dissolveField").value;
+  
+  try {
+    if (dissolveField === '_all_') {
+      // Dissolve all selected features into one using union
+      let dissolved = olFeatureToTurf(selectedFeatures[0]);
+      
+      for (let i = 1; i < selectedFeatures.length; i++) {
+        try {
+          const nextFeature = olFeatureToTurf(selectedFeatures[i]);
+          dissolved = turf.union(turf.featureCollection([dissolved, nextFeature]));
+          
+          if (!dissolved) {
+            alert('Failed to dissolve features. They may not be adjacent.');
+            return;
+          }
+        } catch (err) {
+          console.error('Union error:', err);
+          alert('Dissolve failed: ' + err.message);
+          return;
+        }
+      }
+      
+      // Convert back to OpenLayers
+      const dissolvedGeom = turfToOlGeometry(dissolved.geometry);
+      
+      const newFeature = new ol.Feature({
+        geometry: dissolvedGeom,
+        name: `Dissolved_${selectedFeatures.length}_features`,
+        dissolved_count: selectedFeatures.length,
+        color: randomColor()
+      });
+      
+      newFeature.setId(safeId('dissolve'));
+      const sourceLayer = getFeatureLayer(selectedFeatures[0]);
+      sourceLayer.addFeature(newFeature);
+      // Zoom to result
+      const extent = dissolvedGeom.getExtent();
+      map.getView().fit(extent, {
+        padding: [50, 50, 50, 50],
+        duration: 600,
+        maxZoom: 16
+      });
+      
+      showTempPopup(`Dissolved ${selectedFeatures.length} features into 1!`);
+      buildAttributeTable();
+      buildLayersPanel();
+      saveToLocal();
+      
+    } else {
+      // Group by field value and dissolve each group
+      const groups = {};
+      
+      selectedFeatures.forEach(f => {
+        const val = f.get(dissolveField) || 'null';
+        if (!groups[val]) groups[val] = [];
+        groups[val].push(f);
+      });
+      
+      let dissolvedCount = 0;
+      const allExtents = [];
+      
+      Object.entries(groups).forEach(([value, features]) => {
+        if (features.length < 2) return;
+        
+        try {
+          // Union all features in this group
+          let dissolved = olFeatureToTurf(features[0]);
+          
+          for (let i = 1; i < features.length; i++) {
+            const nextFeature = olFeatureToTurf(features[i]);
+            dissolved = turf.union(turf.featureCollection([dissolved, nextFeature]));
+            
+            if (!dissolved) {
+              console.warn(`Failed to dissolve group: ${value}`);
+              return;
+            }
+          }
+          
+          const dissolvedGeom = turfToOlGeometry(dissolved.geometry);
+          
+          const newFeature = new ol.Feature({
+            geometry: dissolvedGeom,
+            name: `Dissolved_${value}`,
+            [dissolveField]: value,
+            dissolved_count: features.length,
+            color: randomColor()
+          });
+          
+          newFeature.setId(safeId('dissolve'));
+          const sourceLayer = getFeatureLayer(features[0]);
+          sourceLayer.addFeature(newFeature);
+          allExtents.push(dissolvedGeom.getExtent());
+          dissolvedCount++;
+          
+        } catch (err) {
+          console.error(`Dissolve error for ${value}:`, err);
+        }
+      });
+      
+      if (dissolvedCount > 0) {
+        // Zoom to all dissolved features
+        if (allExtents.length > 0) {
+          const combinedExtent = allExtents.reduce((acc, extent) => {
+            return ol.extent.extend(acc, extent);
+          });
+          map.getView().fit(combinedExtent, {
+            padding: [50, 50, 50, 50],
+            duration: 600,
+            maxZoom: 16
+          });
+        }
+        
+        showTempPopup(`Created ${dissolvedCount} dissolved feature(s)!`);
+        buildAttributeTable();
+        buildLayersPanel();
+        saveToLocal();
+      } else {
+        alert('No features to dissolve. Make sure you have 2+ features with same field value.');
+      }
+    }
+    
+  } catch (err) {
+    console.error('Dissolve error:', err);
+    alert('Failed to dissolve features: ' + err.message);
+  }
+};
+
+//DRAGGABLE/RESIZABLE
+(function() {
+  const box = attributeBox;
+  const header = box.querySelector('.box-header');
+  let isDrag = false, offsetX = 0, offsetY = 0;
+  
+  header.addEventListener("mousedown", (e) => {
+    if (e.target.closest('button')) return;
+    isDrag = true;
+    const rect = box.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    box.style.position = "fixed";
+    box.style.zIndex = 99999;
+    document.body.style.userSelect = 'none';
+  });
+  
+  document.addEventListener("mousemove", (e) => {
+    if (!isDrag) return;
+    let left = e.clientX - offsetX;
+    let top = e.clientY - offsetY;
+    const pad = 8;
+    left = Math.max(pad, Math.min(left, window.innerWidth - box.offsetWidth - pad));
+    top = Math.max(pad, Math.min(top, window.innerHeight - box.offsetHeight - pad));
+    box.style.left = left + "px";
+    box.style.top = top + "px";
+    box.style.right = 'auto';
+    box.style.bottom = 'auto';
+  });
+  
+  document.addEventListener("mouseup", () => { isDrag = false; document.body.style.userSelect = ''; });
+
+  // LEFT BOTTOM RESIZER ONLY
+  const resizerLeft = document.createElement("div");
+  resizerLeft.className = "resizer-left";
+  box.appendChild(resizerLeft);
+  
+  let isResizeLeft = false;
+  let startX = 0, startWidth = 0, startLeft = 0;
+  
+  resizerLeft.addEventListener("mousedown", (e) => { 
+    e.preventDefault(); e.stopPropagation(); 
+    isResizeLeft = true;
+    startX = e.clientX;
+    startWidth = box.offsetWidth;
+    startLeft = box.getBoundingClientRect().left;
+    box.style.position = "fixed"; 
+    document.body.style.userSelect = 'none';
+  });
+  
+  document.addEventListener("mousemove", (e) => {
+    if (!isResizeLeft) return;
+    
+    const deltaX = startX - e.clientX;
+    let newW = startWidth + deltaX;
+    let newLeft = startLeft - deltaX;
+    
+    newW = Math.max(400, Math.min(startLeft + startWidth - 10, newW));
+    newLeft = Math.max(10, newLeft);
+    
+    const top = box.getBoundingClientRect().top;
+    let newH = e.clientY - top;
+    newH = Math.max(250, Math.min(window.innerHeight - top - 10, newH));
+    
+    box.style.width = newW + "px";
+    box.style.height = newH + "px";
+    box.style.left = newLeft + "px";
+    box.style.right = 'auto';
+  });
+  
+  document.addEventListener("mouseup", () => { 
+    isResizeLeft = false; 
+    document.body.style.userSelect = ''; 
+  });
+  
+})();
+    // attribute model 
+(function() {
+  const display = document.getElementById('attrTypeDisplay');
+  const optionsContainer = document.getElementById('attrTypeOptions');
+  const wrapper = display?.closest('.custom-select-wrapper');
+  const hiddenInput = document.getElementById('attrType');
+
+  const selectOptionsDiv = document.getElementById('selectOptionsDiv');
+  const dateFormatDiv = document.getElementById('dateFormatDiv');
+  const imageUrlDiv = document.getElementById('imageUrlDiv');
+
+  if (!display || !optionsContainer || !wrapper) return;
+
+  display.onclick = function(e) {
+    e.stopPropagation();
+    wrapper.classList.toggle('open');
+  };
+
+  optionsContainer.querySelectorAll('.custom-option').forEach(option => {
+    option.onclick = function(e) {
+      e.stopPropagation();
+      const value = this.dataset.value;
+      const text = this.textContent;
+
+      display.querySelector('span').textContent = text;
+      hiddenInput.value = value;
+
+      optionsContainer.querySelectorAll('.custom-option')
+        .forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+
+      wrapper.classList.remove('open');
+
+      selectOptionsDiv.style.display = value === 'select' ? 'block' : 'none';
+      dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
+      imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
+    };
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!wrapper.contains(e.target)) {
+      wrapper.classList.remove('open');
+    }
+  });
+})();
+
+// DATABASE CONNECTION FUNCTIONS - COMPLETE WITH COMPACT MODAL STYLING
+const API_BASE = 'http://localhost/gis-map/api';
+
+// Apply compact styling to modals
+function applyCompactModalStyle() {
+  
+  const dbModal = document.querySelector('#dbConnectModal .modal-dialog');
+  if (dbModal) {
+    dbModal.style.maxWidth = '450px';
+    dbModal.style.margin = '1.75rem auto';
+  }
+  
+  const dbModalContent = document.querySelector('#dbConnectModal .modal-content');
+  if (dbModalContent) {
+    dbModalContent.style.borderRadius = '8px';
+    dbModalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+  }
+  
+  const dbHeader = document.querySelector('#dbConnectModal .modal-header');
+  if (dbHeader) {
+    dbHeader.style.padding = '12px 20px';
+    dbHeader.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    dbHeader.style.borderBottom = 'none';
+  }
+  
+  const dbTitle = document.querySelector('#dbConnectModal .modal-title');
+  if (dbTitle) {
+    dbTitle.style.fontSize = '18px';
+    dbTitle.style.fontWeight = '600';
+    dbTitle.style.color = '#fff';
+  }
+  
+  const dbBody = document.querySelector('#dbConnectModal .modal-body');
+  if (dbBody) {
+    dbBody.style.padding = '15px 20px';
+  }
+  
+  const dbFooter = document.querySelector('#dbConnectModal .modal-footer');
+  if (dbFooter) {
+    dbFooter.style.padding = '10px 20px';
+  }
+  
+  // Make all inputs compact
+  document.querySelectorAll('#dbConnectModal .form-control, #dbConnectModal .form-select').forEach(input => {
+    input.style.padding = '6px 10px';
+    input.style.fontSize = '14px';
+    input.style.height = '36px';
+    input.style.borderRadius = '4px';
+  });
+  
+  // Make all labels compact
+  document.querySelectorAll('#dbConnectModal label').forEach(label => {
+    label.style.fontSize = '13px';
+    label.style.fontWeight = '500';
+    label.style.marginBottom = '4px';
+  });
+  
+  // Make buttons compact
+  document.querySelectorAll('#dbConnectModal .btn').forEach(btn => {
+    btn.style.padding = '6px 16px';
+    btn.style.fontSize = '14px';
+    btn.style.borderRadius = '4px';
+  });
+  
+  // Table Select Modal - Compact Size
+  const tableModal = document.querySelector('#tableSelectModal .modal-dialog');
+  if (tableModal) {
+    tableModal.style.maxWidth = '500px';
+  }
+  
+  const tableHeader = document.querySelector('#tableSelectModal .modal-header');
+  if (tableHeader) {
+    tableHeader.style.padding = '12px 20px';
+    tableHeader.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+  }
+  
+  const tableTitle = document.querySelector('#tableSelectModal .modal-title');
+  if (tableTitle) {
+    tableTitle.style.fontSize = '18px';
+    tableTitle.style.color = '#fff';
+  }
+  
+  const tableBody = document.querySelector('#tableSelectModal .modal-body');
+  if (tableBody) {
+    tableBody.style.padding = '15px 20px';
+  }
+  
+  const tableFooter = document.querySelector('#tableSelectModal .modal-footer');
+  if (tableFooter) {
+    tableFooter.style.padding = '10px 20px';
+  }
+  
+  document.querySelectorAll('#tableSelectModal .form-select').forEach(select => {
+    select.style.padding = '6px 10px';
+    select.style.fontSize = '14px';
+    select.style.height = '36px';
+  });
+  
+  document.querySelectorAll('#tableSelectModal label').forEach(label => {
+    label.style.fontSize = '13px';
+    label.style.fontWeight = '500';
+    label.style.marginBottom = '4px';
+  });
+  
+  const columnSelectors = document.getElementById('columnSelectors');
+  if (columnSelectors) {
+    columnSelectors.style.background = '#f8f9fa';
+    columnSelectors.style.padding = '12px';
+    columnSelectors.style.borderRadius = '4px';
+    columnSelectors.style.marginTop = '10px';
+  }
+}
+
+// Apply styles when page loads
+document.addEventListener('DOMContentLoaded', applyCompactModalStyle);
+
+// Connect to Database Button
+document.getElementById('connectDbBtn').onclick = () => {
+  applyCompactModalStyle();
+  const modal = new bootstrap.Modal(document.getElementById('dbConnectModal'));
+  modal.show();
+};
+
+// Auto-fill port based on database type
+document.getElementById('dbType').onchange = (e) => {
+  const port = document.getElementById('dbPort');
+  port.value = e.target.value === 'mysql' ? '3306' : '5432';
+};
+
+// Test Database Connection
+document.getElementById('testDbConnection').onclick = async () => {
+  const statusDiv = document.getElementById('dbStatus');
+  const confirmBtn = document.getElementById('confirmDbConnect');
+  
+  const credentials = {
+    type: document.getElementById('dbType').value,
+    host: document.getElementById('dbHost').value,
+    port: document.getElementById('dbPort').value,
+    database: document.getElementById('dbName').value,
+    username: document.getElementById('dbUsername').value,
+    password: document.getElementById('dbPassword').value
+  };
+  
+  console.log('Testing connection...');
+  
+  statusDiv.style.display = 'block';
+  statusDiv.style.padding = '8px 12px';
+  statusDiv.style.fontSize = '13px';
+  statusDiv.style.borderRadius = '4px';
+  statusDiv.style.marginTop = '10px';
+  statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing connection...';
+  statusDiv.style.background = '#ffc107';
+  statusDiv.style.color = '#000';
+  
+  try {
+    const response = await fetch(`${API_BASE}/db-connect.php`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const result = await response.json();
+    console.log('Connection result:', result);
+    
+    if (result.success) {
+      statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + result.message;
+      statusDiv.style.background = '#28a745';
+      statusDiv.style.color = '#fff';
+      confirmBtn.disabled = false;
+      
+      // Store credentials in window and localStorage
+      const credsToStore = result.data?.credentials || credentials;
+      localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
+      window.dbCredentials = credsToStore;
+      console.log('Credentials stored successfully');
+      
+    } else {
+      statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + result.message;
+      statusDiv.style.background = '#dc3545';
+      statusDiv.style.color = '#fff';
+      confirmBtn.disabled = true;
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    statusDiv.innerHTML = '<i class="fas fa-times-circle"></i> Connection failed: ' + err.message;
+    statusDiv.style.background = '#dc3545';
+    statusDiv.style.color = '#fff';
+    confirmBtn.disabled = true;
+  }
+};
+
+// Confirm Connection and Load Tables
+document.getElementById('confirmDbConnect').onclick = async () => {
+  console.log('Connect & Load Data clicked');
+  
+  try {
+    // Get credentials from window
+    const credentials = window.dbCredentials;
+
+    if (!credentials) {
+      alert('Database credentials missing. Please connect again.');
+      return;
+    }
+
+    // Close modal
+    const connectModal = bootstrap.Modal.getInstance(document.getElementById('dbConnectModal'));
+    if (connectModal) connectModal.hide();
+    
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    console.log('Fetching tables...');
+    
+    const response = await fetch(`${API_BASE}/db-tables.php`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const result = await response.json();
+    console.log('Tables result:', result);
+    
+    if (result.success) {
+      const tableSelect = document.getElementById('dbTableSelect');
+      tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
+      
+      result.data.tables.forEach(table => {
+        const opt = document.createElement('option');
+        opt.value = table.TABLE_NAME;
+        opt.textContent = `${table.TABLE_NAME} (${table.TABLE_ROWS || '?'} rows)`;
+        tableSelect.appendChild(opt);
+      });
+      
+      applyCompactModalStyle(); // Reapply styles for table modal
+      const modal = new bootstrap.Modal(document.getElementById('tableSelectModal'));
+      modal.show();
+      console.log('Table modal opened');
+      
+    } else {
+      alert('Failed to load tables: ' + result.message);
+    }
+    
+  } catch (err) {
+    console.error('Error:', err);
+    alert('Error: ' + err.message + '\n\nCheck console (F12)');
+  }
+};
+
+// Load columns when table is selected
+document.getElementById('dbTableSelect').onchange = async (e) => {
+  const tableName = e.target.value;
+  console.log('Table selected:', tableName);
+  
+  if (!tableName) {
+    document.getElementById('columnSelectors').style.display = 'none';
+    return;
+  }
+  
+  try {
+    // Get credentials from window
+    const credentials = window.dbCredentials;
+
+    if (!credentials) {
+      alert('Database credentials missing. Please connect again.');
+      return;
+    }
+
+    console.log('Fetching columns for table:', tableName);
+
+    const response = await fetch(`${API_BASE}/db-columns.php`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ 
+        ...credentials,
+        table: tableName 
+      })
+    });
+    
+    const result = await response.json();
+    console.log('Columns result:', result);
+    
+    if (result.success) {
+      const latCol = document.getElementById('latColumn');
+      const lngCol = document.getElementById('lngColumn');
+      const nameCol = document.getElementById('nameColumn');
+      
+      latCol.innerHTML = '';
+      lngCol.innerHTML = '';
+      nameCol.innerHTML = '<option value="">-- None --</option>';
+      
+      result.data.columns.forEach(col => {
+        const opt1 = document.createElement('option');
+        opt1.value = col.COLUMN_NAME;
+        opt1.textContent = col.COLUMN_NAME;
+        latCol.appendChild(opt1);
+        
+        const opt2 = document.createElement('option');
+        opt2.value = col.COLUMN_NAME;
+        opt2.textContent = col.COLUMN_NAME;
+        lngCol.appendChild(opt2);
+        
+        const opt3 = document.createElement('option');
+        opt3.value = col.COLUMN_NAME;
+        opt3.textContent = col.COLUMN_NAME;
+        nameCol.appendChild(opt3);
+      });
+      
+      // Auto-select if columns exist
+      if ([...latCol.options].some(opt => opt.value === 'latitude')) latCol.value = 'latitude';
+      if ([...lngCol.options].some(opt => opt.value === 'longitude')) lngCol.value = 'longitude';
+      if ([...nameCol.options].some(opt => opt.value === 'name')) nameCol.value = 'name';
+      
+      document.getElementById('columnSelectors').style.display = 'block';
+      console.log('Columns loaded and auto-selected');
+    }
+  } catch (err) {
+    console.error('Error loading columns:', err);
+    alert('Error loading columns: ' + err.message);
+  }
+};
+
+// Load data from database
+document.getElementById('loadDbData').onclick = async () => {
+  const tableName = document.getElementById('dbTableSelect').value;
+  const latColumn = document.getElementById('latColumn').value;
+  const lngColumn = document.getElementById('lngColumn').value;
+  const nameColumn = document.getElementById('nameColumn').value;
+  
+  console.log('Loading data:', { tableName, latColumn, lngColumn, nameColumn });
+  
+  if (!tableName || !latColumn || !lngColumn) {
+    alert('Please select table and coordinate columns!');
+    return;
+  }
+  
+  // Get credentials from window
+  const credentials = window.dbCredentials;
+  
+  if (!credentials) {
+    alert('Database credentials missing. Please connect again.');
+    return;
+  }
+  
+  const loader = document.getElementById('loader');
+  const loaderText = document.getElementById('loaderText');
+  loader.style.display = 'flex';
+  loaderText.innerText = 'Loading database data...';
+  
+  try {
+    console.log('Fetching data from database...');
+    
+    const response = await fetch(`${API_BASE}/db-fetch-data.php`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        ...credentials,
+        table: tableName,
+        latColumn: latColumn,
+        lngColumn: lngColumn,
+        nameColumn: nameColumn
+      })
+    });
+    
+    const result = await response.json();
+    console.log('Data result:', result);
+    
+    if (result.success) {
+      const features = result.data.rows.map((row, idx) => {
+        const lat = parseFloat(row[latColumn]);
+        const lng = parseFloat(row[lngColumn]);
+        
+        console.log(`Feature ${idx + 1}:`, row[nameColumn] || 'Unnamed', `(${lat}, ${lng})`);
+        
+        const point = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
+        });
+        
+        Object.keys(row).forEach(key => {
+          point.set(key, row[key]);
+        });
+        
+        if (!point.get('color')) point.set('color', randomColor());
+        point.setId(safeId('db'));
+        
+        return point;
+      });
+      
+      const dbLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({ features }),
+        zIndex: 50 + map.getLayers().getLength(),
+        style: featureStyle
+      });
+      
+      dbLayer.set('layerName', `DB: ${tableName}`);
+      dbLayer.set('fileType', 'database');
+      dbLayer.set('featureCount', features.length);
+      
+      map.addLayer(dbLayer);
+      console.log('Layer added to map');
+      
+      if (!window.uploadedLayers) window.uploadedLayers = [];
+      window.uploadedLayers.push(dbLayer);
+      
+      const extent = dbLayer.getSource().getExtent();
+      if (extent && extent.every(v => isFinite(v))) {
+        map.getView().fit(extent, { padding: [50,50,50,50], duration: 700, maxZoom: 16 });
+        console.log('Map fitted to data extent');
+      }
+      
+      bootstrap.Modal.getInstance(document.getElementById('tableSelectModal')).hide();
+      
+      buildAttributeTable();
+      buildLayersPanel();
+      document.getElementById("attributeContainer").style.display = "flex";
+      document.getElementById("layersPanel").style.display = "flex";
+      
+      showTempPopup(`Loaded ${features.length} features from database!`);
+      console.log('Success! Loaded', features.length, 'features from database');
+      
+    } else {
+      alert('Failed to load data: ' + result.message);
+    }
+  } catch (err) {
+    console.error('Error loading data:', err);
+    alert('Error loading data: ' + err.message);
+  } finally {
+    loader.style.display = 'none';
+  }
+};
+// FORCE VISIBLE DROPDOWNS
+document.querySelectorAll('select, select option').forEach(el => {
+  el.style.backgroundColor = '#ffffff';
+  el.style.color = '#000000';
+  el.style.fontSize = '14px';
+});
+
+// highlight selected item
+document.querySelectorAll('select').forEach(sel => {
+  sel.style.border = '1px solid #888';
+  sel.style.borderRadius = '4px';
+});
+
+
+// Ensure modal handlers are set after page loads
+setTimeout(() => {
+  const addAttrBtn = document.getElementById("addAttrBtn");
+  if (addAttrBtn) {
+    addAttrBtn.onclick = () => {
+      document.getElementById('attrName').value = '';
+      document.getElementById('attrType').value = 'text';
+      document.getElementById('selectOptionsDiv').style.display = 'none';
+      
+      let modal = new bootstrap.Modal(document.getElementById('addAttrModal'));
+      modal.show();
+    };
+  }
+}, 500);
+
+
+buildAttributeTable();
+</script>
+</body>
+</html>
