@@ -1565,6 +1565,88 @@ html, body {
     localStorage.removeItem("savedFeatures");
 });
   document.getElementById('year').innerText = new Date().getFullYear();
+// Validate date format (YYYY-MM-DD)
+function isValidDate(dateString) {
+  if (!dateString) return false;
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!regex.test(dateString)) return false;
+  
+  const date = new Date(dateString);
+  const timestamp = date.getTime();
+  
+  if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) return false;
+  
+  // Check date
+  const year = date.getFullYear();
+  if (year < 1900 || year > 2100) return false;
+  
+  return dateString === date.toISOString().split('T')[0];
+}
+
+// Validate number (integer or float)
+function isValidNumber(value) {
+  if (value === '' || value === null || value === undefined) return false;
+  const num = parseFloat(value);
+  return !isNaN(num) && isFinite(num);
+}
+
+// Validate URL format
+function isValidURL(url) {
+  if (!url) return false;
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+  } catch (e) {
+    return false;
+  }
+}
+
+// Validate text length
+function isValidTextLength(text, minLen = 1, maxLen = 500) {
+  if (!text) return false;
+  const len = text.trim().length;
+  return len >= minLen && len <= maxLen;
+}
+
+// Show validation error
+function showValidationError(inputElement, message) {
+  if (!inputElement) return;
+  
+  inputElement.classList.add('error');
+  inputElement.classList.remove('success');
+  
+  // Remove existing error
+  const existingError = inputElement.parentElement.querySelector('.validation-error');
+  if (existingError) existingError.remove();
+  
+  // Add error message
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'validation-error';
+  errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+  inputElement.parentElement.appendChild(errorDiv);
+}
+
+// Clear validation error
+function clearValidationError(inputElement) {
+  if (!inputElement) return;
+  
+  inputElement.classList.remove('error');
+  inputElement.classList.add('success');
+  
+  const existingError = inputElement.parentElement.querySelector('.validation-error');
+  if (existingError) existingError.remove();
+  
+  // Remove success class after 2 seconds
+  setTimeout(() => {
+    inputElement.classList.remove('success');
+  }, 2000);
+}
+
+function sanitizeText(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 //MAP INITIALIZATION
 // Base Layers with updated URLs
@@ -2279,7 +2361,7 @@ const ROWS_PER_PAGE = 100;
     const paginationDiv = document.createElement('div');
     paginationDiv.style.cssText = 'padding:10px; background:rgba(0,229,255,0.15); border-radius:6px; margin-bottom:10px; text-align:center; color:#00e5ff; font-weight:500;';
     paginationDiv.innerHTML = `
-      📊 Showing ${startIdx + 1}-${endIdx} of ${feats.length} features | 
+       Showing ${startIdx + 1}-${endIdx} of ${feats.length} features | 
       <button style="margin:0 5px; padding:4px 12px; background:#0d6efd; color:white; border:none; border-radius:4px; cursor:pointer;" 
         onclick="window.attrTablePage=Math.max(0,${window.attrTablePage}-1); buildAttributeTable();" 
         ${window.attrTablePage === 0 ? 'disabled' : ''}>◀ Previous</button>
@@ -2332,52 +2414,161 @@ const ROWS_PER_PAGE = 100;
     tr.appendChild(tdCheck);
 
     keys.forEach(col => {
-      const td = document.createElement("td");
-      let val = f.get(col);
-      if (typeof val === "object") val = JSON.stringify(val);
+  const td = document.createElement("td");
+  let val = f.get(col);
+  if (typeof val === "object") val = JSON.stringify(val);
+  let type = attributeTypes[col] || "text";
+  
+  if (!attributeTypes[col]) {
+    if (col.toLowerCase().includes("date")) type = "date";
+    else if (!isNaN(val) && val !== "" && val !== null) type = "number";
+    else if (val === true || val === false) type = "checkbox";
+  }
 
-      let type = "text";
-      if (col.toLowerCase().includes("date")) type = "date";
-      else if (!isNaN(val) && val !== "" && val !== null) type = "number";
-      else if (val === true || val === false) type = "checkbox";
+  let input = document.createElement("input");
+  input.classList.add("attr-input");
 
-      let input = document.createElement("input");
-      input.classList.add("attr-input");
-
-      if (type === "date") {
-        input.type = "date";
-        input.value = val ? new Date(val).toISOString().split("T")[0] : "";
-        input.onchange = () => f.set(col, input.value);
+  //  DATE INPUT WITH VALIDATION
+  if (type === "date") {
+    input.type = "date";
+    input.setAttribute('max', '2100-12-31');
+    input.setAttribute('min', '1900-01-01');
+    
+    if (val && isValidDate(val)) {
+      input.value = val;
+    } else if (val) {
+      try {
+        const date = new Date(val);
+        if (!isNaN(date.getTime())) {
+          input.value = date.toISOString().split("T")[0];
+        }
+      } catch (e) {
+        input.value = "";
       }
-
-      else if (type === "number") {
-        input.type = "number";
-        input.value = val ?? "";
-        input.oninput = () => {
-          if (input.value === "" || isNaN(input.value)) input.style.border = "2px solid red";
-          else { input.style.border = ""; f.set(col, Number(input.value)); }
-        };
+    }
+    
+    input.onchange = () => {
+      if (input.value && !isValidDate(input.value)) {
+        input.style.border = "2px solid #dc3545";
+        input.style.background = "#ffe6e6";
+        input.value = "";
+        showTempPopup("Invalid date format (YYYY-MM-DD)");
+      } else {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, input.value);
       }
+    };
+  }
 
-      else if (type === "checkbox") {
-        input = document.createElement("input");
-        input.type = "checkbox";
-        input.checked = !!val;
-        input.onchange = () => f.set(col, input.checked);
+  // NUMBER INPUT WITH VALIDATION
+  else if (type === "number") {
+    input.type = "number";
+    input.step = "any";
+    input.setAttribute('inputmode', 'decimal');
+    
+    if (val !== null && val !== undefined && val !== '') {
+      if (isValidNumber(val)) {
+        input.value = val;
+      } else {
+        input.value = "";
       }
-
-      else {
-        input.type = "text";
-        input.value = val ?? "";
-        input.oninput = () => {
-          if (input.value.trim() === "") input.style.border = "2px solid red";
-          else { input.style.border = ""; f.set(col, input.value); }
-        };
+    }
+    
+    input.oninput = () => {
+      const value = input.value.trim();
+      
+      if (value === '') {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, null);
+      } else if (!isValidNumber(value)) {
+        input.style.border = "2px solid #dc3545";
+        input.style.background = "#ffe6e6";
+      } else {
+        input.style.border = "2px solid #28a745";
+        input.style.background = "";
+        f.set(col, parseFloat(value));
+        
+        setTimeout(() => {
+          input.style.border = "";
+        }, 1000);
       }
+    };
+    
+    // Prevent non-numeric characters
+    input.onkeypress = (e) => {
+      const char = String.fromCharCode(e.which);
+      if (!/[\d.\-]/.test(char)) {
+        e.preventDefault();
+      }
+    };
+  }
 
-      td.appendChild(input);
-      tr.appendChild(td);
-    });
+  // CHECKBOX with 
+  // HANDLING
+  else if (type === "checkbox") {
+    input = document.createElement("input");
+    input.type = "checkbox";
+    input.classList.add('form-check-input');
+    input.style.width = '20px';
+    input.style.height = '20px';
+    input.style.cursor = 'pointer';
+    
+    // Properly handle boolean values
+    if (typeof val === 'boolean') {
+      input.checked = val;
+    } else if (typeof val === 'string') {
+      input.checked = (val.toLowerCase() === 'true' || val === '1' || val === 'yes');
+    } else if (typeof val === 'number') {
+      input.checked = val !== 0;
+    } else {
+      input.checked = !!val;
+    }
+    
+    // Always store as proper boolean
+    input.onchange = () => {
+      f.set(col, input.checked); // Boolean value
+    };
+  }
+
+  // TEXT INPUT WITH LENGTH VALIDATION
+  else {
+    input.type = "text";
+    input.maxLength = 500;
+    input.value = val ?? "";
+    
+    input.oninput = () => {
+      const value = input.value;
+      
+      if (value.length > 500) {
+        input.style.border = "2px solid #dc3545";
+        input.value = value.substring(0, 500);
+        showTempPopup(" Max 500 characters allowed");
+        return;
+      }
+      
+      if (value.trim() === "") {
+        input.style.border = "1px solid #ffc107";
+        input.style.background = "#fff9e6";
+      } else {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, sanitizeText(value));
+      }
+    };
+    
+    input.onfocus = () => {
+      if (input.value.trim() === "") {
+        input.style.border = "";
+        input.style.background = "";
+      }
+    };
+  }
+
+  td.appendChild(input);
+  tr.appendChild(td);
+});
 
     const actionTd = document.createElement("td");
     actionTd.innerHTML = `
@@ -2663,7 +2854,7 @@ document.getElementById("centerSelectedBtn").onclick = () => {
   a.remove();
   URL.revokeObjectURL(url);
   
-  showTempPopup(`✅ Exported ${allFeatures.length} feature(s)!`);
+  showTempPopup(`Exported ${allFeatures.length} feature(s)!`);
 }; 
 /*DRAW / MODIFY*/
 let drawInteraction = null;
@@ -2762,7 +2953,7 @@ document.getElementById('exportDrawing').onclick = () => {
   a.remove();
   URL.revokeObjectURL(url);
   
-  showTempPopup(`✅ Exported ${drawnFeatures.length} drawn feature(s)!`);
+  showTempPopup(`Exported ${drawnFeatures.length} drawn feature(s)!`);
 };
 /*   LOCAL STORAGE           */
 
@@ -3987,14 +4178,190 @@ setTimeout(() => {
       document.getElementById('attrName').value = '';
       document.getElementById('attrType').value = 'text';
       document.getElementById('selectOptionsDiv').style.display = 'none';
+      document.getElementById('dateFormatDiv').style.display = 'none';
+      document.getElementById('imageUrlDiv').style.display = 'none';
+      
+      // Clear any existing errors
+      document.querySelectorAll('.validation-error').forEach(el => el.remove());
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
       
       let modal = new bootstrap.Modal(document.getElementById('addAttrModal'));
       modal.show();
     };
   }
+  
+  // ADD ATTRIBUTE VALIDATION
+  const confirmBtn = document.getElementById("confirmAddAttr");
+  if (confirmBtn) {
+    confirmBtn.onclick = () => {
+      const attrName = document.getElementById('attrName').value.trim();
+      const attrType = document.getElementById('attrType').value;
+      const attrNameInput = document.getElementById('attrName');
+      
+      // Clear previous errors
+      document.querySelectorAll('.validation-error').forEach(el => el.remove());
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      
+      let isValid = true;
+      
+      // Check attribute name exists
+      if (!attrName) {
+        showValidationError(attrNameInput, 'Attribute name is required');
+        isValid = false;
+      }
+      // Check name length (3-50 characters)
+      else if (attrName.length < 3 || attrName.length > 50) {
+        showValidationError(attrNameInput, 'Name must be 3-50 characters');
+        isValid = false;
+      }
+      // Check valid characters (alphanumeric and underscore only, must start with letter)
+      else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(attrName)) {
+        showValidationError(attrNameInput, 'Must start with letter, only letters/numbers/_');
+        isValid = false;
+      }
+      // Check for duplicates
+      else if (customAttributes.includes(attrName)) {
+        showValidationError(attrNameInput, 'Attribute name already exists');
+        isValid = false;
+      }
+      // Check reserved keywords
+      else {
+        const reservedWords = ['geometry', 'id', 'color', 'name', 'type', 'layer', 'feature'];
+        if (reservedWords.includes(attrName.toLowerCase())) {
+          showValidationError(attrNameInput, 'This is a reserved keyword');
+          isValid = false;
+        }
+      }
+      
+      //  Validate select options if dropdown type
+      if (attrType === 'select') {
+        const selectOptionsInput = document.getElementById('selectOptions');
+        const options = selectOptionsInput.value.trim();
+        
+        if (!options) {
+          showValidationError(selectOptionsInput, 'Options are required for dropdown');
+          isValid = false;
+        } else {
+          const optionsList = options.split(',').map(o => o.trim()).filter(o => o);
+          if (optionsList.length < 2) {
+            showValidationError(selectOptionsInput, 'At least 2 options required');
+            isValid = false;
+          } else {
+            clearValidationError(selectOptionsInput);
+          }
+        }
+      }
+      
+      //  Validate image URL if image type
+      if (attrType === 'image') {
+        const imageUrlInput = document.getElementById('imageUrl');
+        const imageUrl = imageUrlInput.value.trim();
+        
+        if (imageUrl && !isValidURL(imageUrl)) {
+          showValidationError(imageUrlInput, 'Invalid URL format (must start with http:// or https://)');
+          isValid = false;
+        } else if (imageUrl) {
+          clearValidationError(imageUrlInput);
+        }
+      }
+      
+      // If validation failed, stop here
+      if (!isValid) {
+        return;
+      }
+      
+      // validations passed
+      clearValidationError(attrNameInput);
+      
+      customAttributes.push(attrName);
+      attributeTypes[attrName] = attrType;
+      
+      try {
+        localStorage.setItem('customAttributes', JSON.stringify(customAttributes));
+        localStorage.setItem('attributeTypes', JSON.stringify(attributeTypes));
+      } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+        showTempPopup('Failed to save attribute');
+        return;
+      }
+      
+      const allFeatures = getAllFeatures();
+      allFeatures.forEach(f => {
+        if (f.get(attrName) === undefined) {
+          if (attrType === 'checkbox') {
+            f.set(attrName, false);
+          } else if (attrType === 'number') {
+            f.set(attrName, 0);
+          } else {
+            f.set(attrName, '');
+          }
+        }
+      });
+      
+      buildAttributeTable();
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
+      if (modal) modal.hide();
+      
+      showTempPopup(` Attribute "${attrName}" added successfully!`);
+    };
+  }
 }, 500);
 
+document.getElementById('attrName')?.addEventListener('input', function() {
+  const value = this.value.trim();
+  
+  if (!value) {
+    clearValidationError(this);
+    return;
+  }
+  
+  if (value.length < 3) {
+    showValidationError(this, 'Min 3 characters');
+  } else if (value.length > 50) {
+    showValidationError(this, 'Max 50 characters');
+  } else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+    showValidationError(this, 'Must start with letter');
+  } else if (customAttributes.includes(value)) {
+    showValidationError(this, 'Already exists');
+  } else {
+    clearValidationError(this);
+  }
+});
 
+// Real-time validation for select options
+document.getElementById('selectOptions')?.addEventListener('input', function() {
+  const options = this.value.trim();
+  
+  if (!options) {
+    clearValidationError(this);
+    return;
+  }
+  
+  const optionsList = options.split(',').map(o => o.trim()).filter(o => o);
+  
+  if (optionsList.length < 2) {
+    showValidationError(this, 'Need at least 2 options');
+  } else {
+    clearValidationError(this);
+  }
+});
+
+// Real-time validation for image URL
+document.getElementById('imageUrl')?.addEventListener('input', function() {
+  const url = this.value.trim();
+  
+  if (!url) {
+    clearValidationError(this);
+    return;
+  }
+  
+  if (!isValidURL(url)) {
+    showValidationError(this, 'Invalid URL');
+  } else {
+    clearValidationError(this);
+  }
+});
 buildAttributeTable();
 </script>
 </body>
