@@ -166,7 +166,7 @@ html, body {
     border-color: #e40813; 
 }
 
-.upload-section, .basemap-group { 
+.upload-section{ 
     display: flex; 
     flex-direction: column; 
     gap: 4px; 
@@ -174,6 +174,7 @@ html, body {
 /* Attribute Box */
 .attribute-box { 
   display: none; 
+  
   position: fixed; 
   bottom: 50px; 
   right: 15px; 
@@ -414,7 +415,7 @@ html, body {
 .editor-btn.active { 
   background: #198754; 
 }
-/* Geoprocessing Box*/
+/* Geoprocessing Box - Enhanced */
 .geoprocessing-box {
   position: fixed;
   top: 120px;
@@ -429,7 +430,22 @@ html, body {
   display: none;
   flex-direction: column;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  overflow-y: auto;
+  overflow: hidden;
+  resize: both;
+  min-width: 280px;
+  min-height: 200px;
+}
+
+.geoprocessing-box.minimized {
+  height: 50px !important;
+  max-height: 50px !important;
+  overflow: hidden;
+  resize: none;
+}
+
+.geoprocessing-box.minimized .geo-main-buttons,
+.geoprocessing-box.minimized .geo-tool-details {
+  display: none !important;
 }
 
 .geoprocessing-box .box-header {
@@ -438,9 +454,10 @@ html, body {
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  cursor: grab;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  cursor: move;
 }
+
 .geoprocessing-box .box-header:active {
   cursor: grabbing;
 }
@@ -450,8 +467,12 @@ html, body {
   font-size: 16px;
   color: #00e5ff;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-/*buttons*/
+
+/* Main Buttons */
 .geo-main-buttons {
   display: flex;
   gap: 8px;
@@ -460,12 +481,12 @@ html, body {
 }
 
 .geo-main-btn {
-  width: 48px;
-  height: 48px;
+  width: 70px;
+  height: 70px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,7 +505,7 @@ html, body {
 .geo-main-btn.intersect-btn { background: #fd7e14; }
 .geo-main-btn.dissolve-btn { background: #6f42c1; }
 
-/* Tool Details Section*/
+/* Tool Details Section */
 .geo-tool-details {
   display: none;
   margin-top: 0;
@@ -508,6 +529,7 @@ html, body {
   color: #fff;
   margin: 0 0 15px 0;
 }
+
 .geo-input-group {
   display: flex;
   flex-direction: column;
@@ -539,11 +561,11 @@ html, body {
 
 .geo-btn {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: white;
   transition: all 0.2s;
@@ -583,20 +605,185 @@ html, body {
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  color: #6c757d;
-  background: white;
+  color: #fff;
+  background: #6c757d;
   transition: all 0.2s;
   margin-top: 8px;
 }
 
 .geo-back-btn:hover {
-  background: #6c757d;
+  background: #5a6268;
   color: white;
 }
 
 .geo-back-btn i {
   margin-right: 5px;
 }
+/* Basemap Selector Box */
+.basemap-box {
+  position: fixed;
+  top: 120px;
+  right: 15px;
+  width: 280px;
+  background: rgba(26, 26, 26, 0.98);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 400;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.basemap-box .box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  cursor: grab;
+}
+
+.basemap-box .box-header:active {
+  cursor: grabbing;
+}
+
+.basemap-box h6 {
+  margin: 0;
+  font-size: 16px;
+  color: #00e5ff;
+  font-weight: 600;
+}
+
+.basemap-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.basemap-option {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 20px 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.basemap-option:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(0,229,255,0.5);
+  transform: translateY(-2px);
+}
+
+.basemap-option.active {
+  background: rgba(0,229,255,0.2);
+  border-color: #00e5ff;
+  box-shadow: 0 0 15px rgba(0,229,255,0.3);
+}
+
+.basemap-option i {
+  font-size: 32px;
+  color: #00e5ff;
+}
+
+.basemap-option span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Upload Files Box */
+.upload-box {
+  position: fixed;
+  top: 120px;
+  left: 280px;
+  width: 300px;
+  background: rgba(26, 26, 26, 0.98);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 400;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.upload-box .box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  cursor: grab;
+}
+
+.upload-box .box-header:active {
+  cursor: grabbing;
+}
+
+.upload-box h6 {
+  margin: 0;
+  font-size: 16px;
+  color: #00e5ff;
+  font-weight: 600;
+}
+
+.upload-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-option {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.upload-option:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  border-color: rgba(0,229,255,0.5);
+  transform: translateX(5px);
+}
+
+.upload-option i {
+  font-size: 28px;
+  color: #00e5ff;
+  width: 40px;
+  text-align: center;
+}
+
+.upload-option-text {
+  flex: 1;
+}
+
+.upload-option-text strong {
+  display: block;
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.upload-option-text small {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+
 
 /* Search */
 .search-bar { 
@@ -1005,7 +1192,6 @@ html, body {
   background: rgba(0,229,255,0.3);
   color: #00e5ff;
 }
-
 /* LAYERS PANEL STYLES */
 .layers-panel {
   position: fixed;
@@ -1163,6 +1349,37 @@ html, body {
   min-width: 35px;
   text-align: right;
 } 
+
+/* Enhanced warning popup */
+.popup.warning {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 20px 30px !important;
+  border-radius: 12px !important;
+  border: 3px solid #fff !important;
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.6) !important;
+  max-width: 400px !important;
+  text-align: center !important;
+  line-height: 1.6 !important;
+  animation: warningPulse 0.5s ease-out !important;
+}
+
+@keyframes warningPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1190,43 +1407,25 @@ html, body {
 
 <!-- DRAWER -->
 <div id="drawer" class="drawer">
+
+  <button id="homeBtn" class="drawer-toggle" title="Home" style="margin-bottom: 8px;">
+    <i class="fas fa-home"></i>
+  </button>
+
   <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
   <div class="drawer-content">
-    <button id="homeBtn" class="icon-btn" title="Home">
-      <i class="fas fa-home"></i> 
+
+    <hr>
+    <button id="toggleBasemaps" class="icon-btn" title="Basemap Viewer">
+    <i class="fas fa-map"></i>
+    <span>Basemaps</span>
     </button>
     <hr>
-    <div class="upload-section">
-      <button id="uploadShpBtn" class="icon-btn" title="Upload Shapefile">
-        <i class="fas fa-file-zipper"></i>
-      </button>
-      <button id="uploadGeoJsonBtn" class="icon-btn" title="Upload GeoJSON">
-        <i class="fas fa-file-code"></i> 
-      </button>
-      <button id="uploadKmlBtn" class="icon-btn" title="Upload KML">
-        <i class="fas fa-map-pin"></i> 
-      </button>
-      
-     <input type="file" id="fileInput" style="display:none" multiple>
+    <button id="toggleUpload" class="icon-btn" title="Upload Files">
+    <i class="fas fa-upload"></i>
+    <span>Upload Files</span>
+    </button>
 
-
-
-    </div>
-    <hr>
-    <div class="basemap-group">
-      <button id="osmBtn" class="icon-btn active" title="OpenStreetMap">
-        <i class="fas fa-globe"></i>
-      </button>
-      <button id="topoBtn" class="icon-btn" title="Topographic">
-        <i class="fas fa-mountain"></i> 
-      </button>
-      <button id="cartoBtn" class="icon-btn" title="Light Map">
-        <i class="fas fa-map-marked"></i> 
-      </button>
-      <button id="esriBtn" class="icon-btn" title="Satellite">
-        <i class="fas fa-satellite"></i> 
-      </button>
-    </div>
     <hr>
     <button id="toggleAttributes" class="icon-btn" title="Attributes">
       <i class="fas fa-table"></i>
@@ -1304,17 +1503,21 @@ html, body {
     <button id="exportDrawing" class="editor-btn" title="Export Drawing Only"><i class="fas fa-download"></i></button>
   </div>
 </div>
-
 <!-- GEOPROCESSING BOX -->
 <div id="geoprocessingContainer" class="geoprocessing-box">
-  <div class="box-header">
-    <h6>Geoprocessing Tools</h6>
-    <button id="closeGeoprocessing" class="attr-small-btn" style="color:#333;" title="Close">
-      <i class="fas fa-times"></i>
-    </button>
+  <div class="box-header" id="geoprocessingHeader">
+    <h6><i class="fas fa-project-diagram"></i> Geoprocessing Tools</h6>
+    <div>
+      <button id="minimizeGeoprocessing" class="attr-small-btn" title="Minimize">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button id="closeGeoprocessing" class="attr-small-btn" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
 
- <!-- MAIN 3 BUTTONS -->
+  <!-- MAIN 3 BUTTONS -->
   <div class="geo-main-buttons" id="geoMainButtons">
     <button class="geo-main-btn buffer-btn" id="showBufferTool" title="Buffer">
       <i class="fas fa-circle-notch"></i>
@@ -1327,7 +1530,7 @@ html, body {
     </button>
   </div>
 
-  <!-- BUFFER DETAILS  -->
+  <!-- BUFFER DETAILS -->
   <div id="bufferDetails" class="geo-tool-details">
     <h6><i class="fas fa-circle-notch"></i> Buffer Tool</h6>
     <p>Create a buffer zone around selected features</p>
@@ -1350,12 +1553,12 @@ html, body {
     <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
   </div>
 
-  <!-- INTERSECT DETAILS  -->
+  <!-- INTERSECT DETAILS -->
   <div id="intersectDetails" class="geo-tool-details">
     <h6><i class="fas fa-compress-arrows-alt"></i> Intersect Tool</h6>
     <p>Find the overlapping area between 2+ features</p>
     <p style="font-size:11px; color:#28a745; background:#d4edda; padding:6px; border-radius:4px;">
-      Select 2+ overlapping features from attribute table first
+      ✅ Select 2+ overlapping features from attribute table first
     </p>
     <button id="runIntersect" class="geo-btn geo-btn-intersect">
       <i class="fas fa-play"></i> Find Intersection
@@ -1378,8 +1581,80 @@ html, body {
     </button>
     <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
   </div>
+  
+  <!-- RESIZE HANDLE -->
+  <div class="resizer-left"></div>
 </div>
- 
+
+<!-- BASEMAP SELECTOR BOX -->
+<div id="basemapContainer" class="basemap-box">
+  <div class="box-header">
+    <h6><i class="fas fa-map"></i> Select Basemap</h6>
+    <button id="closeBasemaps" class="attr-small-btn" title="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="basemap-options">
+    <div class="basemap-option active" data-basemap="osm">
+      <i class="fas fa-globe"></i>
+      <span>OpenStreetMap</span>
+    </div>
+    
+    <div class="basemap-option" data-basemap="topo">
+      <i class="fas fa-mountain"></i>
+      <span>Topographic</span>
+    </div>
+    
+    <div class="basemap-option" data-basemap="carto">
+      <i class="fas fa-map-marked"></i>
+      <span>Light Map</span>
+    </div>
+    
+    <div class="basemap-option" data-basemap="esri">
+      <i class="fas fa-satellite"></i>
+      <span>Satellite</span>
+    </div>
+  </div>
+</div>
+ <!-- UPLOAD FILES BOX -->
+<div id="uploadContainer" class="upload-box">
+  <div class="box-header">
+    <h6><i class="fas fa-upload"></i> Upload Files</h6>
+    <button id="closeUpload" class="attr-small-btn" title="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="upload-options">
+    <div class="upload-option" data-upload="shapefile">
+      <i class="fas fa-file-zipper"></i>
+      <div class="upload-option-text">
+        <strong>Shapefile</strong>
+        <small>Upload .zip containing .shp files</small>
+      </div>
+    </div>
+    
+    <div class="upload-option" data-upload="geojson">
+      <i class="fas fa-file-code"></i>
+      <div class="upload-option-text">
+        <strong>GeoJSON</strong>
+        <small>Upload .geojson or .json files</small>
+      </div>
+    </div>
+    
+    <div class="upload-option" data-upload="kml">
+      <i class="fas fa-map-pin"></i>
+      <div class="upload-option-text">
+        <strong>KML</strong>
+        <small>Upload .kml files</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Keep file input -->
+<input type="file" id="fileInput" style="display:none" multiple>
 <!-- DATABASE CONNECTION MODAL -->
 <div class="modal fade" id="dbConnectModal" tabindex="-1">
   <div class="modal-dialog">
@@ -1477,7 +1752,7 @@ html, body {
 <div class="zoom-controls">
   <button id="zoomIn" class="zoom-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
   <button id="zoomOut" class="zoom-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
-  <button id="locationBtn" class="zoom-btn" title="My Location"><i class="fas fa-location-arrow"></i></button>
+  <button id="locationBtn" class="zoom-btn" title="My Location"><i class="fas fa-crosshairs"></i></button>
 </div>
 
 <!-- SEARCH -->
@@ -1773,10 +2048,27 @@ function openPopupForFeature(f) {
 function hidePopup() { popup.style.display = 'none'; overlay.setPosition(undefined); }
 
 function showTempPopup(msg, dur=2500) {
-  popup.innerText = msg; popup.style.display = 'block'; popup.style.position = 'fixed';
-  popup.style.top = '50%'; popup.style.left = '50%'; popup.style.transform = 'translate(-50%,-50%)'; popup.style.zIndex = '99999';
-  setTimeout(()=>{ popup.style.display='none'; popup.style.position='absolute'; popup.style.transform='none'; }, dur);
+  popup.innerText = msg; 
+  popup.style.display = 'block'; 
+  popup.style.position = 'fixed';
+  popup.style.top = '50%'; 
+  popup.style.left = '50%'; 
+  popup.style.transform = 'translate(-50%,-50%)'; 
+  popup.style.zIndex = '99999';
+  
+  // Add warning styling if message contains warning emoji
+  if (msg.includes('⚠️') || msg.toLowerCase().includes('no features') || msg.toLowerCase().includes('no layers')) {
+    popup.classList.add('warning');
+  }
+  
+  setTimeout(() => { 
+    popup.style.display = 'none'; 
+    popup.style.position = 'absolute'; 
+    popup.style.transform = 'none';
+    popup.classList.remove('warning');
+  }, dur);
 }
+
 //ELEMENTS & CONTROLS
 const drawerToggle = document.getElementById("drawerToggle");
 const drawerContent = document.querySelector(".drawer-content");
@@ -1793,10 +2085,40 @@ drawerToggle.onclick = () => {
 };
 
 document.getElementById("toggleAttributes").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
   const isVis = attributeBox.style.display === "flex";
-  if (isVis) attributeBox.style.display = "none"; else { buildAttributeTable(); attributeBox.style.display = "flex"; }
+  
+  if (isVis) {
+    attributeBox.style.display = "none";
+  } else {
+    const allFeatures = getAllFeatures();
+    
+    if (allFeatures.length === 0) {
+      alert('No features available! Upload a file or draw features first.');
+      return;
+    }
+    
+    buildAttributeTable();
+    attributeBox.style.display = "flex";
+  }
 };
+
+document.getElementById("toggleLayers").onclick = () => {
+  const layersPanel = document.getElementById("layersPanel");
+  const isVis = layersPanel.style.display === "flex";
+  
+  if (isVis) {
+    layersPanel.style.display = "none";
+  } else {
+    if (!window.uploadedLayers || window.uploadedLayers.length === 0) {
+      alert('No layers available! Upload Shapefile, GeoJSON, or KML files first.');
+      return;
+    }
+    
+    buildLayersPanel();
+    layersPanel.style.display = "flex";
+  }
+};
+
 document.getElementById("toggleEditor").onclick = () => {
   if (drawerContent.style.display !== "flex") return;
   const geoBox = document.getElementById("geoprocessingContainer");
@@ -1813,35 +2135,30 @@ document.getElementById("toggleGeoprocessing").onclick = () => {
     geoBox.style.display = "none";
   } else {
     geoBox.style.display = "flex";
-    if (!geoBox.style.left || geoBox.style.left === 'auto') {
-      geoBox.style.top = "120px";
-      geoBox.style.left = "50%";
-      geoBox.style.transform = "translateX(-50%)";
-      geoBox.style.right = "auto";
-    }
     document.getElementById("geoMainButtons").style.display = "flex";
     document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
   }
 };
+
+// SHOW BUFFER TOOL
 document.getElementById("showBufferTool").onclick = () => {
   document.getElementById("geoMainButtons").style.display = "none";
   document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
   document.getElementById("bufferDetails").style.display = "block";
-  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
 };
 
+// SHOW INTERSECT TOOL
 document.getElementById("showIntersectTool").onclick = () => {
   document.getElementById("geoMainButtons").style.display = "none";
   document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
   document.getElementById("intersectDetails").style.display = "block";
-  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
 };
 
+// SHOW DISSOLVE TOOL
 document.getElementById("showDissolveTool").onclick = () => {
   document.getElementById("geoMainButtons").style.display = "none";
   document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
   document.getElementById("dissolveDetails").style.display = "block";
-  document.querySelector(".geoprocessing-box .box-header").style.display = "none";
   
   // Populate dissolve field dropdown
   const dissolveField = document.getElementById("dissolveField");
@@ -1863,30 +2180,13 @@ document.getElementById("showDissolveTool").onclick = () => {
   }
 };
 
-// Back buttons
+// BACK BUTTONS - Return to main menu
 document.querySelectorAll(".geo-back-btn").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
     document.getElementById("geoMainButtons").style.display = "flex";
-    document.querySelector(".geoprocessing-box .box-header").style.display = "flex";
   };
 });
-
-document.getElementById("closeGeoprocessing").onclick = () => {
-  document.getElementById("geoprocessingContainer").style.display = "none";
-};
-
-document.getElementById("toggleLayers").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
-  const layersPanel = document.getElementById("layersPanel");
-  const isVis = layersPanel.style.display === "flex";
-  if (isVis) {
-    layersPanel.style.display = "none";
-  } else {
-    buildLayersPanel();
-    layersPanel.style.display = "flex";
-  }
-};
 
 document.getElementById("closeLayersPanel").onclick = () => {
   document.getElementById("layersPanel").style.display = "none";
@@ -1910,10 +2210,102 @@ function setBase(layer) {
   document.querySelectorAll('.basemap-group .icon-btn').forEach(b => b.classList.remove('active'));
 }
 
-document.getElementById("osmBtn").onclick = () => { setBase(osmLayer); document.getElementById("osmBtn").classList.add('active'); };
-document.getElementById("topoBtn").onclick = () => { setBase(topoLayer); document.getElementById("topoBtn").classList.add('active'); };
-document.getElementById("cartoBtn").onclick = () => { setBase(cartoLayer); document.getElementById("cartoBtn").classList.add('active'); };
-document.getElementById("esriBtn").onclick = () => { setBase(esriLayer); document.getElementById("esriBtn").classList.add('active'); };
+// Toggle Basemap Selector
+document.getElementById("toggleBasemaps").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const basemapBox = document.getElementById("basemapContainer");
+  const isVisible = basemapBox.style.display === "flex";
+  
+  if (isVisible) {
+    basemapBox.style.display = "none";
+  } else {
+    basemapBox.style.display = "flex";
+    // Close other boxes
+    document.getElementById("geoprocessingContainer").style.display = "none";
+    document.getElementById("editorContainer").style.display = "none";
+  }
+};
+
+// Close Basemap Box
+document.getElementById("closeBasemaps").onclick = () => {
+  document.getElementById("basemapContainer").style.display = "none";
+};
+
+// Basemap Selection
+document.querySelectorAll('.basemap-option').forEach(option => {
+  option.onclick = function() {
+    const basemapType = this.dataset.basemap;
+    
+    // Update active state
+    document.querySelectorAll('.basemap-option').forEach(opt => opt.classList.remove('active'));
+    this.classList.add('active');
+    
+    // Switch basemap
+    switch(basemapType) {
+      case 'osm':
+        setBase(osmLayer);
+        break;
+      case 'topo':
+        setBase(topoLayer);
+        break;
+      case 'carto':
+        setBase(cartoLayer);
+        break;
+      case 'esri':
+        setBase(esriLayer);
+        break;
+    }
+    
+    showTempPopup(`Switched to ${this.querySelector('span').textContent}`);
+  };
+});
+
+// Toggle Upload Files Box
+document.getElementById("toggleUpload").onclick = () => {
+  if (drawerContent.style.display !== "flex") return;
+  const uploadBox = document.getElementById("uploadContainer");
+  const isVisible = uploadBox.style.display === "flex";
+  
+  if (isVisible) {
+    uploadBox.style.display = "none";
+  } else {
+    uploadBox.style.display = "flex";
+    // Close other boxes
+    document.getElementById("basemapContainer").style.display = "none";
+    document.getElementById("geoprocessingContainer").style.display = "none";
+    document.getElementById("editorContainer").style.display = "none";
+  }
+};
+
+// Close Upload Box
+document.getElementById("closeUpload").onclick = () => {
+  document.getElementById("uploadContainer").style.display = "none";
+};
+
+// Upload Options Click
+document.querySelectorAll('.upload-option').forEach(option => {
+  option.onclick = function() {
+    const uploadType = this.dataset.upload;
+    const fileInput = document.getElementById('fileInput');
+    
+    switch(uploadType) {
+      case 'shapefile':
+        fileInput.accept = '.zip';
+        fileInput.dataset.type = 'shapefile';
+        break;
+      case 'geojson':
+        fileInput.accept = '.geojson,.json';
+        fileInput.dataset.type = 'geojson';
+        break;
+      case 'kml':
+        fileInput.accept = '.kml';
+        fileInput.dataset.type = 'kml';
+        break;
+    }
+    
+    fileInput.click();
+  };
+});
 
 // Zoom
 document.getElementById("zoomIn").onclick = () => map.getView().setZoom(map.getView().getZoom()+1);
@@ -1968,24 +2360,7 @@ document.getElementById("locationBtn").onclick = () => {
     map.getView().animate({ center: ol.proj.fromLonLat(coords), zoom: 15, duration: 600 });
   }, ()=>alert("Unable to get location"));
 };
-//FILE UPLOAD (SHP/JSON/KML) 
-document.getElementById("uploadShpBtn").onclick = () => {
-  fileInput.accept = '.zip';
-  fileInput.dataset.type = 'shapefile';
-  fileInput.click();
-};
 
-document.getElementById("uploadGeoJsonBtn").onclick = () => {
-  fileInput.accept = '.geojson,.json';
-  fileInput.dataset.type = 'geojson';
-  fileInput.click();
-};
-
-document.getElementById("uploadKmlBtn").onclick = () => {
-  fileInput.accept = '.kml';
-  fileInput.dataset.type = 'kml';
-  fileInput.click();
-};
 fileInput.onchange = async (e) => {
   const files = e.target.files;
   if (!files || !files.length) return;
@@ -2624,7 +2999,8 @@ function setupCheckboxListeners() {
     });
   }
 }
-//BUILD LAYERS PANEL
+
+
 function buildLayersPanel() {
   const layersList = document.getElementById('layersList');
   if (!layersList) return;
@@ -2632,6 +3008,25 @@ function buildLayersPanel() {
   layersList.innerHTML = '';
   
   if (!window.uploadedLayers) window.uploadedLayers = [];
+  
+  // ✅ ADD DRAWN FEATURES LAYER IF IT HAS FEATURES
+  const drawnFeatures = vectorSource.getFeatures();
+  if (drawnFeatures.length > 0) {
+    const vectorLayerExists = window.uploadedLayers.some(layer => layer === vectorLayer);
+    
+    if (!vectorLayerExists) {
+      vectorLayer.set('layerName', 'Drawn Features');
+      vectorLayer.set('fileType', 'drawing');
+      vectorLayer.set('featureCount', drawnFeatures.length);
+      window.uploadedLayers.push(vectorLayer);
+    } else {
+      // Update count
+      const existingLayer = window.uploadedLayers.find(layer => layer === vectorLayer);
+      if (existingLayer) {
+        existingLayer.set('featureCount', drawnFeatures.length);
+      }
+    }
+  }
   
   if (window.uploadedLayers.length === 0) {
     layersList.innerHTML = '<div style="text-align:center; padding:20px; color:rgba(255,255,255,0.5);">No layers loaded</div>';
@@ -2642,9 +3037,18 @@ function buildLayersPanel() {
   
   sortedLayers.forEach((layer, index) => {
     const layerName = layer.get('layerName') || `Layer ${index+1}`;
+    const fileType = layer.get('fileType') || 'unknown';
     const featureCount = layer.getSource().getFeatures().length;
     const opacity = layer.getOpacity();
     const visible = layer.getVisible();
+    
+    // ✅ ADD ICON BASED ON FILE TYPE
+    let layerIcon = 'fa-layer-group';
+    if (fileType === 'drawing') layerIcon = 'fa-pencil-alt';
+    else if (fileType === 'shapefile') layerIcon = 'fa-file-zipper';
+    else if (fileType === 'geojson') layerIcon = 'fa-file-code';
+    else if (fileType === 'kml') layerIcon = 'fa-map-pin';
+    else if (fileType === 'database') layerIcon = 'fa-database';
     
     const layerDiv = document.createElement('div');
     layerDiv.className = 'layer-item';
@@ -2655,6 +3059,7 @@ function buildLayersPanel() {
       <div class="layer-header-row">
         <i class="fas fa-grip-vertical layer-drag-handle"></i>
         <input type="checkbox" class="layer-visibility-check" ${visible ? 'checked' : ''}>
+        <i class="fas ${layerIcon}" style="color:#00e5ff; margin-right:8px;"></i>
         <span class="layer-name">${escapeHtml(layerName)}</span>
         <span class="layer-count-badge">${featureCount}</span>
         <button class="layer-delete-btn" title="Delete Layer">
@@ -2670,11 +3075,13 @@ function buildLayersPanel() {
     
     layersList.appendChild(layerDiv);
     
+    // Visibility toggle
     const checkbox = layerDiv.querySelector('.layer-visibility-check');
     checkbox.onchange = () => {
       layer.setVisible(checkbox.checked);
     };
     
+    // Opacity slider
     const slider = layerDiv.querySelector('.layer-opacity-slider');
     const valueSpan = layerDiv.querySelector('.layer-opacity-value');
     slider.oninput = () => {
@@ -2683,16 +3090,31 @@ function buildLayersPanel() {
       valueSpan.textContent = slider.value + '%';
     };
     
+    // Delete button
     const deleteBtn = layerDiv.querySelector('.layer-delete-btn');
     deleteBtn.onclick = () => {
-      if (confirm(`Delete layer "${layerName}"?`)) {  // ← FIXED: Added parentheses
-        map.removeLayer(layer);
-        window.uploadedLayers = window.uploadedLayers.filter(l => l !== layer);
+      const isDrawnLayer = layer === vectorLayer;
+      const confirmMsg = isDrawnLayer 
+        ? `Delete all drawn features (${featureCount})?` 
+        : `Delete layer "${layerName}"?`;
+      
+      if (confirm(confirmMsg)) {
+        if (isDrawnLayer) {
+          // Clear drawn features but keep the layer
+          vectorSource.clear();
+          window.uploadedLayers = window.uploadedLayers.filter(l => l !== vectorLayer);
+        } else {
+          // Remove uploaded layer
+          map.removeLayer(layer);
+          window.uploadedLayers = window.uploadedLayers.filter(l => l !== layer);
+        }
         buildLayersPanel();
         buildAttributeTable();
+        saveToLocal();
       }
     };
     
+    // Drag and drop handlers
     layerDiv.addEventListener('dragstart', (e) => {
       layerDiv.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -2724,7 +3146,6 @@ function buildLayersPanel() {
     });
   });
 }
-
 function setupCheckboxListeners() {
   const selectAllCheckbox = document.getElementById('selectAllCheckbox');
   if (selectAllCheckbox) {
@@ -2866,6 +3287,7 @@ function removeInteractions() {
   document.querySelectorAll('.editor-btn').forEach(btn => btn.classList.remove('active'));
 }
 
+
 function addDraw(type, button) {
   removeInteractions();
   drawInteraction = new ol.interaction.Draw({ source: vectorSource, type });
@@ -2883,8 +3305,39 @@ function addDraw(type, button) {
       sel.clear();
       sel.push(f);
       selectedFeature = f;
-      if (attributeBox.style.display !== 'flex') attributeBox.style.display = 'flex';
+      
+      // ✅ OPEN ATTRIBUTE TABLE
+      if (attributeBox.style.display !== 'flex') {
+        attributeBox.style.display = 'flex';
+      }
       buildAttributeTable();
+      
+      // ✅ ENSURE DRAWN LAYER EXISTS IN uploadedLayers
+      if (!window.uploadedLayers) window.uploadedLayers = [];
+      
+      // Check if vectorLayer is already in uploadedLayers
+      const vectorLayerExists = window.uploadedLayers.some(layer => layer === vectorLayer);
+      
+      if (!vectorLayerExists) {
+        // Add vectorLayer to uploadedLayers
+        vectorLayer.set('layerName', 'Drawn Features');
+        vectorLayer.set('fileType', 'drawing');
+        vectorLayer.set('featureCount', vectorSource.getFeatures().length);
+        window.uploadedLayers.push(vectorLayer);
+      } else {
+        // Update feature count
+        const existingLayer = window.uploadedLayers.find(layer => layer === vectorLayer);
+        if (existingLayer) {
+          existingLayer.set('featureCount', vectorSource.getFeatures().length);
+        }
+      }
+      
+      // ✅ OPEN AND UPDATE LAYERS PANEL
+      buildLayersPanel();
+      const layersPanel = document.getElementById('layersPanel');
+      if (layersPanel) {
+        layersPanel.style.display = 'flex';
+      }
       
       try {
         const name = prompt('Enter name (optional):', f.get('name') || '');
@@ -2895,8 +3348,13 @@ function addDraw(type, button) {
         if (addr !== null && addr.trim()) f.set('address', addr.trim());
         const author = prompt('Created by (optional):', '');
         if (author !== null && author.trim()) f.set('created_by', author.trim());
+        
+        // Rebuild after prompts
         buildAttributeTable();
-      } catch(err) {}
+        buildLayersPanel();
+      } catch(err) {
+        console.error('Prompt error:', err);
+      }
       
       saveToLocal();
     }, 100);
@@ -3385,7 +3843,7 @@ document.getElementById("runDissolve").onclick = () => {
   }
 };
 
-//DRAGGABLE/RESIZABLE
+//DRAGGABLE/RESIZABLE ATTRIBUTE BOX
 (function() {
   const box = attributeBox;
   const header = box.querySelector('.box-header');
@@ -3461,7 +3919,8 @@ document.getElementById("runDissolve").onclick = () => {
   });
   
 })();
-    // attribute model 
+
+// ATTRIBUTE MODAL - Custom Select Dropdown
 (function() {
   const display = document.getElementById('attrTypeDisplay');
   const optionsContainer = document.getElementById('attrTypeOptions');
@@ -3506,6 +3965,116 @@ document.getElementById("runDissolve").onclick = () => {
     }
   });
 })();
+
+// MAKE GEOPROCESSING BOX DRAGGABLE, RESIZABLE, AND COLLAPSIBLE
+(function() {
+  const box = document.getElementById('geoprocessingContainer');
+  const header = document.getElementById('geoprocessingHeader');
+  
+  if (!box || !header) return;
+  
+  // DRAGGABLE
+  let isDrag = false, offsetX = 0, offsetY = 0;
+  
+  header.addEventListener("mousedown", (e) => {
+    if (e.target.closest('button')) return;
+    isDrag = true;
+    const rect = box.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    box.style.position = "fixed";
+    box.style.zIndex = 99999;
+    document.body.style.userSelect = 'none';
+  });
+  
+  document.addEventListener("mousemove", (e) => {
+    if (!isDrag) return;
+    let left = e.clientX - offsetX;
+    let top = e.clientY - offsetY;
+    const pad = 8;
+    left = Math.max(pad, Math.min(left, window.innerWidth - box.offsetWidth - pad));
+    top = Math.max(pad, Math.min(top, window.innerHeight - box.offsetHeight - pad));
+    box.style.left = left + "px";
+    box.style.top = top + "px";
+    box.style.right = 'auto';
+    box.style.bottom = 'auto';
+  });
+  
+  document.addEventListener("mouseup", () => { 
+    isDrag = false; 
+    document.body.style.userSelect = ''; 
+  });
+
+  // RESIZABLE (Left-Bottom Corner)
+  const resizerLeft = box.querySelector(".resizer-left");
+  if (!resizerLeft) {
+    const newResizer = document.createElement("div");
+    newResizer.className = "resizer-left";
+    box.appendChild(newResizer);
+  }
+  
+  const resizer = box.querySelector(".resizer-left");
+  let isResize = false;
+  let startX = 0, startWidth = 0, startLeft = 0;
+  
+  resizer.addEventListener("mousedown", (e) => { 
+    e.preventDefault(); e.stopPropagation(); 
+    isResize = true;
+    startX = e.clientX;
+    startWidth = box.offsetWidth;
+    startLeft = box.getBoundingClientRect().left;
+    box.style.position = "fixed"; 
+    document.body.style.userSelect = 'none';
+  });
+  
+  document.addEventListener("mousemove", (e) => {
+    if (!isResize) return;
+    
+    const deltaX = startX - e.clientX;
+    let newW = startWidth + deltaX;
+    let newLeft = startLeft - deltaX;
+    
+    newW = Math.max(280, Math.min(startLeft + startWidth - 10, newW));
+    newLeft = Math.max(10, newLeft);
+    
+    const top = box.getBoundingClientRect().top;
+    let newH = e.clientY - top;
+    newH = Math.max(200, Math.min(window.innerHeight - top - 10, newH));
+    
+    box.style.width = newW + "px";
+    box.style.height = newH + "px";
+    box.style.left = newLeft + "px";
+    box.style.right = 'auto';
+  });
+  
+  document.addEventListener("mouseup", () => { 
+    isResize = false; 
+    document.body.style.userSelect = ''; 
+  });
+  
+  // MINIMIZE/MAXIMIZE
+  const minimizeBtn = document.getElementById('minimizeGeoprocessing');
+  if (minimizeBtn) {
+    minimizeBtn.onclick = () => {
+      box.classList.toggle("minimized");
+      const icon = minimizeBtn.querySelector('i');
+      icon.className = box.classList.contains("minimized") ? "fas fa-window-maximize" : "fas fa-minus";
+    };
+  }
+  
+  // CLOSE
+  const closeBtn = document.getElementById('closeGeoprocessing');
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      box.style.display = 'none';
+      // Reset to main view
+      document.getElementById("geoMainButtons").style.display = "flex";
+      document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+    };
+  }
+})();
+
+
 
 // DATABASE CONNECTION FUNCTIONS - COMPACT & DRAGGABLE
 const API_BASE = 'http://localhost/gis-map/api';
@@ -4189,62 +4758,56 @@ setTimeout(() => {
       modal.show();
     };
   }
-  
-  // ADD ATTRIBUTE VALIDATION
+
   const confirmBtn = document.getElementById("confirmAddAttr");
-  if (confirmBtn) {
-    confirmBtn.onclick = () => {
-      const attrName = document.getElementById('attrName').value.trim();
-      const attrType = document.getElementById('attrType').value;
-      const attrNameInput = document.getElementById('attrName');
-      
-      // Clear previous errors
-      document.querySelectorAll('.validation-error').forEach(el => el.remove());
-      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-      
-      let isValid = true;
-      
-      // Check attribute name exists
-      if (!attrName) {
-        showValidationError(attrNameInput, 'Attribute name is required');
+if (confirmBtn) {
+  confirmBtn.onclick = () => {
+    const attrName = document.getElementById('attrName').value.trim();
+    const attrType = document.getElementById('attrType').value;
+    const attrNameInput = document.getElementById('attrName');
+    
+    // Clear previous errors
+    document.querySelectorAll('.validation-error').forEach(el => el.remove());
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    
+    let isValid = true;
+    let mainError = null;
+    
+    // ✅ STEP 1: Validate attribute name FIRST (always required)
+    if (!attrName) {
+      mainError = { element: attrNameInput, message: 'Attribute name is required' };
+      isValid = false;
+    } else if (attrName.length < 3 || attrName.length > 50) {
+      mainError = { element: attrNameInput, message: 'Name must be 3-50 characters' };
+      isValid = false;
+    } else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(attrName)) {
+      mainError = { element: attrNameInput, message: 'Must start with letter, only letters/numbers/_' };
+      isValid = false;
+    } else if (customAttributes.includes(attrName)) {
+      mainError = { element: attrNameInput, message: 'Attribute name already exists' };
+      isValid = false;
+    } else {
+      const reservedWords = ['geometry', 'id', 'color', 'name', 'type', 'layer', 'feature'];
+      if (reservedWords.includes(attrName.toLowerCase())) {
+        mainError = { element: attrNameInput, message: 'This is a reserved keyword' };
         isValid = false;
       }
-      // Check name length (3-50 characters)
-      else if (attrName.length < 3 || attrName.length > 50) {
-        showValidationError(attrNameInput, 'Name must be 3-50 characters');
-        isValid = false;
-      }
-      // Check valid characters (alphanumeric and underscore only, must start with letter)
-      else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(attrName)) {
-        showValidationError(attrNameInput, 'Must start with letter, only letters/numbers/_');
-        isValid = false;
-      }
-      // Check for duplicates
-      else if (customAttributes.includes(attrName)) {
-        showValidationError(attrNameInput, 'Attribute name already exists');
-        isValid = false;
-      }
-      // Check reserved keywords
-      else {
-        const reservedWords = ['geometry', 'id', 'color', 'name', 'type', 'layer', 'feature'];
-        if (reservedWords.includes(attrName.toLowerCase())) {
-          showValidationError(attrNameInput, 'This is a reserved keyword');
-          isValid = false;
-        }
-      }
-      
-      //  Validate select options if dropdown type
+    }
+    
+    // STEP 2: If name is valid, then validate type-specific fields
+    if (isValid) {
+      //  Validate SELECT (Dropdown) type
       if (attrType === 'select') {
         const selectOptionsInput = document.getElementById('selectOptions');
         const options = selectOptionsInput.value.trim();
         
         if (!options) {
-          showValidationError(selectOptionsInput, 'Options are required for dropdown');
+          mainError = { element: selectOptionsInput, message: '⚠️ Dropdown options are required! Add comma-separated values (e.g., Low, Medium, High)' };
           isValid = false;
         } else {
           const optionsList = options.split(',').map(o => o.trim()).filter(o => o);
           if (optionsList.length < 2) {
-            showValidationError(selectOptionsInput, 'At least 2 options required');
+            mainError = { element: selectOptionsInput, message: '⚠️ Need at least 2 dropdown options! Add more values separated by commas.' };
             isValid = false;
           } else {
             clearValidationError(selectOptionsInput);
@@ -4252,60 +4815,107 @@ setTimeout(() => {
         }
       }
       
-      //  Validate image URL if image type
-      if (attrType === 'image') {
+      //  Validate DATE type
+      else if (attrType === 'date') {
+        const dateFormatInput = document.getElementById('dateFormat');
+        const dateFormat = dateFormatInput.value.trim();
+        
+        // Date format is optional, but if provided, validate it
+        if (dateFormat && dateFormat !== 'YYYY-MM-DD' && dateFormat !== 'yyyy-mm-dd') {
+          mainError = { element: dateFormatInput, message: ' Date format should be YYYY-MM-DD (or leave empty for default)' };
+          isValid = false;
+        } else {
+          // Show success message
+          clearValidationError(dateFormatInput);
+          if (!dateFormat) {
+            dateFormatInput.placeholder = 'Default: YYYY-MM-DD ✓';
+          }
+        }
+      }
+      
+      // Validate IMAGE type
+      else if (attrType === 'image') {
         const imageUrlInput = document.getElementById('imageUrl');
         const imageUrl = imageUrlInput.value.trim();
         
-        if (imageUrl && !isValidURL(imageUrl)) {
-          showValidationError(imageUrlInput, 'Invalid URL format (must start with http:// or https://)');
+        if (!imageUrl) {
+          mainError = { element: imageUrlInput, message: 'Image URL is required! Paste a valid image link (https://...)' };
           isValid = false;
-        } else if (imageUrl) {
+        } else if (!isValidURL(imageUrl)) {
+          mainError = { element: imageUrlInput, message: 'Invalid image URL! Must start with http:// or https://' };
+          isValid = false;
+        } else if (!imageUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+          mainError = { element: imageUrlInput, message: 'URL must point to an image file (.jpg, .png, .gif, .svg, .webp)' };
+          isValid = false;
+        } else {
           clearValidationError(imageUrlInput);
         }
       }
       
-      // If validation failed, stop here
-      if (!isValid) {
-        return;
+      //  NUMBER type - no additional validation needed
+      else if (attrType === 'number') {
+        // Number type is ready, just show success
+        clearValidationError(attrNameInput);
       }
       
-      // validations passed
-      clearValidationError(attrNameInput);
-      
-      customAttributes.push(attrName);
-      attributeTypes[attrName] = attrType;
-      
-      try {
-        localStorage.setItem('customAttributes', JSON.stringify(customAttributes));
-        localStorage.setItem('attributeTypes', JSON.stringify(attributeTypes));
-      } catch (e) {
-        console.error('Failed to save to localStorage:', e);
-        showTempPopup('Failed to save attribute');
-        return;
+      //  CHECKBOX type - no additional validation needed
+      else if (attrType === 'checkbox') {
+        // Checkbox type is ready
+        clearValidationError(attrNameInput);
       }
       
-      const allFeatures = getAllFeatures();
-      allFeatures.forEach(f => {
-        if (f.get(attrName) === undefined) {
-          if (attrType === 'checkbox') {
-            f.set(attrName, false);
-          } else if (attrType === 'number') {
-            f.set(attrName, 0);
-          } else {
-            f.set(attrName, '');
-          }
+      //  TEXT type - no additional validation needed
+      else if (attrType === 'text') {
+        // Text type is ready
+        clearValidationError(attrNameInput);
+      }
+    }
+    
+    // STEP 3: Show error if validation failed
+    if (!isValid) {
+      if (mainError) {
+        showValidationError(mainError.element, mainError.message);
+        mainError.element.focus();
+      }
+      return;
+    }
+    
+    // STEP 4: All validations passed - Add the attribute
+    clearValidationError(attrNameInput);
+    
+    customAttributes.push(attrName);
+    attributeTypes[attrName] = attrType;
+    
+    try {
+      localStorage.setItem('customAttributes', JSON.stringify(customAttributes));
+      localStorage.setItem('attributeTypes', JSON.stringify(attributeTypes));
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+      showTempPopup(' Failed to save attribute');
+      return;
+    }
+    
+    const allFeatures = getAllFeatures();
+    allFeatures.forEach(f => {
+      if (f.get(attrName) === undefined) {
+        if (attrType === 'checkbox') {
+          f.set(attrName, false);
+        } else if (attrType === 'number') {
+          f.set(attrName, 0);
+        } else {
+          f.set(attrName, '');
         }
-      });
-      
-      buildAttributeTable();
-      
-      const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
-      if (modal) modal.hide();
-      
-      showTempPopup(` Attribute "${attrName}" added successfully!`);
-    };
-  }
+      }
+    });
+    
+    buildAttributeTable();
+    
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
+    if (modal) modal.hide();
+    
+    showTempPopup(` Attribute "${attrName}" added successfully!`);
+  };
+}
 }, 500);
 
 document.getElementById('attrName')?.addEventListener('input', function() {
