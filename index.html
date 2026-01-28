@@ -82,7 +82,16 @@ html, body {
     left: 12px; 
     z-index: 300; 
 }
-.drawer-toggle { 
+
+/* NEW: Button Group Container */
+.drawer-button-group {
+  display: flex;
+  flex-direction: column;
+  /*gap: 8px;*/
+  margin-bottom: 8px;
+}
+
+/*.drawer-toggle { 
   font-size: 20px; 
   background: #ffffff;
   border: none; 
@@ -91,24 +100,65 @@ html, body {
   cursor: pointer; 
   box-shadow: 0 2px 8px #05934a26; 
   transition: all 0.3s;
+
+   // NEW: Fixed Dimensions 
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}*/
+
+.drawer-toggle { 
+  font-size: 18px; 
+  background: #ffffff;
+  border: none; 
+  padding: 0; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  box-shadow: 0 2px 8px rgba(5, 147, 74, 0.15); 
+  transition: all 0.3s;
+
+  /*FIX: Consistent dimensions*/
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
+
 .drawer-toggle:hover { 
     transform: translateY(-2px); 
     box-shadow: 0 4px 12px rgba(71, 170, 24, 0.2); 
+}
+
+.drawer-button-group .drawer-toggle:first-child {
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 8px 8px 0 0; 
+}
+
+.drawer-button-group .drawer-toggle:last-child {
+  border-radius: 0 0 8px 8px; 
 }
 
 .drawer-content { 
   display: none; 
   flex-direction: column; 
   background: #4b919f;
-  padding: 12px;
+  padding: 8px;
   margin-top: 8px; 
   border-radius: 8px; 
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); 
-  min-width: 50px;
-  max-width: 250px;
-  height: 70vh;
-  overflow-y: scroll;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15); 
+  min-width: 160px;
+  max-width: 180px;
+  max-height: 400px;
+  /*height: 70vh;*/
+  overflow-y: auto;
   overflow-x: hidden;
 }
 /* Scrollbar styling for drawer */
@@ -128,12 +178,12 @@ html, body {
   background: rgba(255,255,255,0.5);
 }
 .drawer-content hr { 
-    margin: 8px 0; 
+    margin: 6px 0; 
     border: none; 
     border-top: 1px solid #bbb6b6; 
 }
 
-/* Icon buttons - FIXED LAYOUT */
+/* Icon buttons - FIXED LAYOUT 
 .icon-btn { 
   display: flex; 
   align-items: center; 
@@ -150,11 +200,36 @@ html, body {
   margin: 2px 0;
   width: 100%;
   text-align: left;
+}*/
+
+.icon-btn { 
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start;
+  gap: 10px; 
+  padding: 12px 14px; 
+  border-radius: 8px;
+  background: #f8f9fa; 
+  cursor: pointer; 
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s;
+  font-size: 14px; 
+  color: #1c0f95; 
+  margin: 4px 0;
+  width: 100%;
+  text-align: left;
+  
+  /*FIX: Consistent height */
+  min-height: 48px;
+  height: 48px;
 }
+
+
 .icon-btn i { 
-  width: 10px; 
+  width: 16px; 
   text-align: center; 
   flex-shrink: 0;
+  font-size: 14px;
 }
 .icon-btn:hover { 
     background: #77c5ee; 
@@ -174,7 +249,6 @@ html, body {
 /* Attribute Box */
 .attribute-box { 
   display: none; 
-  
   position: fixed; 
   bottom: 50px; 
   right: 15px; 
@@ -372,10 +446,11 @@ html, body {
   display: none; 
   position: fixed; 
   bottom: 50px; 
-  left: 15px; 
-  background: rgba(214, 227, 97, 0.98);
+  left: 200px; 
+  background: rgba(26, 26, 26, 0.98);
   padding: 12px; 
-  border-radius: 10px; 
+  /*border-radius: 10px; */
+  border: 2px solid #00e5ff;
   z-index: 500; 
   box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
   min-width: 220px;
@@ -386,14 +461,14 @@ html, body {
     align-items: center; 
     margin-bottom: 10px; 
     padding-bottom: 8px; 
-    border-bottom: 1px solid rgba(0,0,0,0.1); 
+    border-bottom: 1px solid rgba(0,299,255,0.3); 
 }
 .editor-buttons { display: flex; 
     gap: 8px; 
     flex-wrap: wrap; 
     justify-content: center; 
 }
-.editor-btn { 
+/*.editor-btn { 
   width: 48px; 
   height: 48px; 
   border: none; 
@@ -414,7 +489,48 @@ html, body {
 }
 .editor-btn.active { 
   background: #198754; 
+}*/
+
+.editor-btn { 
+  width: 50px; 
+  height: 50px; 
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-size: 20px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  transition: all 0.2s; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
+
+.editor-btn:hover { 
+  opacity: 0.9; 
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  border-color: #00e5ff;
+}
+
+.editor-btn.active { 
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border-color: #38ef7d;
+  box-shadow: 0 0 20px rgba(56, 239, 125, 0.5);
+}
+
+.editor-box h6 {
+  margin: 0; 
+  color: #00e5ff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.editor-box #closeEditor {
+  color: #fff;
+}
+
 /* Geoprocessing Box - Enhanced */
 .geoprocessing-box {
   position: fixed;
@@ -1406,14 +1522,30 @@ html, body {
 </div>
 
 <!-- DRAWER -->
-<div id="drawer" class="drawer">
+<!--<div id="drawer" class="drawer">
 
   <button id="homeBtn" class="drawer-toggle" title="Home" style="margin-bottom: 8px;">
     <i class="fas fa-home"></i>
   </button>
 
   <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
+  <div class="drawer-content">-->
+
+    <div id="drawer" class="drawer">
+  
+  <!--Button Group for Perfect Alignment -->
+  <div class="drawer-button-group">
+    <button id="homeBtn" class="drawer-toggle" title="Home">
+      <i class="fas fa-home"></i>
+    </button>
+    
+    <button id="drawerToggle" class="drawer-toggle" title="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+  
   <div class="drawer-content">
+
 
     <hr>
     <button id="toggleBasemaps" class="icon-btn" title="Basemap Viewer">
@@ -1429,25 +1561,30 @@ html, body {
     <hr>
     <button id="toggleAttributes" class="icon-btn" title="Attributes">
       <i class="fas fa-table"></i>
+      <span>Attributes</span>
     </button>
     <hr>
 
     <button id="toggleLayers" class="icon-btn" title="Layers">
       <i class="fas fa-layer-group"></i>
+      <span>Layers</span>
     </button>
     <hr>
 
     <button id="toggleEditor" class="icon-btn" title="Editor Tools">
       <i class="fas fa-pencil-alt"></i> 
+      <span>Editor</span>
     </button>
 
     <hr>
     <button id="toggleGeoprocessing" class="icon-btn" title="Geoprocessing Tools">
     <i class="fas fa-project-diagram"></i>
+    <span>Geoprocessing</span>
     </button>
     <hr>
     <button id="connectDbBtn" class="icon-btn" title="Connect Database">
-  <i class="fas fa-database"></i>
+    <i class="fas fa-database"></i>
+    <span>Database</span>
 </button>
   </div>
 </div>
@@ -1752,9 +1889,15 @@ html, body {
 <div class="zoom-controls">
   <button id="zoomIn" class="zoom-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
   <button id="zoomOut" class="zoom-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
-  <button id="locationBtn" class="zoom-btn" title="My Location"><i class="fas fa-crosshairs"></i></button>
-</div>
+<button id="locationBtn" class="zoom-btn" title="My Location">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="3" fill="#4285F4"/>
+    <circle cx="12" cy="12" r="8" stroke="#4285F4" stroke-width="2" fill="none"/>
+    <path d="M12 2V6M12 18V22M2 12H6M18 12H22" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+</button>
 
+</div>
 <!-- SEARCH -->
 <div class="search-bar">
   <input type="text" id="searchInput" placeholder="Search location...">
@@ -2093,7 +2236,7 @@ document.getElementById("toggleAttributes").onclick = () => {
     const allFeatures = getAllFeatures();
     
     if (allFeatures.length === 0) {
-      alert('No features available! Upload a file or draw features first.');
+      alert('No features found! Upload a file or draw features first.');
       return;
     }
     
@@ -2108,7 +2251,8 @@ document.getElementById("toggleLayers").onclick = () => {
   
   if (isVis) {
     layersPanel.style.display = "none";
-  } else {
+  } 
+   else {
     if (!window.uploadedLayers || window.uploadedLayers.length === 0) {
       alert('No layers available! Upload Shapefile, GeoJSON, or KML files first.');
       return;
@@ -3287,7 +3431,6 @@ function removeInteractions() {
   document.querySelectorAll('.editor-btn').forEach(btn => btn.classList.remove('active'));
 }
 
-
 function addDraw(type, button) {
   removeInteractions();
   drawInteraction = new ol.interaction.Draw({ source: vectorSource, type });
@@ -3306,13 +3449,13 @@ function addDraw(type, button) {
       sel.push(f);
       selectedFeature = f;
       
-      // ✅ OPEN ATTRIBUTE TABLE
+      // OPEN ATTRIBUTE TABLE
       if (attributeBox.style.display !== 'flex') {
         attributeBox.style.display = 'flex';
       }
       buildAttributeTable();
       
-      // ✅ ENSURE DRAWN LAYER EXISTS IN uploadedLayers
+      // ENSURE DRAWN LAYER EXISTS IN uploadedLayers
       if (!window.uploadedLayers) window.uploadedLayers = [];
       
       // Check if vectorLayer is already in uploadedLayers
@@ -3332,7 +3475,7 @@ function addDraw(type, button) {
         }
       }
       
-      // ✅ OPEN AND UPDATE LAYERS PANEL
+      // OPEN AND UPDATE LAYERS PANEL
       buildLayersPanel();
       const layersPanel = document.getElementById('layersPanel');
       if (layersPanel) {
@@ -3348,10 +3491,6 @@ function addDraw(type, button) {
         if (addr !== null && addr.trim()) f.set('address', addr.trim());
         const author = prompt('Created by (optional):', '');
         if (author !== null && author.trim()) f.set('created_by', author.trim());
-        
-        // Rebuild after prompts
-        buildAttributeTable();
-        buildLayersPanel();
       } catch(err) {
         console.error('Prompt error:', err);
       }
