@@ -91,25 +91,6 @@ html, body {
   margin-bottom: 8px;
 }
 
-/*.drawer-toggle { 
-  font-size: 20px; 
-  background: #ffffff;
-  border: none; 
-  padding: 10px 12px; 
-  border-radius: 8px; 
-  cursor: pointer; 
-  box-shadow: 0 2px 8px #05934a26; 
-  transition: all 0.3s;
-
-   // NEW: Fixed Dimensions 
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}*/
-
 .drawer-toggle { 
   font-size: 18px; 
   background: #ffffff;
@@ -182,32 +163,12 @@ html, body {
     border: none; 
     border-top: 1px solid #bbb6b6; 
 }
-
-/* Icon buttons - FIXED LAYOUT 
 .icon-btn { 
   display: flex; 
   align-items: center; 
   justify-content: flex-start;
-  gap: 10px; 
-  padding: 10px 12px; 
-  border-radius: 6px;
-  background: #f8f9fa; 
-  cursor: pointer; 
-  border: 1px solid #e0e0e0;
-  transition: all 0.2s;
-  font-size: 14px; 
-  color: #1c0f95; 
-  margin: 2px 0;
-  width: 100%;
-  text-align: left;
-}*/
-
-.icon-btn { 
-  display: flex; 
-  align-items: center; 
-  justify-content: flex-start;
-  gap: 10px; 
-  padding: 12px 14px; 
+  gap: 12px; 
+  padding: 14px 16px; 
   border-radius: 8px;
   background: #f8f9fa; 
   cursor: pointer; 
@@ -221,16 +182,28 @@ html, body {
   
   /*FIX: Consistent height */
   min-height: 48px;
+  max-height: 48px;
   height: 48px;
+  box-sizing: border-box; 
 }
 
 
 .icon-btn i { 
-  width: 16px; 
+  width: 18px; 
   text-align: center; 
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
+
+.icon-btn span{
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
 .icon-btn:hover { 
     background: #77c5ee; 
     transform: translateX(3px); 
@@ -246,6 +219,9 @@ html, body {
     flex-direction: column; 
     gap: 4px; 
 }
+
+
+
 /* Attribute Box */
 .attribute-box { 
   display: none; 
@@ -468,28 +444,6 @@ html, body {
     flex-wrap: wrap; 
     justify-content: center; 
 }
-/*.editor-btn { 
-  width: 48px; 
-  height: 48px; 
-  border: none; 
-  border-radius: 8px; 
-  cursor: pointer; 
-  font-size: 18px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  background: #0d6efd; color: #fff;
-  transition: all 0.2s; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-.editor-btn:hover { 
-  opacity: 0.9; 
-  transform: translateY(-2px); 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
-}
-.editor-btn.active { 
-  background: #198754; 
-}*/
 
 .editor-btn { 
   width: 50px; 
@@ -1695,7 +1649,7 @@ html, body {
     <h6><i class="fas fa-compress-arrows-alt"></i> Intersect Tool</h6>
     <p>Find the overlapping area between 2+ features</p>
     <p style="font-size:11px; color:#28a745; background:#d4edda; padding:6px; border-radius:4px;">
-      ✅ Select 2+ overlapping features from attribute table first
+      Select 2+ overlapping features from attribute table first
     </p>
     <button id="runIntersect" class="geo-btn geo-btn-intersect">
       <i class="fas fa-play"></i> Find Intersection
@@ -1890,11 +1844,21 @@ html, body {
   <button id="zoomIn" class="zoom-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
   <button id="zoomOut" class="zoom-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
 <button id="locationBtn" class="zoom-btn" title="My Location">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="3" fill="#4285F4"/>
-    <circle cx="12" cy="12" r="8" stroke="#4285F4" stroke-width="2" fill="none"/>
-    <path d="M12 2V6M12 18V22M2 12H6M18 12H22" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
-  </svg>
+  <svg class="location-icon-svg" viewBox="0 0 24 24">
+  <!-- Outer circle (location waves) - 3 concentric circles -->
+  <circle cx="12" cy="12" r="10" opacity="0.3"/>
+  <circle cx="12" cy="12" r="7" opacity="0.5"/>
+  
+  <!-- Center dot (your location) - filled blue with white center -->
+  <circle cx="12" cy="12" r="4" fill="#4285F4"/>
+  <circle cx="12" cy="12" r="2.5" fill="#ffffff"/>
+  
+  <!-- Crosshair lines - 4 directional indicators -->
+  <line x1="12" y1="2" x2="12" y2="6" stroke="#4285F4"/>    <!-- Top -->
+  <line x1="12" y1="18" x2="12" y2="22" stroke="#4285F4"/>  <!-- Bottom -->
+  <line x1="2" y1="12" x2="6" y2="12" stroke="#4285F4"/>    <!-- Left -->
+  <line x1="18" y1="12" x2="22" y2="12" stroke="#4285F4"/>  <!-- Right -->
+</svg>
 </button>
 
 </div>
@@ -2158,7 +2122,14 @@ if (northArrow) {
 
 // Utilities
 function randomColor() { return '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'); }
-function safeId(p='fid') { return `${p}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`; }
+//function safeId(p='fid') { return `${p}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`; }
+
+function safeId(p='fid') { 
+  if (!window._idCounter) window._idCounter = 0;
+  window._idCounter++;
+  return `${p}-${Date.now()}-${window._idCounter}-${Math.random().toString(36).slice(2,11)}`; 
+}
+
 function escapeHtml(t) { return (t+'').replace(/[&<>"'`=\/]/g, s => '&#'+s.charCodeAt(0)+';'); }
 // Custom attributes with types
 let customAttributes = [];
@@ -2254,7 +2225,7 @@ document.getElementById("toggleLayers").onclick = () => {
   } 
    else {
     if (!window.uploadedLayers || window.uploadedLayers.length === 0) {
-      alert('No layers available! Upload Shapefile, GeoJSON, or KML files first.');
+      alert('No features found!Upload a file or draw features first.');
       return;
     }
     
@@ -2463,11 +2434,26 @@ function closeSuggestions() {
   suggestionBox.style.display = 'none'; suggestionBox.innerHTML = ''; suggestionIndex = -1; currentSuggestions = [];
 }
 
-searchInput.addEventListener("input", async () => {
+/*searchInput.addEventListener("input", async () => {
   const q = searchInput.value.trim();
   if (!q) { closeSuggestions(); return; }
   try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);*/
+    let searchTimeout; //  Add this variable
+
+searchInput.addEventListener("input", async () => {
+  clearTimeout(searchTimeout); //  Cancel previous search
+  const q = searchInput.value.trim();
+  
+  if (!q) { 
+    closeSuggestions(); 
+    return; 
+  }
+  
+  //  Wait 400ms after user stops typing
+  searchTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);
     const data = await res.json();
     suggestionBox.innerHTML = ''; currentSuggestions = data||[];
     if (!currentSuggestions.length) { closeSuggestions(); return; }
@@ -2482,7 +2468,8 @@ searchInput.addEventListener("input", async () => {
     });
     suggestionBox.style.display = 'block';
   } catch(err) { closeSuggestions(); }
-});
+
+})});
 
 searchInput.addEventListener('keydown', (e) => {
   const items = suggestionBox.querySelectorAll('.suggestion-item');
@@ -2805,8 +2792,56 @@ function findByIdAcrossSources(id) {
   
   return foundFeature;
 }
-//GET ALL FEATURES        
+//GET ALL FEATURES   
+
+
 function getAllFeatures() {
+  const seen = new Set();
+  const allFeatures = [];
+  
+  //  Helper to add feature without duplicates
+  function addFeature(feature) {
+    const id = feature.getId();
+    if (id && !seen.has(id)) {
+      seen.add(id);
+      allFeatures.push(feature);
+      return true;
+    }
+    return false;
+  }
+  
+  // Collect from standard layers first
+  vectorSource.getFeatures().forEach(addFeature);
+  shapefileLayer.getSource().getFeatures().forEach(addFeature);
+  geojsonLayer.getSource().getFeatures().forEach(addFeature);
+  kmlLayer.getSource().getFeatures().forEach(addFeature);
+  
+  // Collect from uploaded layers (these might overlap with standard layers)
+  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
+    window.uploadedLayers.forEach(layer => {
+      if (layer && layer.getSource && typeof layer.getSource === 'function') {
+        const source = layer.getSource();
+        if (source && source.getFeatures && typeof source.getFeatures === 'function') {
+          source.getFeatures().forEach(addFeature);
+        }
+      }
+    });
+  }
+  
+  // Collect from multiFileLayer if exists
+  if (window.multiFileLayer && window.multiFileLayer.getSource) {
+    const source = window.multiFileLayer.getSource();
+    if (source && source.getFeatures) {
+      source.getFeatures().forEach(addFeature);
+    }
+  }
+  
+  console.log(` getAllFeatures: Found ${allFeatures.length} unique features (${seen.size} IDs tracked)`);
+  return allFeatures;
+}
+
+
+/*function getAllFeatures() {
   let allFeatures = [];
   
   allFeatures = allFeatures.concat(vectorSource.getFeatures());
@@ -2853,7 +2888,7 @@ function getAllFeatures() {
   });
   
   return allFeatures;
-}
+}*/
   function buildAttributeTable() {
 
   attrHead.innerHTML = "";
@@ -2867,10 +2902,21 @@ function getAllFeatures() {
     return;
   }
 
+/*const ROWS_PER_PAGE = 100;
+  if (!window.attrTablePage) window.attrTablePage = 0;
+  
+  const totalPages = Math.ceil(feats.length / ROWS_PER_PAGE);*/
+
 const ROWS_PER_PAGE = 100;
   if (!window.attrTablePage) window.attrTablePage = 0;
   
   const totalPages = Math.ceil(feats.length / ROWS_PER_PAGE);
+  
+  // Reset page if out of bounds
+  if (window.attrTablePage >= totalPages) {
+    window.attrTablePage = Math.max(0, totalPages - 1);
+  }
+
   const startIdx = window.attrTablePage * ROWS_PER_PAGE;
   const endIdx = Math.min(startIdx + ROWS_PER_PAGE, feats.length);
   const displayFeats = feats.slice(startIdx, endIdx);
@@ -3133,7 +3179,7 @@ const ROWS_PER_PAGE = 100;
   };
 
 }
-// ADD THIS NEW FUNCTION RIGHT AFTER buildAttributeTable
+/* ADD THIS NEW FUNCTION RIGHT AFTER buildAttributeTable
 function setupCheckboxListeners() {
   const selectAllCheckbox = document.getElementById('selectAllCheckbox');
   if (selectAllCheckbox) {
@@ -3142,7 +3188,7 @@ function setupCheckboxListeners() {
       checkboxes.forEach(cb => cb.checked = this.checked);
     });
   }
-}
+}*/
 
 
 function buildLayersPanel() {
@@ -3290,7 +3336,55 @@ function buildLayersPanel() {
     });
   });
 }
-function setupCheckboxListeners() {
+
+
+
+
+//  NEW: One listener for all table buttons
+(function setupTableEventHandlers() {
+  const attrBody = document.getElementById('attrBody');
+  
+  if (!attrBody) return;
+  
+  // Listen for ALL clicks on the table body
+  attrBody.addEventListener('click', function(e) {
+    const button = e.target.closest('button');
+    if (!button) return; 
+    
+    const row = button.closest('tr');
+    if (!row) return; 
+    
+    const fid = row.dataset.fid;
+    
+    // Is it the DELETE button?
+    if (button.classList.contains('btn-delete')) {
+      e.stopPropagation();
+      const f = findByIdAcrossSources(fid);
+      if (!f || !confirm("Delete this feature?")) return;
+      const src = findFeatureSource(f);
+      if (src) src.removeFeature(f);
+      buildAttributeTable();
+      saveToLocal();
+    }
+    
+    // Is it the CENTER button?
+    else if (button.classList.contains('btn-focus')) {
+      e.stopPropagation();
+      const f = findByIdAcrossSources(fid);
+      if (!f) return;
+      const geom = f.getGeometry();
+      const center = geom.getType() === "Point"
+        ? geom.getCoordinates()
+        : ol.extent.getCenter(geom.getExtent());
+      map.getView().animate({ center, zoom: 15, duration: 600 });
+    }
+  });
+  
+  console.log(' Table handlers ready');
+})();
+
+
+/*function setupCheckboxListeners() {
   const selectAllCheckbox = document.getElementById('selectAllCheckbox');
   if (selectAllCheckbox) {
     selectAllCheckbox.addEventListener('change', function() {
@@ -3298,7 +3392,7 @@ function setupCheckboxListeners() {
       checkboxes.forEach(cb => cb.checked = this.checked);
     });
   }
-}
+}*/
 function highlightRowForFeature(f) {
   removeRowHighlights();
   const row = attrBody.querySelector(`tr[data-fid="${f.getId()}"]`); 
@@ -3554,7 +3648,7 @@ document.getElementById('exportDrawing').onclick = () => {
 };
 /*   LOCAL STORAGE           */
 
-function saveToLocal() {
+/*function saveToLocal() {
   try {
     const fmt = new ol.format.GeoJSON();
     const data = {
@@ -3568,6 +3662,67 @@ function saveToLocal() {
     localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
   } catch(e) { console.error('Save error', e); }
 }
+*/
+
+function saveToLocal() {
+  try {
+    const fmt = new ol.format.GeoJSON();
+    const data = {
+      vectorFeatures: fmt.writeFeaturesObject(vectorSource.getFeatures(), { featureProjection: 'EPSG:3857' }),
+      shapefileFeatures: fmt.writeFeaturesObject(shapefileLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
+      geojsonFeatures: fmt.writeFeaturesObject(geojsonLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
+      kmlFeatures: fmt.writeFeaturesObject(kmlLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' })
+    };
+    
+    // Check data size before saving
+    const dataStr = JSON.stringify(data);
+    const sizeMB = new Blob([dataStr]).size / (1024 * 1024);
+    
+    if (sizeMB > 5) {
+      console.warn(` Data too large (${sizeMB.toFixed(2)}MB). Saving only recent features.`);
+      
+      // Save only first 1000 features from each source
+      const compactData = {
+        vectorFeatures: fmt.writeFeaturesObject(
+          vectorSource.getFeatures().slice(0, 1000), 
+          { featureProjection: 'EPSG:3857' }
+        ),
+        shapefileFeatures: fmt.writeFeaturesObject(
+          shapefileLayer.getSource().getFeatures().slice(0, 1000),
+          { featureProjection: 'EPSG:3857' }
+        ),
+        geojsonFeatures: fmt.writeFeaturesObject(
+          geojsonLayer.getSource().getFeatures().slice(0, 1000),
+          { featureProjection: 'EPSG:3857' }
+        ),
+        kmlFeatures: fmt.writeFeaturesObject(
+          kmlLayer.getSource().getFeatures().slice(0, 1000),
+          { featureProjection: 'EPSG:3857' }
+        )
+      };
+      localStorage.setItem("savedFeatures", JSON.stringify(compactData));
+      showTempPopup(` Saved 4000 of ${getAllFeatures().length} features (storage limit)`, 3500);
+    } else {
+      localStorage.setItem("savedFeatures", JSON.stringify(data));
+    }
+    
+    localStorage.setItem("customAttributes", JSON.stringify(customAttributes||[]));
+    localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
+    
+  } catch(e) { 
+    console.error('Save error', e);
+    if (e.name === 'QuotaExceededError') {
+      alert(' Storage full!\n\nYour browser storage is full. Please:\n1. Export your data\n2. Clear browser cache\n3. Delete unused features');
+      // Try to save at least custom attributes
+      try {
+        localStorage.setItem("customAttributes", JSON.stringify(customAttributes||[]));
+        localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
+      } catch(e2) { console.error('Failed to save attributes', e2); }
+    }
+  }
+}
+
+
 
 function loadFromLocal() {
   try {
@@ -3770,6 +3925,17 @@ document.getElementById("runBuffer").onclick = () => {
   }
 };
 //INTERSECT 
+/*document.getElementById("runIntersect").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length < 2) {
+    alert('Please select at least 2 features to find intersection!');
+    return;
+  }
+  
+  try {*/
+
+
 document.getElementById("runIntersect").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
@@ -3778,7 +3944,28 @@ document.getElementById("runIntersect").onclick = () => {
     return;
   }
   
+  // ✅ Validate geometry types
+  const geometryTypes = selectedFeatures.map(f => {
+    const geom = f.getGeometry();
+    return geom ? geom.getType() : null;
+  });
+  
+  const hasInvalidTypes = geometryTypes.some(t => 
+    t === 'Point' || t === 'MultiPoint' || 
+    t === 'LineString' || t === 'MultiLineString' || 
+    t === null
+  );
+  
+  if (hasInvalidTypes) {
+    alert(' Intersect only works with Polygon features!\n\n' +
+          ' Selected: ' + geometryTypes.join(', ') + '\n\n' +
+          ' Tip: Use Buffer tool on points/lines first to create polygons.');
+    return;
+  }
+  
   try {
+
+
     // Convert all features to Turf and clean them
     const turfFeatures = selectedFeatures.map(f => {
       const tf = olFeatureToTurf(f);
@@ -4078,7 +4265,7 @@ document.getElementById("runDissolve").onclick = () => {
   };
 
   optionsContainer.querySelectorAll('.custom-option').forEach(option => {
-    option.onclick = function(e) {
+   /* option.onclick = function(e) {
       e.stopPropagation();
       const value = this.dataset.value;
       const text = this.textContent;
@@ -4096,14 +4283,44 @@ document.getElementById("runDissolve").onclick = () => {
       dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
       imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
     };
+  });*/
+
+  option.onclick = function(e) {
+  e.stopPropagation();
+  const value = this.dataset.value;
+  const text = this.textContent;
+
+  display.querySelector('span').textContent = text;
+  hiddenInput.value = value;
+
+  optionsContainer.querySelectorAll('.custom-option')
+    .forEach(opt => opt.classList.remove('selected'));
+  this.classList.add('selected');
+
+  wrapper.classList.remove('open');
+  
+  // ✅ Clear all type-specific inputs
+  document.getElementById('selectOptions').value = '';
+  document.getElementById('dateFormat').value = '';
+  document.getElementById('imageUrl').value = '';
+  
+  // ✅ Clear validation errors
+  document.querySelectorAll('.validation-error').forEach(el => el.remove());
+  document.querySelectorAll('.error, .success').forEach(el => {
+    el.classList.remove('error', 'success');
   });
+
+  selectOptionsDiv.style.display = value === 'select' ? 'block' : 'none';
+  dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
+  imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
+};
 
   document.addEventListener('click', function(e) {
     if (!wrapper.contains(e.target)) {
       wrapper.classList.remove('open');
     }
   });
-})();
+})()});
 
 // MAKE GEOPROCESSING BOX DRAGGABLE, RESIZABLE, AND COLLAPSIBLE
 (function() {
@@ -4597,9 +4814,13 @@ document.getElementById('testDbConnection').onclick = async () => {
       confirmBtn.disabled = false;
       
       const credsToStore = result.data?.credentials || credentials;
-      localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
+      /*localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
+      window.dbCredentials = credsToStore;*/
+        localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
       window.dbCredentials = credsToStore;
       
+      //  Security warning
+      console.warn('SECURITY: Database credentials stored in browser localStorage (unencrypted). Do not use on shared computers!');
     } else {
       statusDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + result.message;
       statusDiv.style.background = '#dc3545';
@@ -4912,7 +5133,7 @@ if (confirmBtn) {
     let isValid = true;
     let mainError = null;
     
-    // ✅ STEP 1: Validate attribute name FIRST (always required)
+    // STEP 1: Validate attribute name FIRST (always required)
     if (!attrName) {
       mainError = { element: attrNameInput, message: 'Attribute name is required' };
       isValid = false;
@@ -5047,7 +5268,20 @@ if (confirmBtn) {
       }
     });
     
-    buildAttributeTable();
+    /*buildAttributeTable();
+    
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
+    if (modal) modal.hide();
+    
+    showTempPopup(` Attribute "${attrName}" added successfully!`);
+  };
+}*/
+buildAttributeTable();
+    
+    // Auto-open attribute box after adding custom attribute
+    if (attributeBox.style.display !== 'flex') {
+      attributeBox.style.display = 'flex';
+    }
     
     const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
     if (modal) modal.hide();
