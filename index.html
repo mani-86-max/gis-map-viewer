@@ -1475,15 +1475,6 @@ html, body {
   </div>
 </div>
 
-<!-- DRAWER -->
-<!--<div id="drawer" class="drawer">
-
-  <button id="homeBtn" class="drawer-toggle" title="Home" style="margin-bottom: 8px;">
-    <i class="fas fa-home"></i>
-  </button>
-
-  <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
-  <div class="drawer-content">-->
 
     <div id="drawer" class="drawer">
   
@@ -2114,7 +2105,7 @@ if (northArrow) {
   northArrow.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     map.getView().animate({ 
-      rotation: 0, // Reset to north
+      rotation: 0, 
       duration: 600 
     });
   });
@@ -2122,7 +2113,6 @@ if (northArrow) {
 
 // Utilities
 function randomColor() { return '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'); }
-//function safeId(p='fid') { return `${p}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`; }
 
 function safeId(p='fid') { 
   if (!window._idCounter) window._idCounter = 0;
@@ -2434,11 +2424,7 @@ function closeSuggestions() {
   suggestionBox.style.display = 'none'; suggestionBox.innerHTML = ''; suggestionIndex = -1; currentSuggestions = [];
 }
 
-/*searchInput.addEventListener("input", async () => {
-  const q = searchInput.value.trim();
-  if (!q) { closeSuggestions(); return; }
-  try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=6`);*/
+
     let searchTimeout; //  Add this variable
 
 searchInput.addEventListener("input", async () => {
@@ -2841,54 +2827,7 @@ function getAllFeatures() {
 }
 
 
-/*function getAllFeatures() {
-  let allFeatures = [];
-  
-  allFeatures = allFeatures.concat(vectorSource.getFeatures());
-  allFeatures = allFeatures.concat(shapefileLayer.getSource().getFeatures());
-  allFeatures = allFeatures.concat(geojsonLayer.getSource().getFeatures());
-  allFeatures = allFeatures.concat(kmlLayer.getSource().getFeatures());
-  
-  if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
-    window.uploadedLayers.forEach(layer => {
-      if (layer && layer.getSource && typeof layer.getSource === 'function') {
-        const source = layer.getSource();
-        if (source && source.getFeatures && typeof source.getFeatures === 'function') {
-          allFeatures = allFeatures.concat(source.getFeatures());
-        }
-      }
-    });
-  }
-  
-  if (window.multiFileLayer && window.multiFileLayer.getSource) {
-    const source = window.multiFileLayer.getSource();
-    if (source && source.getFeatures) {
-      allFeatures = allFeatures.concat(source.getFeatures());
-    }
-  }
-  
-  map.getLayers().forEach(layer => {
-    if (layer instanceof ol.layer.Vector && 
-        layer !== vectorLayer && 
-        layer !== shapefileLayer && 
-        layer !== geojsonLayer && 
-        layer !== kmlLayer &&
-        layer !== window.multiFileLayer) {
-      
-      const source = layer.getSource();
-      if (source && source.getFeatures) {
-        const features = source.getFeatures();
-        features.forEach(f => {
-          if (!allFeatures.some(existing => existing.getId() === f.getId())) {
-            allFeatures.push(f);
-          }
-        });
-      }
-    }
-  });
-  
-  return allFeatures;
-}*/
+
   function buildAttributeTable() {
 
   attrHead.innerHTML = "";
@@ -2902,10 +2841,7 @@ function getAllFeatures() {
     return;
   }
 
-/*const ROWS_PER_PAGE = 100;
-  if (!window.attrTablePage) window.attrTablePage = 0;
-  
-  const totalPages = Math.ceil(feats.length / ROWS_PER_PAGE);*/
+
 
 const ROWS_PER_PAGE = 100;
   if (!window.attrTablePage) window.attrTablePage = 0;
@@ -3179,18 +3115,7 @@ const ROWS_PER_PAGE = 100;
   };
 
 }
-/* ADD THIS NEW FUNCTION RIGHT AFTER buildAttributeTable
-function setupCheckboxListeners() {
-  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-  if (selectAllCheckbox) {
-    selectAllCheckbox.addEventListener('change', function() {
-      const checkboxes = document.querySelectorAll('.select-checkbox');
-      checkboxes.forEach(cb => cb.checked = this.checked);
-    });
-  }
-}*/
-
-
+  
 function buildLayersPanel() {
   const layersList = document.getElementById('layersList');
   if (!layersList) return;
@@ -3336,10 +3261,6 @@ function buildLayersPanel() {
     });
   });
 }
-
-
-
-
 //  NEW: One listener for all table buttons
 (function setupTableEventHandlers() {
   const attrBody = document.getElementById('attrBody');
@@ -3383,16 +3304,6 @@ function buildLayersPanel() {
   console.log(' Table handlers ready');
 })();
 
-
-/*function setupCheckboxListeners() {
-  const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-  if (selectAllCheckbox) {
-    selectAllCheckbox.addEventListener('change', function() {
-      const checkboxes = document.querySelectorAll('.select-checkbox');
-      checkboxes.forEach(cb => cb.checked = this.checked);
-    });
-  }
-}*/
 function highlightRowForFeature(f) {
   removeRowHighlights();
   const row = attrBody.querySelector(`tr[data-fid="${f.getId()}"]`); 
@@ -3647,23 +3558,6 @@ document.getElementById('exportDrawing').onclick = () => {
   showTempPopup(`Exported ${drawnFeatures.length} drawn feature(s)!`);
 };
 /*   LOCAL STORAGE           */
-
-/*function saveToLocal() {
-  try {
-    const fmt = new ol.format.GeoJSON();
-    const data = {
-      vectorFeatures: fmt.writeFeaturesObject(vectorSource.getFeatures(), { featureProjection: 'EPSG:3857' }),
-      shapefileFeatures: fmt.writeFeaturesObject(shapefileLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
-      geojsonFeatures: fmt.writeFeaturesObject(geojsonLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' }),
-      kmlFeatures: fmt.writeFeaturesObject(kmlLayer.getSource().getFeatures(), { featureProjection: 'EPSG:3857' })
-    };
-    localStorage.setItem("savedFeatures", JSON.stringify(data));
-    localStorage.setItem("customAttributes", JSON.stringify(customAttributes||[]));
-    localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
-  } catch(e) { console.error('Save error', e); }
-}
-*/
-
 function saveToLocal() {
   try {
     const fmt = new ol.format.GeoJSON();
@@ -3924,17 +3818,6 @@ document.getElementById("runBuffer").onclick = () => {
     alert('Failed to create buffer. Please try again.');
   }
 };
-//INTERSECT 
-/*document.getElementById("runIntersect").onclick = () => {
-  const selectedFeatures = getSelectedFeaturesFromTable();
-  
-  if (selectedFeatures.length < 2) {
-    alert('Please select at least 2 features to find intersection!');
-    return;
-  }
-  
-  try {*/
-
 
 document.getElementById("runIntersect").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
@@ -4265,25 +4148,6 @@ document.getElementById("runDissolve").onclick = () => {
   };
 
   optionsContainer.querySelectorAll('.custom-option').forEach(option => {
-   /* option.onclick = function(e) {
-      e.stopPropagation();
-      const value = this.dataset.value;
-      const text = this.textContent;
-
-      display.querySelector('span').textContent = text;
-      hiddenInput.value = value;
-
-      optionsContainer.querySelectorAll('.custom-option')
-        .forEach(opt => opt.classList.remove('selected'));
-      this.classList.add('selected');
-
-      wrapper.classList.remove('open');
-
-      selectOptionsDiv.style.display = value === 'select' ? 'block' : 'none';
-      dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
-      imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
-    };
-  });*/
 
   option.onclick = function(e) {
   e.stopPropagation();
@@ -4814,8 +4678,7 @@ document.getElementById('testDbConnection').onclick = async () => {
       confirmBtn.disabled = false;
       
       const credsToStore = result.data?.credentials || credentials;
-      /*localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
-      window.dbCredentials = credsToStore;*/
+     
         localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
       window.dbCredentials = credsToStore;
       
@@ -5267,15 +5130,6 @@ if (confirmBtn) {
         }
       }
     });
-    
-    /*buildAttributeTable();
-    
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addAttrModal'));
-    if (modal) modal.hide();
-    
-    showTempPopup(` Attribute "${attrName}" added successfully!`);
-  };
-}*/
 buildAttributeTable();
     
     // Auto-open attribute box after adding custom attribute
