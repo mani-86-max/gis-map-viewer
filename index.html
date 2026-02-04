@@ -238,7 +238,7 @@ html, body {
   flex-direction: column; 
   box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
   resize: both; 
-  overflow: auto;
+  overflow: hidden;
   min-width: 350px; 
   min-height: 200px;
 }
@@ -289,11 +289,37 @@ html, body {
     fle:1;
     border-radius: 8px; 
     margin-bottom: 10px; 
-    min-height: 150px;
+    min-height: calc(80vh - 200px);
 }
-.table-wrapper table { 
+/*.table-wrapper table { 
     margin-bottom: 0; 
+}*/
+
+.table-wrapper table { 
+    margin-bottom: 0;
+    table-layout: auto;
+    width: 100%;
+    min-width: 100%;
 }
+
+.table-wrapper th,
+.table-wrapper td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 60px;
+    max-width: none;
+    padding: 8px 12px !important;
+}
+
+.table-wrapper th:hover,
+.table-wrapper td:hover {
+    overflow: visible;
+    white-space: normal;
+    position: relative;
+    z-index: 10;
+}
+
 .table-wrapper td[contenteditable="true"] { 
   background: rgba(255,255,255,0.05); 
   color: #dad6dfdb; 
@@ -328,7 +354,7 @@ html, body {
 
     /* Attribute Table Buttons */
 .table-wrapper .btn-focus {
-    background-color: #0d6efd; /* Blue for Center */
+    background-color: #0d6efd; 
     color: #fff;
     border: 1px solid #0d6efd;
     border-radius: 4px;
@@ -344,7 +370,7 @@ html, body {
 }
 
 .table-wrapper .btn-del-feature {
-    background-color: #dc3545; /* Red for Delete */
+    background-color: #dc3545; 
     color: #fff;
     border: 1px solid #dc3545;
     border-radius: 4px;
@@ -376,7 +402,7 @@ html, body {
     width: 18px; 
     height: 18px; 
 }
-/* NEW: Checkbox styles for row selection */
+/* Checkbox styles for row selection */
 .select-checkbox {
     width: 20px;
     height: 20px;
@@ -667,6 +693,16 @@ html, body {
   box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
 }
 
+/* Remove Buttons Style */
+.geo-btn-remove { 
+  background: #dc3545 !important; 
+}
+.geo-btn-remove:hover { 
+  background: #c82333 !important; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
 .geo-back-btn {
   width: 100%;
   padding: 8px;
@@ -934,7 +970,7 @@ html, body {
 .zoom-btn:hover { 
   transform: translateY(-2px); 
   box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-}
+}*/
 
 /* Custom Magnetic North Arrow */
 .north-arrow {
@@ -1629,8 +1665,16 @@ html, body {
         <option value="miles">Miles</option>
       </select>
     </div>
-    <button id="runBuffer" class="geo-btn geo-btn-buffer">
+    <!--<button id="runBuffer" class="geo-btn geo-btn-buffer">
       <i class="fas fa-play"></i> Create Buffer
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>-->
+  <button id="runBuffer" class="geo-btn geo-btn-buffer">
+      <i class="fas fa-play"></i> Create Buffer
+    </button>
+    <button id="removeBuffer" class="geo-btn geo-btn-remove">
+      <i class="fas fa-trash"></i> Remove Buffer
     </button>
     <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
   </div>
@@ -1642,8 +1686,17 @@ html, body {
     <p style="font-size:11px; color:#28a745; background:#d4edda; padding:6px; border-radius:4px;">
       Select 2+ overlapping features from attribute table first
     </p>
-    <button id="runIntersect" class="geo-btn geo-btn-intersect">
+   <!-- <button id="runIntersect" class="geo-btn geo-btn-intersect">
       <i class="fas fa-play"></i> Find Intersection
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>-->
+
+  <button id="runIntersect" class="geo-btn geo-btn-intersect">
+      <i class="fas fa-play"></i> Find Intersection
+    </button>
+    <button id="removeIntersection" class="geo-btn geo-btn-remove">
+      <i class="fas fa-trash"></i> Remove Intersection
     </button>
     <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
   </div>
@@ -1658,8 +1711,18 @@ html, body {
         <option value="_all_">Dissolve All</option>
       </select>
     </div>
-    <button id="runDissolve" class="geo-btn geo-btn-dissolve">
+   <!-- <button id="runDissolve" class="geo-btn geo-btn-dissolve">
       <i class="fas fa-play"></i> Dissolve Features
+    </button>
+    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>-->
+
+
+  <button id="runDissolve" class="geo-btn geo-btn-dissolve">
+      <i class="fas fa-play"></i> Dissolve Features
+    </button>
+    <button id="removeDissolve" class="geo-btn geo-btn-remove">
+      <i class="fas fa-trash"></i> Remove Dissolve
     </button>
     <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
   </div>
@@ -2101,7 +2164,7 @@ if (northArrow) {
     });
   });
 
-  // Optional: Right-click to reset rotation to north
+  //Right-click to reset rotation to north
   northArrow.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     map.getView().animate({ 
@@ -2113,7 +2176,10 @@ if (northArrow) {
 
 // Utilities
 function randomColor() { return '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'); }
+<<<<<<< HEAD
 
+=======
+>>>>>>> a7821af (Update index.html)
 function safeId(p='fid') { 
   if (!window._idCounter) window._idCounter = 0;
   window._idCounter++;
@@ -2424,11 +2490,15 @@ function closeSuggestions() {
   suggestionBox.style.display = 'none'; suggestionBox.innerHTML = ''; suggestionIndex = -1; currentSuggestions = [];
 }
 
+<<<<<<< HEAD
 
     let searchTimeout; //  Add this variable
+=======
+let searchTimeout;
+>>>>>>> a7821af (Update index.html)
 
 searchInput.addEventListener("input", async () => {
-  clearTimeout(searchTimeout); //  Cancel previous search
+  clearTimeout(searchTimeout);  
   const q = searchInput.value.trim();
   
   if (!q) { 
@@ -2826,8 +2896,11 @@ function getAllFeatures() {
   return allFeatures;
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a7821af (Update index.html)
   function buildAttributeTable() {
 
   attrHead.innerHTML = "";
@@ -2841,8 +2914,11 @@ function getAllFeatures() {
     return;
   }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a7821af (Update index.html)
 const ROWS_PER_PAGE = 100;
   if (!window.attrTablePage) window.attrTablePage = 0;
   
@@ -3006,8 +3082,7 @@ const ROWS_PER_PAGE = 100;
     };
   }
 
-  // CHECKBOX with 
-  // HANDLING
+  // CHECKBOX with HANDLING
   else if (type === "checkbox") {
     input = document.createElement("input");
     input.type = "checkbox";
@@ -3029,7 +3104,7 @@ const ROWS_PER_PAGE = 100;
     
     // Always store as proper boolean
     input.onchange = () => {
-      f.set(col, input.checked); // Boolean value
+      f.set(col, input.checked); 
     };
   }
 
@@ -3115,7 +3190,11 @@ const ROWS_PER_PAGE = 100;
   };
 
 }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> a7821af (Update index.html)
 function buildLayersPanel() {
   const layersList = document.getElementById('layersList');
   if (!layersList) return;
@@ -3124,7 +3203,7 @@ function buildLayersPanel() {
   
   if (!window.uploadedLayers) window.uploadedLayers = [];
   
-  // ✅ ADD DRAWN FEATURES LAYER IF IT HAS FEATURES
+  // ADD DRAWN FEATURES LAYER IF IT HAS FEATURES
   const drawnFeatures = vectorSource.getFeatures();
   if (drawnFeatures.length > 0) {
     const vectorLayerExists = window.uploadedLayers.some(layer => layer === vectorLayer);
@@ -3157,7 +3236,7 @@ function buildLayersPanel() {
     const opacity = layer.getOpacity();
     const visible = layer.getVisible();
     
-    // ✅ ADD ICON BASED ON FILE TYPE
+    // ADD ICON BASED ON FILE TYPE
     let layerIcon = 'fa-layer-group';
     if (fileType === 'drawing') layerIcon = 'fa-pencil-alt';
     else if (fileType === 'shapefile') layerIcon = 'fa-file-zipper';
@@ -3304,6 +3383,11 @@ function buildLayersPanel() {
   console.log(' Table handlers ready');
 })();
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a7821af (Update index.html)
 function highlightRowForFeature(f) {
   removeRowHighlights();
   const row = attrBody.querySelector(`tr[data-fid="${f.getId()}"]`); 
@@ -3818,7 +3902,52 @@ document.getElementById("runBuffer").onclick = () => {
     alert('Failed to create buffer. Please try again.');
   }
 };
+<<<<<<< HEAD
+=======
 
+// Remove Buffer Functionality
+document.getElementById("removeBuffer").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one buffer feature from the attribute table!');
+    return;
+  }
+  
+  const bufferFeatures = selectedFeatures.filter(f => f.get('buffer_distance'));
+  
+  if (bufferFeatures.length === 0) {
+    alert('No buffer features selected!\n\nSelect features created with Buffer tool.');
+    return;
+  }
+  
+  if (!confirm(`Delete ${bufferFeatures.length} buffer feature(s)?`)) return;
+  
+  let removedCount = 0;
+  bufferFeatures.forEach(feature => {
+    try {
+      const sourceLayer = getFeatureLayer(feature);
+      if (sourceLayer) {
+        sourceLayer.removeFeature(feature);
+        removedCount++;
+      }
+    } catch (err) {
+      console.error('Error removing buffer:', err);
+    }
+  });
+  
+  if (removedCount > 0) {
+    buildAttributeTable();
+    buildLayersPanel();
+    saveToLocal();
+    showTempPopup(`Removed ${removedCount} buffer feature(s)!`);
+  } else {
+    alert('Failed to remove buffers.');
+  }
+};
+>>>>>>> a7821af (Update index.html)
+
+//INTERSECT 
 document.getElementById("runIntersect").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
@@ -3827,7 +3956,7 @@ document.getElementById("runIntersect").onclick = () => {
     return;
   }
   
-  // ✅ Validate geometry types
+  // Validate geometry types
   const geometryTypes = selectedFeatures.map(f => {
     const geom = f.getGeometry();
     return geom ? geom.getType() : null;
@@ -3915,6 +4044,51 @@ document.getElementById("runIntersect").onclick = () => {
     alert('Failed to create intersection: ' + err.message);
   }
 };
+
+// Remove Intersection Functionality
+document.getElementById("removeIntersection").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one intersection feature from the attribute table!');
+    return;
+  }
+  
+  const intersectionFeatures = selectedFeatures.filter(f => {
+    const name = f.get('name') || '';
+    return name.includes('Intersection_') || f.get('source_count');
+  });
+  
+  if (intersectionFeatures.length === 0) {
+    alert('No intersection features selected!\n\nSelect features created with Intersect tool.');
+    return;
+  }
+  
+  if (!confirm(`Delete ${intersectionFeatures.length} intersection feature(s)?`)) return;
+  
+  let removedCount = 0;
+  intersectionFeatures.forEach(feature => {
+    try {
+      const sourceLayer = getFeatureLayer(feature);
+      if (sourceLayer) {
+        sourceLayer.removeFeature(feature);
+        removedCount++;
+      }
+    } catch (err) {
+      console.error('Error removing intersection:', err);
+    }
+  });
+  
+  if (removedCount > 0) {
+    buildAttributeTable();
+    buildLayersPanel();
+    saveToLocal();
+    showTempPopup(`Removed ${removedCount} intersection feature(s)!`);
+  } else {
+    alert('Failed to remove intersections.');
+  }
+};
+
 //DISSOLVE TOOL
 document.getElementById("runDissolve").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
@@ -4052,6 +4226,51 @@ document.getElementById("runDissolve").onclick = () => {
   }
 };
 
+// Remove Dissolve Functionality
+document.getElementById("removeDissolve").onclick = () => {
+  const selectedFeatures = getSelectedFeaturesFromTable();
+  
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one dissolved feature from the attribute table!');
+    return;
+  }
+  
+  const dissolveFeatures = selectedFeatures.filter(f => {
+    const name = f.get('name') || '';
+    return name.includes('Dissolved_') || f.get('dissolved_count');
+  });
+  
+  if (dissolveFeatures.length === 0) {
+    alert('No dissolved features selected!\n\nSelect features created with Dissolve tool.');
+    return;
+  }
+  
+  if (!confirm(`Delete ${dissolveFeatures.length} dissolved feature(s)?`)) return;
+  
+  let removedCount = 0;
+  dissolveFeatures.forEach(feature => {
+    try {
+      const sourceLayer = getFeatureLayer(feature);
+      if (sourceLayer) {
+        sourceLayer.removeFeature(feature);
+        removedCount++;
+      }
+    } catch (err) {
+      console.error('Error removing dissolve:', err);
+    }
+  });
+  
+  if (removedCount > 0) {
+    buildAttributeTable();
+    buildLayersPanel();
+    saveToLocal();
+    showTempPopup(`Removed ${removedCount} dissolved feature(s)!`);
+  } else {
+    alert('Failed to remove dissolved features.');
+  }
+};
+
+
 //DRAGGABLE/RESIZABLE ATTRIBUTE BOX
 (function() {
   const box = attributeBox;
@@ -4148,7 +4367,10 @@ document.getElementById("runDissolve").onclick = () => {
   };
 
   optionsContainer.querySelectorAll('.custom-option').forEach(option => {
+<<<<<<< HEAD
 
+=======
+>>>>>>> a7821af (Update index.html)
   option.onclick = function(e) {
   e.stopPropagation();
   const value = this.dataset.value;
@@ -4163,12 +4385,12 @@ document.getElementById("runDissolve").onclick = () => {
 
   wrapper.classList.remove('open');
   
-  // ✅ Clear all type-specific inputs
+  // Clear all type-specific inputs
   document.getElementById('selectOptions').value = '';
   document.getElementById('dateFormat').value = '';
   document.getElementById('imageUrl').value = '';
   
-  // ✅ Clear validation errors
+  // Clear validation errors
   document.querySelectorAll('.validation-error').forEach(el => el.remove());
   document.querySelectorAll('.error, .success').forEach(el => {
     el.classList.remove('error', 'success');
@@ -4678,7 +4900,11 @@ document.getElementById('testDbConnection').onclick = async () => {
       confirmBtn.disabled = false;
       
       const credsToStore = result.data?.credentials || credentials;
+<<<<<<< HEAD
      
+=======
+      
+>>>>>>> a7821af (Update index.html)
         localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
       window.dbCredentials = credsToStore;
       
@@ -5025,12 +5251,12 @@ if (confirmBtn) {
         const options = selectOptionsInput.value.trim();
         
         if (!options) {
-          mainError = { element: selectOptionsInput, message: '⚠️ Dropdown options are required! Add comma-separated values (e.g., Low, Medium, High)' };
+          mainError = { element: selectOptionsInput, message: 'Dropdown options are required! Add comma-separated values (e.g., Low, Medium, High)' };
           isValid = false;
         } else {
           const optionsList = options.split(',').map(o => o.trim()).filter(o => o);
           if (optionsList.length < 2) {
-            mainError = { element: selectOptionsInput, message: '⚠️ Need at least 2 dropdown options! Add more values separated by commas.' };
+            mainError = { element: selectOptionsInput, message: 'Need at least 2 dropdown options! Add more values separated by commas.' };
             isValid = false;
           } else {
             clearValidationError(selectOptionsInput);
