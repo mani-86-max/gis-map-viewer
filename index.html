@@ -238,7 +238,7 @@ html, body {
   flex-direction: column; 
   box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
   resize: both; 
-  overflow: hidden;
+  overflow: auto;
   min-width: 350px; 
   min-height: 200px;
 }
@@ -289,7 +289,7 @@ html, body {
     fle:1;
     border-radius: 8px; 
     margin-bottom: 10px; 
-    min-height: calc(80vh - 200px);
+    min-height: 150px;
 }
 /*.table-wrapper table { 
     margin-bottom: 0; 
@@ -307,8 +307,8 @@ html, body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-width: 60px;
-    max-width: none;
+    min-width: 80px;
+    max-width: 300px;
     padding: 8px 12px !important;
 }
 
@@ -1511,6 +1511,15 @@ html, body {
   </div>
 </div>
 
+<!-- DRAWER -->
+<!--<div id="drawer" class="drawer">
+
+  <button id="homeBtn" class="drawer-toggle" title="Home" style="margin-bottom: 8px;">
+    <i class="fas fa-home"></i>
+  </button>
+
+  <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
+  <div class="drawer-content">-->
 
     <div id="drawer" class="drawer">
   
@@ -2168,7 +2177,7 @@ if (northArrow) {
   northArrow.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     map.getView().animate({ 
-      rotation: 0, 
+      rotation: 0, // Reset to north
       duration: 600 
     });
   });
@@ -2176,10 +2185,6 @@ if (northArrow) {
 
 // Utilities
 function randomColor() { return '#' + Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0'); }
-<<<<<<< HEAD
-
-=======
->>>>>>> a7821af (Update index.html)
 function safeId(p='fid') { 
   if (!window._idCounter) window._idCounter = 0;
   window._idCounter++;
@@ -2490,12 +2495,7 @@ function closeSuggestions() {
   suggestionBox.style.display = 'none'; suggestionBox.innerHTML = ''; suggestionIndex = -1; currentSuggestions = [];
 }
 
-<<<<<<< HEAD
-
-    let searchTimeout; //  Add this variable
-=======
 let searchTimeout;
->>>>>>> a7821af (Update index.html)
 
 searchInput.addEventListener("input", async () => {
   clearTimeout(searchTimeout);  
@@ -2896,11 +2896,6 @@ function getAllFeatures() {
   return allFeatures;
 }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> a7821af (Update index.html)
   function buildAttributeTable() {
 
   attrHead.innerHTML = "";
@@ -2914,11 +2909,6 @@ function getAllFeatures() {
     return;
   }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> a7821af (Update index.html)
 const ROWS_PER_PAGE = 100;
   if (!window.attrTablePage) window.attrTablePage = 0;
   
@@ -3190,11 +3180,7 @@ const ROWS_PER_PAGE = 100;
   };
 
 }
-<<<<<<< HEAD
-  
-=======
 
->>>>>>> a7821af (Update index.html)
 function buildLayersPanel() {
   const layersList = document.getElementById('layersList');
   if (!layersList) return;
@@ -3340,6 +3326,10 @@ function buildLayersPanel() {
     });
   });
 }
+
+
+
+
 //  NEW: One listener for all table buttons
 (function setupTableEventHandlers() {
   const attrBody = document.getElementById('attrBody');
@@ -3383,11 +3373,8 @@ function buildLayersPanel() {
   console.log(' Table handlers ready');
 })();
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> a7821af (Update index.html)
 function highlightRowForFeature(f) {
   removeRowHighlights();
   const row = attrBody.querySelector(`tr[data-fid="${f.getId()}"]`); 
@@ -3902,8 +3889,6 @@ document.getElementById("runBuffer").onclick = () => {
     alert('Failed to create buffer. Please try again.');
   }
 };
-<<<<<<< HEAD
-=======
 
 // Remove Buffer Functionality
 document.getElementById("removeBuffer").onclick = () => {
@@ -3945,7 +3930,6 @@ document.getElementById("removeBuffer").onclick = () => {
     alert('Failed to remove buffers.');
   }
 };
->>>>>>> a7821af (Update index.html)
 
 //INTERSECT 
 document.getElementById("runIntersect").onclick = () => {
@@ -4367,10 +4351,6 @@ document.getElementById("removeDissolve").onclick = () => {
   };
 
   optionsContainer.querySelectorAll('.custom-option').forEach(option => {
-<<<<<<< HEAD
-
-=======
->>>>>>> a7821af (Update index.html)
   option.onclick = function(e) {
   e.stopPropagation();
   const value = this.dataset.value;
@@ -4900,11 +4880,7 @@ document.getElementById('testDbConnection').onclick = async () => {
       confirmBtn.disabled = false;
       
       const credsToStore = result.data?.credentials || credentials;
-<<<<<<< HEAD
-     
-=======
       
->>>>>>> a7821af (Update index.html)
         localStorage.setItem('dbCredentials', JSON.stringify(credsToStore));
       window.dbCredentials = credsToStore;
       
@@ -5251,12 +5227,12 @@ if (confirmBtn) {
         const options = selectOptionsInput.value.trim();
         
         if (!options) {
-          mainError = { element: selectOptionsInput, message: 'Dropdown options are required! Add comma-separated values (e.g., Low, Medium, High)' };
+          mainError = { element: selectOptionsInput, message: '⚠️ Dropdown options are required! Add comma-separated values (e.g., Low, Medium, High)' };
           isValid = false;
         } else {
           const optionsList = options.split(',').map(o => o.trim()).filter(o => o);
           if (optionsList.length < 2) {
-            mainError = { element: selectOptionsInput, message: 'Need at least 2 dropdown options! Add more values separated by commas.' };
+            mainError = { element: selectOptionsInput, message: '⚠️ Need at least 2 dropdown options! Add more values separated by commas.' };
             isValid = false;
           } else {
             clearValidationError(selectOptionsInput);
