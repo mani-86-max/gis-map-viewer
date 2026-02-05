@@ -1510,17 +1510,6 @@ html, body {
     </div>
   </div>
 </div>
-
-<!-- DRAWER -->
-<!--<div id="drawer" class="drawer">
-
-  <button id="homeBtn" class="drawer-toggle" title="Home" style="margin-bottom: 8px;">
-    <i class="fas fa-home"></i>
-  </button>
-
-  <button id="drawerToggle" class="drawer-toggle" title="Menu"><i class="fas fa-bars"></i></button>
-  <div class="drawer-content">-->
-
     <div id="drawer" class="drawer">
   
   <!--Button Group for Perfect Alignment -->
@@ -1674,11 +1663,7 @@ html, body {
         <option value="miles">Miles</option>
       </select>
     </div>
-    <!--<button id="runBuffer" class="geo-btn geo-btn-buffer">
-      <i class="fas fa-play"></i> Create Buffer
-    </button>
-    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>-->
+  
   <button id="runBuffer" class="geo-btn geo-btn-buffer">
       <i class="fas fa-play"></i> Create Buffer
     </button>
@@ -1695,12 +1680,6 @@ html, body {
     <p style="font-size:11px; color:#28a745; background:#d4edda; padding:6px; border-radius:4px;">
       Select 2+ overlapping features from attribute table first
     </p>
-   <!-- <button id="runIntersect" class="geo-btn geo-btn-intersect">
-      <i class="fas fa-play"></i> Find Intersection
-    </button>
-    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>-->
-
   <button id="runIntersect" class="geo-btn geo-btn-intersect">
       <i class="fas fa-play"></i> Find Intersection
     </button>
@@ -1720,13 +1699,7 @@ html, body {
         <option value="_all_">Dissolve All</option>
       </select>
     </div>
-   <!-- <button id="runDissolve" class="geo-btn geo-btn-dissolve">
-      <i class="fas fa-play"></i> Dissolve Features
-    </button>
-    <button class="geo-back-btn"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>-->
-
-
+  
   <button id="runDissolve" class="geo-btn geo-btn-dissolve">
       <i class="fas fa-play"></i> Dissolve Features
     </button>
@@ -2368,7 +2341,23 @@ document.getElementById("closeLayersPanel").onclick = () => {
   document.getElementById("layersPanel").style.display = "none";
 };
 document.getElementById("closeAttributes").onclick = () => attributeBox.style.display = "none";
-document.getElementById("closeEditor").onclick = () => { editorBox.style.display = "none"; removeInteractions(); };
+/*document.getElementById("closeEditor").onclick = () => { editorBox.style.display = "none"; removeInteractions(); };*/
+
+document.getElementById("closeEditor").onclick = () => { 
+  //Remove interactions BEFORE hiding panel
+  removeInteractions();
+  
+  // Clear any selected features from editor
+  selectInteraction.getFeatures().clear();
+  selectedFeature = null;
+  
+  // Hide the panel
+  editorBox.style.display = "none"; 
+  
+  showTempPopup('Editor tools disabled');
+};
+
+
 document.getElementById("closeGeoprocessing").onclick = () => {
   document.getElementById("geoprocessingContainer").style.display = "none";
 };
@@ -2742,12 +2731,25 @@ selectInteraction.on('select', (evt) => {
     selectedFeature = f;
     highlightRowForFeature(f);
     openPopupForFeature(f);
+    
+    //Auto-check the checkbox in attribute table
+    const fid = f.getId();
+    const checkbox = document.querySelector(`.select-checkbox[data-fid="${fid}"]`);
+    if (checkbox) {
+      checkbox.checked = true;
+    }
   } else {
     selectedFeature = null;
     removeRowHighlights();
     hidePopup();
+    
+    // Uncheck all checkboxes when deselecting
+    document.querySelectorAll('.select-checkbox').forEach(cb => cb.checked = false);
   }
 });
+
+
+
 function findFeatureSource(feature) {
   if (!feature) return null;
   
@@ -2896,14 +2898,26 @@ function getAllFeatures() {
   return allFeatures;
 }
 
-  function buildAttributeTable() {
+ //function to create attribute table
+function buildAttributeTable() {
 
   attrHead.innerHTML = "";
   attrBody.innerHTML = "";
 
   const feats = getAllFeatures();
+  
+  // Remove duplicates by feature ID
+  const uniqueFeats = [];
+  const seenIds = new Set();
+  feats.forEach(f => {
+    const fid = f.getId();
+    if (fid && !seenIds.has(fid)) {
+      seenIds.add(fid);
+      uniqueFeats.push(f);
+    }
+  });
 
-  if (!feats.length) {
+  if (!uniqueFeats.length) {
     attrHead.innerHTML = "<tr><th>No features</th></tr>";
     attributeBox.style.display = "none";
     return;
@@ -2912,7 +2926,7 @@ function getAllFeatures() {
 const ROWS_PER_PAGE = 100;
   if (!window.attrTablePage) window.attrTablePage = 0;
   
-  const totalPages = Math.ceil(feats.length / ROWS_PER_PAGE);
+  const totalPages = Math.ceil(uniqueFeats.length / ROWS_PER_PAGE);
   
   // Reset page if out of bounds
   if (window.attrTablePage >= totalPages) {
@@ -2920,15 +2934,15 @@ const ROWS_PER_PAGE = 100;
   }
 
   const startIdx = window.attrTablePage * ROWS_PER_PAGE;
-  const endIdx = Math.min(startIdx + ROWS_PER_PAGE, feats.length);
-  const displayFeats = feats.slice(startIdx, endIdx);
+  const endIdx = Math.min(startIdx + ROWS_PER_PAGE, uniqueFeats.length);
+  const displayFeats = uniqueFeats.slice(startIdx, endIdx);
   
   // Add pagination controls if needed
-  if (feats.length > ROWS_PER_PAGE) {
+  if (uniqueFeats.length > ROWS_PER_PAGE) {
     const paginationDiv = document.createElement('div');
     paginationDiv.style.cssText = 'padding:10px; background:rgba(0,229,255,0.15); border-radius:6px; margin-bottom:10px; text-align:center; color:#00e5ff; font-weight:500;';
     paginationDiv.innerHTML = `
-       Showing ${startIdx + 1}-${endIdx} of ${feats.length} features | 
+       Showing ${startIdx + 1}-${endIdx} of ${uniqueFeats.length} features | 
       <button style="margin:0 5px; padding:4px 12px; background:#0d6efd; color:white; border:none; border-radius:4px; cursor:pointer;" 
         onclick="window.attrTablePage=Math.max(0,${window.attrTablePage}-1); buildAttributeTable();" 
         ${window.attrTablePage === 0 ? 'disabled' : ''}>◀ Previous</button>
@@ -2949,11 +2963,13 @@ const ROWS_PER_PAGE = 100;
   }
 
   const keySet = new Set();
-  feats.forEach(f =>
+  uniqueFeats.forEach(f =>
     Object.keys(f.getProperties()).forEach(k => {
       if (k !== "geometry") keySet.add(k);
     })
   );
+
+
   customAttributes.forEach(k => keySet.add(k));
 
   const keys = Array.from(keySet);
@@ -2972,13 +2988,33 @@ const ROWS_PER_PAGE = 100;
     const tr = document.createElement("tr");
     tr.dataset.fid = fid;
 
-    const tdCheck = document.createElement("td");
+const tdCheck = document.createElement("td");
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.classList.add("select-checkbox");
     cb.dataset.fid = fid;
+    
+    // checkbox with map selection
+    cb.onchange = function() {
+      if (this.checked) {
+        const feature = findByIdAcrossSources(fid);
+        if (feature) {
+          selectInteraction.getFeatures().clear();
+          selectInteraction.getFeatures().push(feature);
+          selectedFeature = feature;
+        }
+      } else {
+        selectInteraction.getFeatures().clear();
+        if (selectedFeature && selectedFeature.getId() === fid) {
+          selectedFeature = null;
+        }
+      }
+    };
+    
     tdCheck.appendChild(cb);
     tr.appendChild(tdCheck);
+
+
 
     keys.forEach(col => {
   const td = document.createElement("td");
@@ -3502,17 +3538,45 @@ let drawInteraction = null;
 let modifyInteraction = null;
 
 function removeInteractions() {
-  if (drawInteraction) { map.removeInteraction(drawInteraction); drawInteraction = null; }
-  if (modifyInteraction) { map.removeInteraction(modifyInteraction); modifyInteraction = null; }
+  //  any active drawing
+  if (drawInteraction) { 
+    try {
+      drawInteraction.abortDrawing(); 
+    } catch(e) {
+      console.log('No active drawing to abort');
+    }
+    map.removeInteraction(drawInteraction); 
+    drawInteraction = null; 
+  }
+  
+  if (modifyInteraction) { 
+    map.removeInteraction(modifyInteraction); 
+    modifyInteraction = null; 
+  }
+  
+  // Remove active state from all editor buttons
   document.querySelectorAll('.editor-btn').forEach(btn => btn.classList.remove('active'));
+  
+  //reset curesor
+  map.getTargetElement().style.cursor = '';
 }
+
+
 
 function addDraw(type, button) {
   removeInteractions();
   drawInteraction = new ol.interaction.Draw({ source: vectorSource, type });
   if (button) button.classList.add('active');
   map.addInteraction(drawInteraction);
-  drawInteraction.on('drawend', e => {
+
+
+drawInteraction.on('drawend', e => {
+    // Check if editor is still open
+    if (editorBox.style.display !== 'flex') {
+      console.log('Editor closed - ignoring draw event');
+      return; 
+    }
+    
     const f = e.feature;
     if (!f.get('name')) f.set('name', `Feature ${vectorSource.getFeatures().length}`);
     if (!f.get('color')) f.set('color', randomColor());
@@ -3524,7 +3588,7 @@ function addDraw(type, button) {
       sel.clear();
       sel.push(f);
       selectedFeature = f;
-      
+
       // OPEN ATTRIBUTE TABLE
       if (attributeBox.style.display !== 'flex') {
         attributeBox.style.display = 'flex';
@@ -3688,7 +3752,6 @@ function saveToLocal() {
 }
 
 
-
 function loadFromLocal() {
   try {
     customAttributes = JSON.parse(localStorage.getItem('customAttributes')||'[]')||[];
@@ -3800,7 +3863,7 @@ function olFeatureToTurf(olFeature) {
   return turf.feature(geoJsonGeom);
 }
 
-// Helper: Convert Turf Geometry to OL Geometry
+// Convert Turf Geometry to OL Geometry
 function turfToOlGeometry(turfGeometry) {
   const format = new ol.format.GeoJSON();
   return format.readGeometry(turfGeometry, {
@@ -3841,7 +3904,7 @@ document.getElementById("runBuffer").onclick = () => {
   let bufferedCount = 0;
   const bufferedExtents = [];
   
-  selectedFeatures.forEach(feature => {
+selectedFeatures.forEach(feature => {
     try {
       const turfFeature = olFeatureToTurf(feature);
       const buffered = turf.buffer(turfFeature, distanceInKm, {units: 'kilometers'});
@@ -3849,15 +3912,28 @@ document.getElementById("runBuffer").onclick = () => {
       if (buffered && buffered.geometry) {
         const bufferedGeom = turfToOlGeometry(buffered.geometry);
         
+        // Generate deterministic ID based on source feature + distance
+        const sourceId = feature.getId();
+        const bufferId = `buffer-${sourceId}-${distance}${unit}`;
+        
+        // Check if buffer already exists
+        const existingBuffer = findByIdAcrossSources(bufferId);
+        if (existingBuffer) {
+          console.log(`Buffer already exists: ${sourceId} at ${distance}${unit}`);
+          showTempPopup(`Buffer already exists for this feature at ${distance}${unit}!`, 3000);
+          return; 
+        }
+        
         const newFeature = new ol.Feature({
           geometry: bufferedGeom,
           name: `Buffer_${feature.get('name') || 'Feature'}`,
           buffer_distance: `${distance} ${unit}`,
           source_feature: feature.get('name') || feature.getId(),
+          source_feature_id: sourceId,  
           color: randomColor()
         });
         
-        newFeature.setId(safeId('buffer'));
+        newFeature.setId(bufferId);  
         const sourceLayer = getFeatureLayer(feature);
         sourceLayer.addFeature(newFeature);
         bufferedCount++;
@@ -3868,6 +3944,7 @@ document.getElementById("runBuffer").onclick = () => {
       alert('Buffer creation failed: ' + err.message);
     }
   });
+
   
   if (bufferedCount > 0) {
     // for zoom of all buffers
@@ -5198,7 +5275,7 @@ if (confirmBtn) {
     let isValid = true;
     let mainError = null;
     
-    // STEP 1: Validate attribute name FIRST (always required)
+    // Validate attribute name FIRST (always required)
     if (!attrName) {
       mainError = { element: attrNameInput, message: 'Attribute name is required' };
       isValid = false;
@@ -5219,7 +5296,7 @@ if (confirmBtn) {
       }
     }
     
-    // STEP 2: If name is valid, then validate type-specific fields
+    // If name is valid, then validate type-specific fields
     if (isValid) {
       //  Validate SELECT (Dropdown) type
       if (attrType === 'select') {
@@ -5296,7 +5373,7 @@ if (confirmBtn) {
       }
     }
     
-    // STEP 3: Show error if validation failed
+    // Show error if validation failed
     if (!isValid) {
       if (mainError) {
         showValidationError(mainError.element, mainError.message);
@@ -5305,7 +5382,7 @@ if (confirmBtn) {
       return;
     }
     
-    // STEP 4: All validations passed - Add the attribute
+    // All validations passed - Add the attribute
     clearValidationError(attrNameInput);
     
     customAttributes.push(attrName);
