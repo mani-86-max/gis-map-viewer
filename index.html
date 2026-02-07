@@ -4409,64 +4409,7 @@ document.getElementById("removeDissolve").onclick = () => {
   
 })();
 
-/* ATTRIBUTE MODAL - Custom Select Dropdown
-(function() {
-  const display = document.getElementById('attrTypeDisplay');
-  const optionsContainer = document.getElementById('attrTypeOptions');
-  const wrapper = display?.closest('.custom-select-wrapper');
-  const hiddenInput = document.getElementById('attrType');
-
-  const selectOptionsDiv = document.getElementById('selectOptionsDiv');
-  const dateFormatDiv = document.getElementById('dateFormatDiv');
-  const imageUrlDiv = document.getElementById('imageUrlDiv');
-
-  if (!display || !optionsContainer || !wrapper) return;
-
-  display.onclick = function(e) {
-    e.stopPropagation();
-    wrapper.classList.toggle('open');
-  };
-
-  optionsContainer.querySelectorAll('.custom-option').forEach(option => {
-  option.onclick = function(e) {
-  e.stopPropagation();
-  const value = this.dataset.value;
-  const text = this.textContent;
-
-  display.querySelector('span').textContent = text;
-  hiddenInput.value = value;
-
-  optionsContainer.querySelectorAll('.custom-option')
-    .forEach(opt => opt.classList.remove('selected'));
-  this.classList.add('selected');
-
-  wrapper.classList.remove('open');
-  
-  // Clear all type-specific inputs
-  document.getElementById('selectOptions').value = '';
-  document.getElementById('dateFormat').value = '';
-  document.getElementById('imageUrl').value = '';
-  
-  // Clear validation errors
-  document.querySelectorAll('.validation-error').forEach(el => el.remove());
-  document.querySelectorAll('.error, .success').forEach(el => {
-    el.classList.remove('error', 'success');
-  });
-
-  selectOptionsDiv.style.display = value === 'select' ? 'block' : 'none';
-  dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
-  imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
-};
-
-  document.addEventListener('click', function(e) {
-    if (!wrapper.contains(e.target)) {
-      wrapper.classList.remove('open');
-    }
-  });
-})()});*/
-
-
-// ATTRIBUTE MODAL - Custom Select Dropdown (FIXED)
+// ATTRIBUTE MODAL - Custom Select Dropdown function
 function initCustomDropdown() {
   console.log('🔧 Initializing custom dropdown...');
   
