@@ -4409,7 +4409,7 @@ document.getElementById("removeDissolve").onclick = () => {
   
 })();
 
-// ATTRIBUTE MODAL - Custom Select Dropdown
+/* ATTRIBUTE MODAL - Custom Select Dropdown
 (function() {
   const display = document.getElementById('attrTypeDisplay');
   const optionsContainer = document.getElementById('attrTypeOptions');
@@ -4463,7 +4463,121 @@ document.getElementById("removeDissolve").onclick = () => {
       wrapper.classList.remove('open');
     }
   });
-})()});
+})()});*/
+
+
+// ATTRIBUTE MODAL - Custom Select Dropdown (FIXED)
+function initCustomDropdown() {
+  console.log('🔧 Initializing custom dropdown...');
+  
+  const display = document.getElementById('attrTypeDisplay');
+  const optionsContainer = document.getElementById('attrTypeOptions');
+  const wrapper = display?.closest('.custom-select-wrapper');
+  const hiddenInput = document.getElementById('attrType');
+
+  const selectOptionsDiv = document.getElementById('selectOptionsDiv');
+  const dateFormatDiv = document.getElementById('dateFormatDiv');
+  const imageUrlDiv = document.getElementById('imageUrlDiv');
+
+  if (!display || !optionsContainer || !wrapper) {
+    console.log('⏳ Dropdown elements not ready, retrying...');
+    setTimeout(initCustomDropdown, 100);
+    return;
+  }
+
+  console.log('✅ Dropdown elements found!');
+
+  // Clone to remove old event listeners
+  const newDisplay = display.cloneNode(true);
+  display.parentNode.replaceChild(newDisplay, display);
+  
+  const newWrapper = newDisplay.closest('.custom-select-wrapper');
+  const newOptionsContainer = newWrapper.querySelector('.custom-select-options');
+
+  // Toggle dropdown
+  newDisplay.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const wasOpen = newWrapper.classList.contains('open');
+    document.querySelectorAll('.custom-select-wrapper.open').forEach(w => w.classList.remove('open'));
+    
+    if (!wasOpen) {
+      newWrapper.classList.add('open');
+      console.log('🔽 Dropdown opened');
+    }
+  });
+
+  // Handle option clicks
+  newOptionsContainer.querySelectorAll('.custom-option').forEach(option => {
+    const newOption = option.cloneNode(true);
+    option.parentNode.replaceChild(newOption, option);
+    
+    newOption.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const value = this.dataset.value;
+      const text = this.textContent.trim();
+      
+      console.log('✔️ Selected:', value);
+
+      newDisplay.querySelector('span').textContent = text;
+      hiddenInput.value = value;
+
+      newOptionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      newWrapper.classList.remove('open');
+      
+      // Clear inputs
+      if (document.getElementById('selectOptions')) document.getElementById('selectOptions').value = '';
+      if (document.getElementById('dateFormat')) document.getElementById('dateFormat').value = '';
+      if (document.getElementById('imageUrl')) document.getElementById('imageUrl').value = '';
+      
+      // Clear errors
+      document.querySelectorAll('.validation-error').forEach(el => el.remove());
+      document.querySelectorAll('.error, .success').forEach(el => el.classList.remove('error', 'success'));
+
+      // Show/hide fields
+      if (selectOptionsDiv) selectOptionsDiv.style.display = value === 'select' ? 'block' : 'none';
+      if (dateFormatDiv) dateFormatDiv.style.display = value === 'date' ? 'block' : 'none';
+      if (imageUrlDiv) imageUrlDiv.style.display = value === 'image' ? 'block' : 'none';
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', function(e) {
+    if (!newWrapper.contains(e.target)) newWrapper.classList.remove('open');
+  });
+  
+  console.log('✅ Dropdown initialized!');
+}
+
+// Initialize on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => setTimeout(initCustomDropdown, 200));
+} else {
+  setTimeout(initCustomDropdown, 200);
+}
+
+// Reinitialize when modal opens
+const addAttrModal = document.getElementById('addAttrModal');
+if (addAttrModal) {
+  addAttrModal.addEventListener('shown.bs.modal', () => setTimeout(initCustomDropdown, 100));
+}
+
+// Reinitialize when Add button clicked
+setTimeout(() => {
+  const addAttrBtn = document.getElementById('addAttrBtn');
+  if (addAttrBtn) {
+    const originalClick = addAttrBtn.onclick;
+    addAttrBtn.onclick = function() {
+      if (originalClick) originalClick.call(this);
+      setTimeout(initCustomDropdown, 150);
+    };
+  }
+}, 1000);
+
 
 // MAKE GEOPROCESSING BOX DRAGGABLE, RESIZABLE, AND COLLAPSIBLE
 (function() {
@@ -5275,7 +5389,7 @@ if (confirmBtn) {
     let isValid = true;
     let mainError = null;
     
-    // Validate attribute name FIRST (always required)
+    // Validate attribute name FIRST require
     if (!attrName) {
       mainError = { element: attrNameInput, message: 'Attribute name is required' };
       isValid = false;
