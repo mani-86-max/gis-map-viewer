@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!--<meta name="viewport" content="width=device-width,initial-scale=1" />-->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+
 <title>Map Viewer </title>
 
 <!-- OpenLayers -->
@@ -75,7 +82,7 @@ html, body {
   display: flex; justify-content: center; align-items: center; z-index: 300; font-size: 13px;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
 }
-/* Desktop/Laptop - Default */
+/* ==================== DESKTOP DRAWER (Default) ==================== */
 .drawer { 
     position: fixed; 
     top: 70px; 
@@ -130,8 +137,8 @@ html, body {
   margin-top: 8px; 
   border-radius: 8px; 
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15); 
-  min-width: 160px;
-  max-width: 180px;
+  min-width: 140px;
+  max-width: 160px;
   max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -198,255 +205,380 @@ html, body {
     gap: 4px; 
 }
 
-/* TABLET  */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .drawer {
-    top: 65px;
-    left: 10px;
-  }
-  
-  .drawer-toggle {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 16px;
-  }
-  
-  .drawer-content {
-    min-width: 150px;
-    max-width: 170px;
-    max-height: 350px;
-  }
-  
-  .icon-btn {
-    padding: 12px 14px;
-    font-size: 13px;
-    min-height: 44px;
-    max-height: 44px;
-    height: 44px;
-  }
-  
-  .icon-btn i {
-    font-size: 15px;
-  }
-}
+/* ==================== MOBILE RESPONSIVE STYLES ==================== */
 
-/* MOBILE LANDSCAPE */
-@media (max-width: 768px) and (min-width: 577px) {
-  .drawer {
-    top: 60px;
-    left: 8px;
+/* Mobile Portrait (< 576px) */
+@media (max-width: 575px) {
+  body, html {
+    overflow-x: hidden;
+    width: 100%;
   }
   
-  .drawer-toggle {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    min-height: 42px;
-    font-size: 15px;
+  /* Compact Header */
+  .app-header {
+    height: 50px;
+    padding: 0 10px;
   }
   
-  .drawer-content {
-    min-width: 140px;
-    max-width: 160px;
-    max-height: 300px;
-    padding: 6px;
-  }
-  
-  .icon-btn {
-    padding: 10px 12px;
-    font-size: 12px;
-    gap: 10px;
-    min-height: 40px;
-    max-height: 40px;
-    height: 40px;
-  }
-  
-  .icon-btn i {
-    width: 16px;
-    font-size: 14px;
-  }
-  
-  .icon-btn span {
-    font-size: 12px;
-  }
-}
-
-/*  MOBILE PORTRAIT */
-@media (max-width: 576px) {
-  .drawer {
-    top: 58px;
-    left: 6px;
-  }
-  
-  .drawer-toggle {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    font-size: 14px;
-    border-radius: 6px;
-  }
-  
-  .drawer-button-group .drawer-toggle:first-child {
-    border-radius: 6px 6px 0 0;
-  }
-  
-  .drawer-button-group .drawer-toggle:last-child {
-    border-radius: 0 0 6px 6px;
-  }
-  
-  .drawer-content {
-    min-width: 130px;
-    max-width: 150px;
-    max-height: 280px;
-    padding: 6px;
-    margin-top: 6px;
-    border-radius: 6px;
-  }
-  
-  .icon-btn {
-    padding: 8px 10px;
-    font-size: 11px;
-    gap: 8px;
-    min-height: 38px;
-    max-height: 38px;
-    height: 38px;
-    border-radius: 6px;
-    margin: 3px 0;
-  }
-  
-  .icon-btn i {
-    width: 14px;
-    font-size: 13px;
-  }
-  
-  .icon-btn span {
-    font-size: 11px;
-  }
-  
-  .drawer-content hr {
-    margin: 4px 0;
-  }
-}
-
-/*  SMALL MOBILE (< 320px)  */
-@media (max-width: 320px) {
-  .drawer {
-    top: 56px;
-    left: 4px;
-  }
-  
-  .drawer-toggle {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
-    font-size: 12px;
-  }
-  
-  .drawer-content {
-    min-width: 120px;
-    max-width: 140px;
-    max-height: 250px;
-    padding: 5px;
-  }
-  
-  .icon-btn {
-    padding: 6px 8px;
-    font-size: 10px;
-    gap: 6px;
-    min-height: 34px;
-    max-height: 34px;
+  .app-header .logo {
+    width: 34px;
     height: 34px;
+    font-size: 17px;
+  }
+  
+  .app-header .app-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  /* Mobile Bottom Sheet Drawer */
+  .drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  
+  .drawer.mobile-active {
+    background: rgba(0, 0, 0, 0.6);
+    pointer-events: all;
+  }
+  
+  .drawer-button-group {
+    position: fixed;
+    top: 54px;
+    left: 8px;
+    z-index: 350;
+    pointer-events: all;
+  }
+  
+  .drawer-toggle {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    font-size: 20px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Bottom Sheet */
+  .drawer-content {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 75vh;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: all;
+    z-index: 9998;
+  }
+  
+  .drawer.mobile-active .drawer-content {
+    transform: translateY(0);
+  }
+  
+  .drawer-content::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 3px;
+    margin: 0 auto 15px;
+    cursor: grab;
+  }
+  
+  .icon-btn {
+    min-height: 56px !important;
+    max-height: 56px !important;
+    height: 56px !important;
+    padding: 16px 18px;
+    font-size: 16px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    color: #333;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
   }
   
   .icon-btn i {
-    width: 12px;
-    font-size: 11px;
-  }
-}
-
-/* iOS SPECIFIC FIXES  */
-@supports (-webkit-touch-callout: none) {
-  .drawer {
-    -webkit-overflow-scrolling: touch;
+    font-size: 20px;
+    width: 24px;
   }
   
-  .drawer-toggle {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-  
-  .icon-btn {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-  
-  .drawer-content {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/*  TOUCH DEVICES */
-@media (hover: none) and (pointer: coarse) {
-  .drawer-toggle {
-    min-width: 44px;
-    min-height: 44px;
-  }
-  
-  .icon-btn {
-    min-height: 44px;
-    padding: 12px 14px;
-  }
-  
-  .drawer-toggle:hover,
-  .icon-btn:hover {
-    transform: none;
-  }
-  
-  .drawer-toggle:active {
-    transform: scale(0.95);
-    background: #e8e8e8;
+  .icon-btn span {
+    font-size: 16px;
+    font-weight: 500;
   }
   
   .icon-btn:active {
-    background: #5fa3c9;
+    background: #e0e0e0;
     transform: scale(0.98);
   }
-}
-
-/* LANDSCAPE MODE  */
-@media (max-height: 500px) and (orientation: landscape) {
-  .drawer {
-    top: 55px;
+  
+  /* Full Screen Panels */
+  .attribute-box,
+  .geoprocessing-box,
+  .basemap-box,
+  .upload-box,
+  .layers-panel,
+  .editor-box {
+    position: fixed !important;
+    top: 50px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: calc(100vh - 50px) !important;
+    max-height: calc(100vh - 50px) !important;
+    border-radius: 0 !important;
+    padding: 12px;
+    margin: 0 !important;
+    z-index: 9997;
   }
   
-  .drawer-content {
-    max-height: calc(100vh - 110px);
+  /* Mobile Table */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 60px;
   }
   
-  .drawer-toggle {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    min-height: 38px;
+  .table-wrapper table {
+    min-width: 700px;
+    font-size: 13px;
   }
   
-  .icon-btn {
-    padding: 8px 10px;
-    min-height: 36px;
-    max-height: 36px;
+  .table-wrapper th,
+  .table-wrapper td {
+    padding: 10px 8px !important;
+    font-size: 13px;
+  }
+  
+  /* Sticky Footer Buttons */
+  .attr-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    z-index: 100;
+  }
+  
+  .attr-footer .btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 140px;
+    padding: 12px 10px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  /* Search Bar */
+  .search-bar {
+    top: 54px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 120px);
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+  
+  .suggestion-box {
+    width: calc(100% - 120px);
+    left: 60px;
+    transform: none;
+  }
+  
+  /* Zoom Controls */
+  .zoom-controls {
+    position: fixed;
+    top: auto;
+    bottom: 80px;
+    right: 12px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .zoom-btn {
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+  }
+  
+  /* North Arrow & Scale */
+  .north-arrow {
+    bottom: 80px;
+    left: 12px;
+    width: 46px;
+    height: 46px;
+  }
+  
+  .scale-container {
+    bottom: 80px;
+    right: 70px;
+  }
+  
+  .scale-unit-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .scale-unit-btn {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+  
+  /* Footer */
+  .app-footer {
     height: 36px;
+    font-size: 11px;
+  }
+  
+  /* Geoprocessing Mobile */
+  .geo-main-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .geo-main-btn {
+    width: 100%;
+    height: 90px;
+    font-size: 32px;
+  }
+  
+  /* Basemap Options */
+  .basemap-options {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .basemap-option {
+    padding: 24px 12px;
+  }
+  
+  .basemap-option i {
+    font-size: 40px;
+  }
+  
+  /* Upload Options */
+  .upload-option {
+    padding: 20px 16px;
+  }
+  
+  .upload-option i {
+    font-size: 36px;
+  }
+  
+  /* Layers Panel */
+  .layer-item {
+    padding: 16px 12px;
+  }
+  
+  .layer-name {
+    font-size: 15px;
+  }
+  
+  /* Editor Buttons */
+  .editor-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .editor-btn {
+    width: 100%;
+    height: 75px;
+    font-size: 26px;
+  }
+  
+  /* Modals */
+  .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+    height: 100%;
+  }
+  
+  .modal-content {
+    height: 100%;
+    border-radius: 0;
+  }
+  
+  .modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
-/* HIGH DPI DISPLAYS */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .drawer-toggle,
+/* Tablets (577px - 991px) */
+@media (min-width: 577px) and (max-width: 991px) {
+  .drawer-content {
+    min-width: 200px;
+    max-width: 220px;
+  }
+  
   .icon-btn {
-    border-width: 0.5px;
+    min-height: 50px;
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  
+  .attribute-box {
+    width: 80%;
+    max-width: 700px;
+  }
+}
+
+/* Touch Devices - No Hover */
+@media (hover: none) and (pointer: coarse) {
+  .icon-btn:hover,
+  .drawer-toggle:hover,
+  .zoom-btn:hover {
+    transform: none !important;
+  }
+  
+  .icon-btn:active {
+    background: #e0e0e0;
+    transform: scale(0.97);
+  }
+}
+
+/* iOS Specific */
+@supports (-webkit-touch-callout: none) {
+  .drawer-content,
+  .table-wrapper,
+  .modal-body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  button,
+  .icon-btn,
+  .drawer-toggle {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -5797,6 +5929,15 @@ document.getElementById('selectOptions')?.addEventListener('input', function() {
   }
 });
 
+document.querySelectorAll('.icon-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      document.querySelector('.drawer-content').style.display = 'none';
+    }
+  });
+});
+console.log('Auto-close enabled');
+
 // Real-time validation for image URL
 document.getElementById('imageUrl')?.addEventListener('input', function() {
   const url = this.value.trim();
@@ -5812,6 +5953,104 @@ document.getElementById('imageUrl')?.addEventListener('input', function() {
     clearValidationError(this);
   }
 });
+
+// OBILE OPTIMIZATION
+
+(function() {
+  const isMobile = window.innerWidth <= 575;
+  const isTablet = window.innerWidth > 575 && window.innerWidth <= 991;
+  
+  console.log('📱 Device:', isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop');
+  
+  if (isMobile || isTablet) {
+    const drawer = document.getElementById('drawer');
+    const drawerToggle = document.getElementById('drawerToggle');
+    const drawerContent = document.querySelector('.drawer-content');
+    
+    // Mobile drawer toggle
+    drawerToggle.onclick = function(e) {
+      e.stopPropagation();
+      drawer.classList.toggle('mobile-active');
+      document.body.style.overflow = drawer.classList.contains('mobile-active') ? 'hidden' : '';
+    };
+    
+    // Close on background click
+    drawer.addEventListener('click', function(e) {
+      if (e.target === drawer) {
+        drawer.classList.remove('mobile-active');
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // Prevent closing when clicking menu
+    drawerContent.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // Auto-close drawer after selecting tool
+    document.querySelectorAll('.icon-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        setTimeout(() => {
+          drawer.classList.remove('mobile-active');
+          document.body.style.overflow = '';
+        }, 400);
+      });
+    });
+    
+    // Swipe down to close
+    let startY = 0;
+    drawerContent.addEventListener('touchstart', function(e) {
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    drawerContent.addEventListener('touchmove', function(e) {
+      const currentY = e.touches[0].clientY;
+      const diff = currentY - startY;
+      
+      if (diff > 0 && drawerContent.scrollTop === 0) {
+        drawerContent.style.transform = `translateY(${Math.min(diff, 150)}px)`;
+      }
+    }, { passive: true });
+    
+    drawerContent.addEventListener('touchend', function(e) {
+      const currentY = e.changedTouches[0].clientY;
+      const diff = currentY - startY;
+      
+      if (diff > 100) {
+        drawer.classList.remove('mobile-active');
+        document.body.style.overflow = '';
+      }
+      drawerContent.style.transform = '';
+    });
+    
+    console.log('✅ Mobile optimizations loaded');
+  }
+  
+  // Prevent double-tap zoom
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+  
+  // Fix viewport height
+  function setMobileHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  
+  setMobileHeight();
+  window.addEventListener('resize', setMobileHeight);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(setMobileHeight, 100);
+    setTimeout(() => map.updateSize(), 200);
+  });
+  
+})();
+
 buildAttributeTable();
 </script>
 </body>
