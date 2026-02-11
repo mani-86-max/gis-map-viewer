@@ -134,19 +134,19 @@ html, body {
   display: none; 
   flex-direction: column; 
   background: #4b919f;
-  padding: 6px;              /* ✅ Reduced from 8px */
-  margin-top: 6px;           /* ✅ Reduced from 8px */
+  padding: 6px;              
+  margin-top: 6px;           
   border-radius: 8px; 
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15); 
-  min-width: 120px;          /* ✅ CHANGED - Was 140px */
-  max-width: 140px;          /* ✅ CHANGED - Was 160px */
-  max-height: 400px;
+  min-width: 120px;          
+  max-width: 140px;          
+  max-height: calc(100vh - 150px);  
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .drawer-content hr { 
-    margin: 4px 0;           /* ✅ Reduced from 6px */
+    margin: 4px 0;          
     border: none; 
     border-top: 1px solid #bbb6b6; 
 }
@@ -156,29 +156,29 @@ html, body {
   display: flex; 
   align-items: center; 
   justify-content: flex-start;
-  gap: 8px;                  /* ✅ Reduced from 12px */
-  padding: 10px 12px;        /* ✅ Reduced from 14px 16px */
-  border-radius: 6px;        /* ✅ Reduced from 8px */
+  gap: 8px;                  
+  padding: 10px 12px;        
+  border-radius: 6px;        
   background: #f8f9fa; 
   cursor: pointer; 
   border: 1px solid #e0e0e0;
   transition: all 0.2s;
-  font-size: 13px;           /* ✅ Reduced from 14px */
+  font-size: 13px;          
   color: #1c0f95; 
-  margin: 3px 0;             /* ✅ Reduced from 4px */
+  margin: 3px 0;             
   width: 100%;
   text-align: left;
-  min-height: 42px;          /* ✅ Reduced from 48px */
+  min-height: 42px;         
   max-height: 42px;
   height: 42px;
   box-sizing: border-box; 
 }
 
 .icon-btn i { 
-  width: 16px;               /* ✅ Reduced from 18px */
+  width: 16px;               
   text-align: center; 
   flex-shrink: 0;
-  font-size: 14px;           /* ✅ Reduced from 16px */
+  font-size: 14px;           
 }
 
 .icon-btn span {
@@ -187,7 +187,7 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
-  font-size: 12px;           /* ✅ NEW - Smaller text */
+  font-size: 12px;          
   font-weight: 500;
 }
 
@@ -205,7 +205,7 @@ html, body {
 .upload-section { 
     display: flex; 
     flex-direction: column; 
-    gap: 3px;                /* ✅ Reduced from 4px */
+    gap: 3px;                
 }
 
 /* TABLET  */
@@ -224,9 +224,9 @@ html, body {
   }
   
   .drawer-content {
-    min-width: 120px !important;   /* ✅ CHANGED */
-    max-width: 140px !important;   /* ✅ CHANGED */
-    max-height: 350px;
+    min-width: 120px !important;   
+    max-width: 140px !important;   
+    max-height: calc(100vh - 140px);  
   }
   
   .icon-btn {
@@ -258,10 +258,10 @@ html, body {
   }
   
   .drawer-content {
-    min-width: 110px !important;   /* ✅ CHANGED - Much narrower */
-    max-width: 130px !important;   /* ✅ CHANGED - Much narrower */
-    width: 130px !important;       /* ✅ FORCE width */
-    max-height: 300px;
+    min-width: 110px !important;   
+    max-width: 130px !important;   
+    width: 130px !important;       
+    max-height: calc(100vh - 130px);  
     padding: 5px;
   }
   
@@ -287,8 +287,8 @@ html, body {
 /*  MOBILE PORTRAIT - ✅ CRITICAL FIX */
 @media (max-width: 576px) {
   .drawer {
-    top: 56px;               /* ✅ Closer to top */
-    left: 4px;               /* ✅ Closer to edge */
+    top: 56px;               
+    left: 4px;               
   }
   
   .drawer-toggle {
@@ -309,9 +309,9 @@ html, body {
   }
   
   .drawer-content {
-    min-width: 100px !important;   /* ✅ MUCH NARROWER - Was 130px */
-    max-width: 120px !important;   /* ✅ MUCH NARROWER - Was 150px */
-    width: 120px !important;       /* ✅ FORCE narrow width */
+    min-width: 100px !important;   
+    max-width: 120px !important;   
+    width: 120px !important;       
     max-height: calc(100vh - 150px);
     padding: 4px;
     margin-top: 4px;
@@ -359,10 +359,10 @@ html, body {
   }
   
   .drawer-content {
-    min-width: 90px !important;    /* ✅ Even narrower */
-    max-width: 110px !important;   /* ✅ Even narrower */
+    min-width: 90px !important;    
+    max-width: 110px !important;   
     width: 110px !important;
-    max-height: 250px;
+    max-height: calc(100vh - 120px); 
     padding: 3px;
   }
   
@@ -405,12 +405,12 @@ html, body {
 /*  TOUCH DEVICES */
 @media (hover: none) and (pointer: coarse) {
   .drawer-toggle {
-    min-width: 40px;         /* ✅ Smaller on touch */
+    min-width: 40px;        
     min-height: 40px;
   }
   
   .icon-btn {
-    min-height: 40px;        /* ✅ Smaller on touch */
+    min-height: 40px;        
     padding: 10px 12px;
   }
   
