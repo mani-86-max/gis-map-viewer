@@ -82,396 +82,271 @@ html, body {
   display: flex; justify-content: center; align-items: center; z-index: 300; font-size: 13px;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
 }
-
-.drawer { 
-    position: fixed; 
-    top: 70px; 
-    left: 12px; 
-    z-index: 300;
-    transition: all 0.3s ease;
-}
-
-.drawer-button-group {
+/*SIDEBAR - OpenStreetMap Editor Style*/
+  
+.sidebar {
+  position: fixed;
+  left: 10;
+  top: 56px;
+  bottom: 0px;
+  width: 60px;
+  background: #f6f6f6;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px;
-}
-
-.drawer-toggle { 
-  font-size: 18px; 
-  background: #ffffff;
-  border: none; 
-  padding: 0; 
-  border-radius: 8px; 
-  cursor: pointer; 
-  box-shadow: 0 2px 8px rgba(5, 147, 74, 0.15); 
-  transition: all 0.3s;
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.drawer-toggle:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 4px 12px rgba(71, 170, 24, 0.2); 
-}
-
-.drawer-button-group .drawer-toggle:first-child {
-  border-bottom: 1px solid #e0e0e0;
-  border-radius: 8px 8px 0 0; 
-}
-
-.drawer-button-group .drawer-toggle:last-child {
-  border-radius: 0 0 8px 8px; 
-}
-
-/* ✅ UPDATED - Narrower drawer */
-.drawer-content { 
-  display: none; 
-  flex-direction: column; 
-  background: #4b919f;
-  padding: 6px;              
-  margin-top: 6px;           
-  border-radius: 8px; 
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15); 
-  min-width: 120px;          
-  max-width: 140px;          
-  max-height: calc(100vh - 150px);  
+  z-index: 300;
+  border-right: 1px solid #ccc;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.drawer-content hr { 
-    margin: 4px 0;          
-    border: none; 
-    border-top: 1px solid #bbb6b6; 
+.sidebar::-webkit-scrollbar {
+  width: 3px;
 }
 
-/* ✅ UPDATED - Smaller buttons */
-.icon-btn { 
-  display: flex; 
-  align-items: center; 
-  justify-content: flex-start;
-  gap: 8px;                  
-  padding: 10px 12px;        
-  border-radius: 6px;        
-  background: #f8f9fa; 
-  cursor: pointer; 
-  border: 1px solid #e0e0e0;
-  transition: all 0.2s;
-  font-size: 13px;          
-  color: #1c0f95; 
-  margin: 3px 0;             
-  width: 100%;
-  text-align: left;
-  min-height: 42px;         
-  max-height: 42px;
-  height: 42px;
-  box-sizing: border-box; 
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3);
+  border-radius: 2px;
 }
 
-.icon-btn i { 
-  width: 16px;               
-  text-align: center; 
+.sidebar-btn {
+  width: 60px;
+  height: 60px;
+  min-height: 60px;
+  border: none;
+  background: transparent;
+  color: #333;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   flex-shrink: 0;
-  font-size: 14px;           
 }
 
-.icon-btn span {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  font-size: 12px;          
+.sidebar-btn:hover {
+  background: #e8e8e8;
+  color: #000;
+}
+
+.sidebar-btn.active {
+  background: #7ebc6f;
+  color: white;
+}
+
+.sidebar-btn.active:hover {
+  background: #73a965;
+}
+
+/* Tooltip on hover */
+.sidebar-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 68px;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
 }
 
-.icon-btn:hover { 
-    background: #77c5ee; 
-    transform: translateX(3px); 
+.sidebar-btn:hover::after {
+  opacity: 1;
 }
 
-.icon-btn.active { 
-    background: #ecf3eca8; 
-    color: #e06b6b; 
-    border-color: #e40813; 
+.sidebar-separator {
+  height: 1px;
+  background: #ddd;
+  margin: 0;
+  flex-shrink: 0;
 }
 
-.upload-section { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 3px;                
+/* Adjust map to account for sidebar */
+.map {
+  margin-left: 60px;
+  width: calc(100% - 60px);
 }
 
-/* TABLET  */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .drawer {
-    top: 65px;
-    left: 10px;
+/* Adjust search bar */
+.search-bar {
+  left: calc(50% + 30px);
+}
+
+/* Icon adjustments for specific buttons */
+.sidebar-btn i {
+  font-size: 24px;
+}
+
+/* Special styling for specific icons */
+.sidebar-btn .fa-home {
+  font-size: 26px;
+}
+
+.sidebar-btn .fa-layer-group {
+  font-size: 22px;
+}
+
+.sidebar-btn .fa-map {
+  font-size: 23px;
+}
+
+.sidebar-btn .fa-upload {
+  font-size: 22px;
+}
+
+.sidebar-btn .fa-table {
+  font-size: 22px;
+}
+
+.sidebar-btn .fa-pencil-alt {
+  font-size: 23px;
+}
+
+.sidebar-btn .fa-project-diagram {
+  font-size: 20px;
+}
+
+.sidebar-btn .fa-database {
+  font-size: 22px;
+}
+
+/* RESPONSIVE - TABLET */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 55px;
   }
   
-  .drawer-toggle {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+  .sidebar-btn {
+    width: 55px;
+    height: 55px;
+    min-height: 55px;
+    font-size: 20px;
+  }
+  
+  .map {
+    margin-left: 55px;
+    width: calc(100% - 55px);
+  }
+  
+  .search-bar {
+    left: calc(50% + 27.5px);
+  }
+}
+
+/* RESPONSIVE - MOBILE LANDSCAPE */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 50px;
+  }
+  
+  .sidebar-btn {
+    width: 50px;
+    height: 50px;
+    min-height: 50px;
+    font-size: 18px;
+  }
+  
+  .sidebar-btn i {
+    font-size: 20px;
+  }
+  
+  .sidebar-btn::after {
+    font-size: 12px;
+    padding: 6px 10px;
+    left: 58px;
+  }
+  
+  .map {
+    margin-left: 50px;
+    width: calc(100% - 50px);
+  }
+  
+  .search-bar {
+    left: calc(50% + 25px);
+    top: 60px;
+  }
+  
+  .search-bar input {
+    width: 280px;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
+/* RESPONSIVE - MOBILE PORTRAIT */
+@media (max-width: 576px) {
+  .sidebar {
+    width: 45px;
+    top: 56px;
+  }
+  
+  .sidebar-btn {
+    width: 45px;
+    height: 45px;
+    min-height: 45px;
     font-size: 16px;
   }
   
-  .drawer-content {
-    min-width: 120px !important;   
-    max-width: 140px !important;   
-    max-height: calc(100vh - 140px);  
+  .sidebar-btn i {
+    font-size: 18px;
   }
   
-  .icon-btn {
-    padding: 10px 12px;
-    font-size: 12px;
-    min-height: 40px;
-    max-height: 40px;
-    height: 40px;
+  .map {
+    margin-left: 45px;
+    width: calc(100% - 45px);
   }
   
-  .icon-btn i {
-    font-size: 14px;
+  .search-bar {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 64px;
+  }
+  
+  .search-bar input {
+    width: 240px;
   }
 }
 
-/* MOBILE LANDSCAPE */
-@media (max-width: 768px) and (min-width: 577px) {
-  .drawer {
-    top: 60px;
-    left: 6px;
-  }
-  
-  .drawer-toggle {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    font-size: 14px;
-  }
-  
-  .drawer-content {
-    min-width: 110px !important;   
-    max-width: 130px !important;   
-    width: 130px !important;       
-    max-height: calc(100vh - 130px);  
-    padding: 5px;
-  }
-  
-  .icon-btn {
-    padding: 8px 10px;
-    font-size: 11px;
-    gap: 6px;
-    min-height: 38px;
-    max-height: 38px;
-    height: 38px;
-  }
-  
-  .icon-btn i {
-    width: 14px;
-    font-size: 13px;
-  }
-  
-  .icon-btn span {
-    font-size: 11px;
-  }
-}
-
-/*  MOBILE PORTRAIT - ✅ CRITICAL FIX */
-@media (max-width: 576px) {
-  .drawer {
-    top: 56px;               
-    left: 4px;               
-  }
-  
-  .drawer-toggle {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
-    font-size: 13px;
-    border-radius: 6px;
-  }
-  
-  .drawer-button-group .drawer-toggle:first-child {
-    border-radius: 6px 6px 0 0;
-  }
-  
-  .drawer-button-group .drawer-toggle:last-child {
-    border-radius: 0 0 6px 6px;
-  }
-  
-  .drawer-content {
-    min-width: 100px !important;   
-    max-width: 120px !important;   
-    width: 120px !important;       
-    max-height: calc(100vh - 150px);
-    padding: 4px;
-    margin-top: 4px;
-    border-radius: 6px;
-  }
-  
-  .icon-btn {
-    padding: 6px 8px !important;
-    font-size: 10px !important;
-    gap: 6px;
-    min-height: 36px !important;
-    max-height: 36px !important;
-    height: 36px !important;
-    border-radius: 4px;
-    margin: 2px 0;
-  }
-  
-  .icon-btn i {
-    width: 12px !important;
-    font-size: 11px !important;
-  }
-  
-  .icon-btn span {
-    font-size: 10px !important;
-  }
-  
-  .drawer-content hr {
-    margin: 3px 0;
-  }
-}
-
-/*  SMALL MOBILE (< 320px)  */
-@media (max-width: 320px) {
-  .drawer {
-    top: 54px;
-    left: 3px;
-  }
-  
-  .drawer-toggle {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    font-size: 12px;
-  }
-  
-  .drawer-content {
-    min-width: 90px !important;    
-    max-width: 110px !important;   
-    width: 110px !important;
-    max-height: calc(100vh - 120px); 
-    padding: 3px;
-  }
-  
-  .icon-btn {
-    padding: 5px 6px !important;
-    font-size: 9px !important;
-    gap: 4px;
-    min-height: 32px !important;
-    max-height: 32px !important;
-    height: 32px !important;
-  }
-  
-  .icon-btn i {
-    width: 10px !important;
-    font-size: 10px !important;
-  }
-}
-
-/* iOS SPECIFIC FIXES  */
-@supports (-webkit-touch-callout: none) {
-  .drawer {
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .drawer-toggle {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-  
-  .icon-btn {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-  
-  .drawer-content {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/*  TOUCH DEVICES */
+/* TOUCH DEVICES */
 @media (hover: none) and (pointer: coarse) {
-  .drawer-toggle {
-    min-width: 40px;        
-    min-height: 40px;
-  }
-  
-  .icon-btn {
-    min-height: 40px;        
-    padding: 10px 12px;
-  }
-  
-  .drawer-toggle:hover,
-  .icon-btn:hover {
-    transform: none;
-  }
-  
-  .drawer-toggle:active {
+  .sidebar-btn:active {
     transform: scale(0.95);
-    background: #e8e8e8;
+    background: rgba(126, 188, 111, 0.3);
   }
   
-  .icon-btn:active {
-    background: #5fa3c9;
-    transform: scale(0.98);
+  .sidebar-btn.active:active {
+    transform: scale(0.95);
+    background: #73a965;
   }
 }
 
-/* LANDSCAPE MODE  */
-@media (max-height: 500px) and (orientation: landscape) {
-  .drawer {
-    top: 52px;
-  }
-  
-  .drawer-content {
-    max-height: calc(100vh - 100px);
-  }
-  
-  .drawer-toggle {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
-  }
-  
-  .icon-btn {
-    padding: 6px 8px;
-    min-height: 32px;
-    max-height: 32px;
-    height: 32px;
-    font-size: 10px;
-  }
-}
-
-/* HIGH DPI DISPLAYS */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .drawer-toggle,
-  .icon-btn {
-    border-width: 0.5px;
-  }
-}
-
-/*  ACCESSIBILITY */
+/* ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
-  .drawer,
-  .drawer-toggle,
-  .icon-btn,
-  .drawer-content {
+  .sidebar,
+  .sidebar-btn,
+  .sidebar-btn::after {
     transition: none !important;
   }
+}
+
+/* Focus state for keyboard navigation */
+.sidebar-btn:focus {
+  outline: 2px solid #7ebc6f;
+  outline-offset: -2px;
+}
+
+.sidebar-btn:focus:not(:focus-visible) {
+  outline: none;
 }
 
 
@@ -1784,63 +1659,50 @@ html, body {
     </div>
   </div>
 </div>
-    <div id="drawer" class="drawer">
+<!-- SIDEBAR - With Better OSM-Style Icons -->
+<div class="sidebar">
+  <button id="homeBtn" class="sidebar-btn" data-tooltip="Home">
+    <i class="fas fa-home"></i>
+  </button>
   
-  <!--Button Group for Perfect Alignment -->
-  <div class="drawer-button-group">
-    <button id="homeBtn" class="drawer-toggle" title="Home">
-      <i class="fas fa-home"></i>
-    </button>
-    
-    <button id="drawerToggle" class="drawer-toggle" title="Menu">
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
+  <div class="sidebar-separator"></div>
   
-  <div class="drawer-content">
-
-
-    <hr>
-    <button id="toggleBasemaps" class="icon-btn" title="Basemap Viewer">
-    <i class="fas fa-map"></i>
-    <span>Basemaps</span>
-    </button>
-    <hr>
-    <button id="toggleUpload" class="icon-btn" title="Upload Files">
-    <i class="fas fa-upload"></i>
-    <span>Upload Files</span>
-    </button>
-
-    <hr>
-    <button id="toggleAttributes" class="icon-btn" title="Attributes">
-      <i class="fas fa-table"></i>
-      <span>Attributes</span>
-    </button>
-    <hr>
-
-    <button id="toggleLayers" class="icon-btn" title="Layers">
-      <i class="fas fa-layer-group"></i>
-      <span>Layers</span>
-    </button>
-    <hr>
-
-    <button id="toggleEditor" class="icon-btn" title="Editor Tools">
-      <i class="fas fa-pencil-alt"></i> 
-      <span>Editor</span>
-    </button>
-
-    <hr>
-    <button id="toggleGeoprocessing" class="icon-btn" title="Geoprocessing Tools">
-    <i class="fas fa-project-diagram"></i>
-    <span>Geoprocessing</span>
-    </button>
-    <hr>
-    <button id="connectDbBtn" class="icon-btn" title="Connect Database">
+  <button id="toggleLayers" class="sidebar-btn" data-tooltip="Layers">
+    <i class="fas fa-layer-group"></i>
+  </button>
+  
+  <button id="toggleBasemaps" class="sidebar-btn" data-tooltip="Map">
+    <i class="fas fa-globe"></i>
+  </button>
+  
+  <div class="sidebar-separator"></div>
+  
+  <button id="toggleUpload" class="sidebar-btn" data-tooltip="Upload">
+    <i class="fas fa-cloud-upload-alt"></i>
+  </button>
+  
+  <button id="toggleAttributes" class="sidebar-btn" data-tooltip="Data">
+    <i class="fas fa-list-alt"></i>
+  </button>
+  
+  <button id="toggleEditor" class="sidebar-btn" data-tooltip="Edit">
+    <i class="fas fa-edit"></i>
+  </button>
+  
+  <button id="toggleGeoprocessing" class="sidebar-btn" data-tooltip="Tools">
+    <i class="fas fa-wrench"></i>
+  </button>
+  
+  <div class="sidebar-separator"></div>
+  
+  <button id="connectDbBtn" class="sidebar-btn" data-tooltip="Database">
     <i class="fas fa-database"></i>
-    <span>Database</span>
-</button>
-  </div>
+  </button>
 </div>
+
+
+
+
 <!-- ATTRIBUTE BOX -->
 <div id="attributeContainer" class="attribute-box">
   <div class="box-header">
@@ -2493,76 +2355,264 @@ function showTempPopup(msg, dur=2500) {
 }
 
 //ELEMENTS & CONTROLS
-const drawerToggle = document.getElementById("drawerToggle");
-const drawerContent = document.querySelector(".drawer-content");
 const fileInput = document.getElementById("fileInput");
 const attributeBox = document.getElementById("attributeContainer");
 const attrHead = document.getElementById("attrHead");
 const attrBody = document.getElementById("attrBody");
 const editorBox = document.getElementById("editorContainer");
 
-drawerToggle.onclick = () => {
-  const isOpen = drawerContent.style.display === "flex";
-  drawerContent.style.display = isOpen ? "none" : "flex";
-  if (isOpen) { attributeBox.style.display = "none"; editorBox.style.display = "none"; }
-};
+// Helper function to set active button
+function setActiveButton(buttonId) {
+  document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+  const btn = document.getElementById(buttonId);
+  if (btn) {
+    btn.classList.add('active');
+    console.log('✅ Activated:', btn.getAttribute('data-tooltip'));
+  }
+}
 
+
+// Helper function to close all panels
+function closeAllPanels() {
+  attributeBox.style.display = "none";
+  editorBox.style.display = "none";
+  document.getElementById("geoprocessingContainer").style.display = "none";
+  document.getElementById("basemapContainer").style.display = "none";
+  document.getElementById("uploadContainer").style.display = "none";
+  document.getElementById("layersPanel").style.display = "none";
+  document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+}
+
+// Toggle Attributes
 document.getElementById("toggleAttributes").onclick = () => {
   const isVis = attributeBox.style.display === "flex";
   
   if (isVis) {
     attributeBox.style.display = "none";
+    document.getElementById("toggleAttributes").classList.remove('active');
   } else {
     const allFeatures = getAllFeatures();
     
     if (allFeatures.length === 0) {
-      alert('No features found! Upload a file or draw features first.');
+      alert('⚠️ No features found! Upload a file or draw features first.');
       return;
     }
     
+    closeAllPanels();
     buildAttributeTable();
     attributeBox.style.display = "flex";
+    setActiveButton("toggleAttributes");
   }
 };
 
+// Toggle Layers
 document.getElementById("toggleLayers").onclick = () => {
   const layersPanel = document.getElementById("layersPanel");
   const isVis = layersPanel.style.display === "flex";
   
   if (isVis) {
     layersPanel.style.display = "none";
-  } 
-   else {
+    document.getElementById("toggleLayers").classList.remove('active');
+  } else {
     if (!window.uploadedLayers || window.uploadedLayers.length === 0) {
-      alert('No features found!Upload a file or draw features first.');
+      alert('⚠️ No layers found! Upload a file or draw features first.');
       return;
     }
     
+    closeAllPanels();
     buildLayersPanel();
     layersPanel.style.display = "flex";
+    setActiveButton("toggleLayers");
   }
 };
 
+// Toggle Editor
 document.getElementById("toggleEditor").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
-  const geoBox = document.getElementById("geoprocessingContainer");
-  if (geoBox.style.display === "flex") geoBox.style.display = "none";
-  editorBox.style.display = editorBox.style.display === "flex" ? "none" : "flex";
+  const isVis = editorBox.style.display === "flex";
+  
+  if (isVis) {
+    editorBox.style.display = "none";
+    removeInteractions();
+    document.getElementById("toggleEditor").classList.remove('active');
+  } else {
+    closeAllPanels();
+    editorBox.style.display = "flex";
+    setActiveButton("toggleEditor");
+  }
 };
 
+// Toggle Geoprocessing
 document.getElementById("toggleGeoprocessing").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
   const geoBox = document.getElementById("geoprocessingContainer");
-  if (editorBox.style.display === "flex") editorBox.style.display = "none";
+  const isVis = geoBox.style.display === "flex";
   
-  if (geoBox.style.display === "flex") {
+  if (isVis) {
     geoBox.style.display = "none";
+    document.getElementById("toggleGeoprocessing").classList.remove('active');
   } else {
+    closeAllPanels();
     geoBox.style.display = "flex";
     document.getElementById("geoMainButtons").style.display = "flex";
     document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+    setActiveButton("toggleGeoprocessing");
   }
 };
+
+// Home Button
+document.getElementById("homeBtn").onclick = () => {
+  map.getView().animate({ 
+    center: ol.proj.fromLonLat([72.8777, 19.0760]), 
+    zoom: 12, 
+    duration: 600 
+  });
+  closeAllPanels();
+};
+
+// Toggle Basemaps
+document.getElementById("toggleBasemaps").onclick = () => {
+  const basemapBox = document.getElementById("basemapContainer");
+  const isVisible = basemapBox.style.display === "flex";
+  
+  if (isVisible) {
+    basemapBox.style.display = "none";
+    document.getElementById("toggleBasemaps").classList.remove('active');
+  } else {
+    closeAllPanels();
+    basemapBox.style.display = "flex";
+    setActiveButton("toggleBasemaps");
+  }
+};
+
+// Toggle Upload
+document.getElementById("toggleUpload").onclick = () => {
+  const uploadBox = document.getElementById("uploadContainer");
+  const isVisible = uploadBox.style.display === "flex";
+  
+  if (isVisible) {
+    uploadBox.style.display = "none";
+    document.getElementById("toggleUpload").classList.remove('active');
+  } else {
+    closeAllPanels();
+    uploadBox.style.display = "flex";
+    setActiveButton("toggleUpload");
+  }
+};
+// HOME BUTTON
+document.getElementById("homeBtn").onclick = () => {
+  map.getView().animate({ 
+    center: ol.proj.fromLonLat([72.8777, 19.0760]), 
+    zoom: 12, 
+    duration: 600 
+  });
+  closeAllPanels();
+};
+
+// TOGGLE LAYERS
+document.getElementById("toggleLayers").onclick = () => {
+  const layersPanel = document.getElementById("layersPanel");
+  const isVis = layersPanel.style.display === "flex";
+  
+  if (isVis) {
+    layersPanel.style.display = "none";
+    clearActiveStates();
+  } else {
+    if (!window.uploadedLayers || window.uploadedLayers.length === 0) {
+      alert('⚠️ No layers found! Upload a file or draw features first.');
+      return;
+    }
+    closeAllPanels();
+    buildLayersPanel();
+    layersPanel.style.display = "flex";
+    setActiveButton("toggleLayers");
+  }
+};
+
+// TOGGLE BASEMAPS
+document.getElementById("toggleBasemaps").onclick = () => {
+  const basemapBox = document.getElementById("basemapContainer");
+  const isVisible = basemapBox.style.display === "flex";
+  
+  if (isVisible) {
+    basemapBox.style.display = "none";
+    clearActiveStates();
+  } else {
+    closeAllPanels();
+    basemapBox.style.display = "flex";
+    setActiveButton("toggleBasemaps");
+  }
+};
+
+// TOGGLE UPLOAD
+document.getElementById("toggleUpload").onclick = () => {
+  const uploadBox = document.getElementById("uploadContainer");
+  const isVisible = uploadBox.style.display === "flex";
+  
+  if (isVisible) {
+    uploadBox.style.display = "none";
+    clearActiveStates();
+  } else {
+    closeAllPanels();
+    uploadBox.style.display = "flex";
+    setActiveButton("toggleUpload");
+  }
+};
+
+// TOGGLE ATTRIBUTES
+document.getElementById("toggleAttributes").onclick = () => {
+  const isVis = attributeBox.style.display === "flex";
+  
+  if (isVis) {
+    attributeBox.style.display = "none";
+    clearActiveStates();
+  } else {
+    const allFeatures = getAllFeatures();
+    
+    if (allFeatures.length === 0) {
+      alert('⚠️ No features found! Upload a file or draw features first.');
+      return;
+    }
+    
+    closeAllPanels();
+    buildAttributeTable();
+    attributeBox.style.display = "flex";
+    setActiveButton("toggleAttributes");
+  }
+};
+
+// TOGGLE EDITOR
+document.getElementById("toggleEditor").onclick = () => {
+  const isVis = editorBox.style.display === "flex";
+  
+  if (isVis) {
+    editorBox.style.display = "none";
+    removeInteractions();
+    clearActiveStates();
+  } else {
+    closeAllPanels();
+    editorBox.style.display = "flex";
+    setActiveButton("toggleEditor");
+  }
+};
+
+// TOGGLE GEOPROCESSING
+document.getElementById("toggleGeoprocessing").onclick = () => {
+  const geoBox = document.getElementById("geoprocessingContainer");
+  const isVis = geoBox.style.display === "flex";
+  
+  if (isVis) {
+    geoBox.style.display = "none";
+    clearActiveStates();
+  } else {
+    closeAllPanels();
+    geoBox.style.display = "flex";
+    document.getElementById("geoMainButtons").style.display = "flex";
+    document.querySelectorAll(".geo-tool-details").forEach(d => d.style.display = "none");
+    setActiveButton("toggleGeoprocessing");
+  }
+};
+
+
+
 
 // SHOW BUFFER TOOL
 document.getElementById("showBufferTool").onclick = () => {
@@ -2614,61 +2664,87 @@ document.querySelectorAll(".geo-back-btn").forEach(btn => {
 
 document.getElementById("closeLayersPanel").onclick = () => {
   document.getElementById("layersPanel").style.display = "none";
+  document.getElementById("toggleLayers").classList.remove('active');
 };
-document.getElementById("closeAttributes").onclick = () => attributeBox.style.display = "none";
-/*document.getElementById("closeEditor").onclick = () => { editorBox.style.display = "none"; removeInteractions(); };*/
+
+document.getElementById("closeAttributes").onclick = () => {
+  attributeBox.style.display = "none";
+  document.getElementById("toggleAttributes").classList.remove('active');
+};
 
 document.getElementById("closeEditor").onclick = () => { 
-  //Remove interactions BEFORE hiding panel
   removeInteractions();
   selectInteraction.getFeatures().clear();
   selectedFeature = null;
-  
-  // Hide the panel
   editorBox.style.display = "none"; 
-  
-  showTempPopup('Editor tools disabled');
+  document.getElementById("toggleEditor").classList.remove('active');
+  showTempPopup('✅ Editor tools disabled');
+};
+document.getElementById("closeBasemaps").onclick = () => {
+  document.getElementById("basemapContainer").style.display = "none";
+  document.getElementById("toggleBasemaps").classList.remove('active');
 };
 
+document.getElementById("closeUpload").onclick = () => {
+  document.getElementById("uploadContainer").style.display = "none";
+  document.getElementById("toggleUpload").classList.remove('active');
+};
+
+// CLOSE BUTTON HANDLERS
+document.getElementById("closeLayersPanel").onclick = () => {
+  document.getElementById("layersPanel").style.display = "none";
+  clearActiveStates();
+};
+
+document.getElementById("closeAttributes").onclick = () => {
+  attributeBox.style.display = "none";
+  clearActiveStates();
+};
+
+document.getElementById("closeEditor").onclick = () => { 
+  removeInteractions();
+  selectInteraction.getFeatures().clear();
+  selectedFeature = null;
+  editorBox.style.display = "none"; 
+  clearActiveStates();
+  showTempPopup('✅ Editor tools disabled');
+};
 
 document.getElementById("closeGeoprocessing").onclick = () => {
   document.getElementById("geoprocessingContainer").style.display = "none";
+  clearActiveStates();
 };
+
+document.getElementById("closeBasemaps").onclick = () => {
+  document.getElementById("basemapContainer").style.display = "none";
+  clearActiveStates();
+};
+
+document.getElementById("closeUpload").onclick = () => {
+  document.getElementById("uploadContainer").style.display = "none";
+  clearActiveStates();
+};
+
 document.getElementById("minimizeAttr").onclick = () => {
   attributeBox.classList.toggle("minimized");
   const icon = document.getElementById("minimizeAttr").querySelector('i');
   icon.className = attributeBox.classList.contains("minimized") ? "fas fa-window-maximize" : "fas fa-minus";
 };
 
-// Home & Basemaps
-document.getElementById("homeBtn").onclick = () => map.getView().animate({ center: ol.proj.fromLonLat([72.8777,19.0760]), zoom: 12, duration: 600 });
-
-function setBase(layer) {
-  [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === layer));
-  document.querySelectorAll('.basemap-group .icon-btn').forEach(b => b.classList.remove('active'));
-}
-
-// Toggle Basemap Selector
-document.getElementById("toggleBasemaps").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
-  const basemapBox = document.getElementById("basemapContainer");
-  const isVisible = basemapBox.style.display === "flex";
-  
-  if (isVisible) {
-    basemapBox.style.display = "none";
-  } else {
-    basemapBox.style.display = "flex";
-    // Close other boxes
-    document.getElementById("geoprocessingContainer").style.display = "none";
-    document.getElementById("editorContainer").style.display = "none";
-  }
+document.getElementById("minimizeGeoprocessing").onclick = () => {
+  const geoBox = document.getElementById("geoprocessingContainer");
+  geoBox.classList.toggle("minimized");
+  const icon = document.getElementById("minimizeGeoprocessing").querySelector('i');
+  icon.className = geoBox.classList.contains("minimized") ? "fas fa-window-maximize" : "fas fa-minus";
 };
 
-// Close Basemap Box
-document.getElementById("closeBasemaps").onclick = () => {
-  document.getElementById("basemapContainer").style.display = "none";
-};
 
+
+document.getElementById("minimizeAttr").onclick = () => {
+  attributeBox.classList.toggle("minimized");
+  const icon = document.getElementById("minimizeAttr").querySelector('i');
+  icon.className = attributeBox.classList.contains("minimized") ? "fas fa-window-maximize" : "fas fa-minus";
+};
 // Basemap Selection
 document.querySelectorAll('.basemap-option').forEach(option => {
   option.onclick = function() {
@@ -2681,45 +2757,22 @@ document.querySelectorAll('.basemap-option').forEach(option => {
     // Switch basemap
     switch(basemapType) {
       case 'osm':
-        setBase(osmLayer);
+        [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === osmLayer));
         break;
       case 'topo':
-        setBase(topoLayer);
+        [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === topoLayer));
         break;
       case 'carto':
-        setBase(cartoLayer);
+        [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === cartoLayer));
         break;
       case 'esri':
-        setBase(esriLayer);
+        [osmLayer, topoLayer, cartoLayer, esriLayer].forEach(l => l.setVisible(l === esriLayer));
         break;
     }
     
-    showTempPopup(`Switched to ${this.querySelector('span').textContent}`);
+    showTempPopup(`✅ Switched to ${this.querySelector('span').textContent}`);
   };
 });
-
-// Toggle Upload Files Box
-document.getElementById("toggleUpload").onclick = () => {
-  if (drawerContent.style.display !== "flex") return;
-  const uploadBox = document.getElementById("uploadContainer");
-  const isVisible = uploadBox.style.display === "flex";
-  
-  if (isVisible) {
-    uploadBox.style.display = "none";
-  } else {
-    uploadBox.style.display = "flex";
-    // Close other boxes
-    document.getElementById("basemapContainer").style.display = "none";
-    document.getElementById("geoprocessingContainer").style.display = "none";
-    document.getElementById("editorContainer").style.display = "none";
-  }
-};
-
-// Close Upload Box
-document.getElementById("closeUpload").onclick = () => {
-  document.getElementById("uploadContainer").style.display = "none";
-};
-
 // Upload Options Click
 document.querySelectorAll('.upload-option').forEach(option => {
   option.onclick = function() {
