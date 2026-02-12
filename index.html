@@ -82,8 +82,7 @@ html, body {
   display: flex; justify-content: center; align-items: center; z-index: 300; font-size: 13px;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
 }
-/*SIDEBAR - OpenStreetMap Editor Style*/
-  
+/*SIDEBAR */ 
 .sidebar {
   position: fixed;
   left: 10;
@@ -98,7 +97,7 @@ html, body {
   border-right: 1px solid #ccc;
   overflow-y: auto;
   overflow-x: hidden;
-}
+}*/
 
 .sidebar::-webkit-scrollbar {
   width: 3px;
@@ -440,10 +439,6 @@ html, body {
     margin-bottom: 10px; 
     min-height: 150px;
 }
-/*.table-wrapper table { 
-    margin-bottom: 0; 
-}*/
-
 .table-wrapper table { 
     margin-bottom: 0;
     table-layout: auto;
@@ -591,16 +586,13 @@ html, body {
   font-size: 13px; 
   font-weight: 500; 
 }
-
-/* Editor Box */
 .editor-box { 
   display: none; 
   position: fixed; 
-  bottom: 50px; 
-  left: 200px; 
+  top: 120px; 
+  right: 15px; 
   background: rgba(26, 26, 26, 0.98);
   padding: 12px; 
-  /*border-radius: 10px; */
   border: 2px solid #00e5ff;
   z-index: 500; 
   box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
@@ -954,11 +946,10 @@ html, body {
   color: #fff;
 }
 
-/* Upload Files Box */
 .upload-box {
   position: fixed;
   top: 120px;
-  left: 280px;
+  right: 15px;
   width: 300px;
   background: rgba(26, 26, 26, 0.98);
   color: #fff;
@@ -1098,15 +1089,15 @@ html, body {
   pointer-events: none;
 }
 
-/* Zoom Controls */
 .zoom-controls { 
   position: fixed; 
   top: 70px; 
   right: 15px; 
   z-index: 310; 
   display: flex; 
-  flex-direction: column; 
-  gap: 8px; }
+  flex-direction: row; 
+  gap: 8px; 
+}
 .zoom-btn { 
   width: 40px; 
   height: 40px; 
@@ -1114,12 +1105,17 @@ html, body {
   border: none; 
   cursor: pointer; 
   background: #f6f4f4;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s; font-size: 16px; color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+  transition: all 0.2s; 
+  font-size: 16px; 
+  color: #333;
 }
 .zoom-btn:hover { 
   transform: translateY(-2px); 
   box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-}*/
+}
+
+
 
 /* Custom Magnetic North Arrow */
 .north-arrow {
