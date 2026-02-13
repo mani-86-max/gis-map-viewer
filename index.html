@@ -3,15 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <!--<meta name="viewport" content="width=device-width,initial-scale=1" />-->
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-
-
 <title>Map Viewer </title>
-
 <!-- OpenLayers -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.7.0/ol.css">
 <!-- Bootstrap -->
@@ -231,7 +227,6 @@ html, body {
     min-height: 55px;
     font-size: 20px;
   }
-  
   .map {
     margin-left: 55px;
     width: calc(100% - 55px);
@@ -357,6 +352,156 @@ html, body {
     border-width: 0.5px;
   }
 }
+
+
+/* Database Modal - Top Right Positioning (NEW) */
+#dbConnectModal .modal-dialog,
+#tableSelectModal .modal-dialog {
+  position: fixed !important;
+  top: 120px !important;
+  right: 15px !important;
+  left: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  max-width: 420px !important;
+  transform: none !important;
+}
+
+#dbConnectModal.show .modal-dialog,
+#tableSelectModal.show .modal-dialog {
+  transform: none !important;
+}
+
+/* Remove backdrop centering */
+#dbConnectModal .modal,
+#tableSelectModal .modal {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important;
+  padding-right: 15px !important;
+  padding-top: 120px !important;
+}
+
+/* Make modal look like other panels */
+#dbConnectModal .modal-content,
+#tableSelectModal .modal-content {
+  background: rgba(26, 26, 26, 0.98) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  border: none !important;
+}
+
+/* Modal Headers - Matching other panels */
+#dbConnectModal .modal-header,
+#tableSelectModal .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 10px 18px;
+}
+
+#dbConnectModal .modal-title,
+#tableSelectModal .modal-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Modal Body */
+#dbConnectModal .modal-body,
+#tableSelectModal .modal-body {
+  padding: 12px 18px;
+  background: rgba(26, 26, 26, 0.98);
+  color: #fff;
+}
+
+/* Modal Footer */
+#dbConnectModal .modal-footer,
+#tableSelectModal .modal-footer {
+  padding: 8px 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.1);
+}
+
+/* Form Controls */
+#dbConnectModal .form-control,
+#dbConnectModal .form-select,
+#tableSelectModal .form-control,
+#tableSelectModal .form-select {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 5px 10px;
+  font-size: 13px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+#dbConnectModal .form-control:focus,
+#dbConnectModal .form-select:focus,
+#tableSelectModal .form-control:focus,
+#tableSelectModal .form-select:focus {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-color: #00e5ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,229,255,0.2);
+}
+
+/* Labels */
+#dbConnectModal label,
+#tableSelectModal label {
+  color: #00e5ff;
+  font-weight: 500;
+  font-size: 12px;
+  margin-bottom: 3px;
+  margin-top: 8px;
+}
+
+/* Buttons */
+#dbConnectModal .btn,
+#tableSelectModal .btn {
+  padding: 5px 14px;
+  font-size: 13px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Status Div */
+#dbStatus {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+/* Adjust modal backdrop */
+#dbConnectModal .modal-backdrop,
+#tableSelectModal .modal-backdrop {
+  opacity: 0.3 !important;
+}
+
+/* Column Selectors */
+#columnSelectors {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #dbConnectModal .modal-dialog,
+  #tableSelectModal .modal-dialog {
+    top: 70px !important;
+    right: 10px !important;
+    max-width: 90vw !important;
+  }
+}
+
+
+
 
 /*  ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
@@ -2279,7 +2424,7 @@ if (northArrow) {
   northArrow.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     map.getView().animate({ 
-      rotation: 0, // Reset to north
+      rotation: 0, 
       duration: 600 
     });
   });
@@ -3680,11 +3825,7 @@ function buildLayersPanel() {
     });
   });
 }
-
-
-
-
-//  NEW: One listener for all table buttons
+//  One listener for all table buttons
 (function setupTableEventHandlers() {
   const attrBody = document.getElementById('attrBody');
   
@@ -5030,158 +5171,90 @@ setTimeout(() => {
 // DATABASE CONNECTION FUNCTIONS - COMPACT & DRAGGABLE
 const API_BASE = 'http://localhost/gis-map/api';
 
-// Apply compact styling to modals
+
+
+// NEW - Apply compact styling to modals - Top Right Position
 function applyCompactModalStyle() {
-  // Database Connect Modal - Ultra Compact
+  // Database Connect Modal - Top Right Position
   const dbModal = document.querySelector('#dbConnectModal .modal-dialog');
   if (dbModal) {
+    dbModal.style.position = 'fixed';
+    dbModal.style.top = '120px';
+    dbModal.style.right = '15px';
+    dbModal.style.left = 'auto';
+    dbModal.style.bottom = 'auto';
     dbModal.style.maxWidth = '420px';
-    dbModal.style.margin = '2rem auto';
+    dbModal.style.margin = '0';
+    dbModal.style.transform = 'none';
   }
   
   const dbModalContent = document.querySelector('#dbConnectModal .modal-content');
   if (dbModalContent) {
     dbModalContent.style.borderRadius = '10px';
-    dbModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+    dbModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
+    dbModalContent.style.background = 'rgba(26, 26, 26, 0.98)';
     dbModalContent.style.position = 'relative';
     dbModalContent.style.minHeight = 'auto';
     dbModalContent.style.maxHeight = '85vh';
     dbModalContent.style.overflow = 'hidden';
   }
   
-  const dbHeader = document.querySelector('#dbConnectModal .modal-header');
-  if (dbHeader) {
-    dbHeader.style.padding = '10px 18px';
-    dbHeader.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-    dbHeader.style.borderBottom = 'none';
-    dbHeader.style.borderRadius = '10px 10px 0 0';
-  }
-  
-  const dbTitle = document.querySelector('#dbConnectModal .modal-title');
-  if (dbTitle) {
-    dbTitle.style.fontSize = '16px';
-    dbTitle.style.fontWeight = '600';
-    dbTitle.style.color = '#fff';
-  }
-  
-  const dbBody = document.querySelector('#dbConnectModal .modal-body');
-  if (dbBody) {
-    dbBody.style.padding = '12px 18px';
-    dbBody.style.overflowY = 'auto';
-    dbBody.style.maxHeight = 'calc(85vh - 120px)';
-  }
-  
-  const dbFooter = document.querySelector('#dbConnectModal .modal-footer');
-  if (dbFooter) {
-    dbFooter.style.padding = '8px 18px';
-    dbFooter.style.borderTop = '1px solid rgba(255,255,255,0.1)';
-    dbFooter.style.background = 'rgba(0,0,0,0.1)';
-  }
-  
-  // Compact all form groups
-  document.querySelectorAll('#dbConnectModal .mb-3').forEach(group => {
-    group.style.marginBottom = '8px';
-  });
-  
-  // Make all inputs compact
-  document.querySelectorAll('#dbConnectModal .form-control, #dbConnectModal .form-select').forEach(input => {
-    input.style.padding = '5px 10px';
-    input.style.fontSize = '13px';
-    input.style.height = '32px';
-    input.style.borderRadius = '4px';
-    input.style.border = '1px solid #555';
-    input.style.background = '#2a2a2a';
-    input.style.color = '#fff';
-  });
-  
-  // Make all labels compact
-  document.querySelectorAll('#dbConnectModal label').forEach(label => {
-    label.style.fontSize = '12px';
-    label.style.fontWeight = '500';
-    label.style.marginBottom = '3px';
-    label.style.color = '#00d4ff';
-  });
-  
-  // Make buttons compact
-  document.querySelectorAll('#dbConnectModal .btn').forEach(btn => {
-    btn.style.padding = '5px 14px';
-    btn.style.fontSize = '13px';
-    btn.style.borderRadius = '4px';
-    btn.style.fontWeight = '500';
-  });
-  
-  // Status div compact
-  const statusDiv = document.getElementById('dbStatus');
-  if (statusDiv) {
-    statusDiv.style.marginTop = '8px';
-    statusDiv.style.padding = '6px 10px';
-    statusDiv.style.fontSize = '12px';
-  }
-  
-  // Table Select Modal - Compact
+  // Table Select Modal - Top Right Position
   const tableModal = document.querySelector('#tableSelectModal .modal-dialog');
   if (tableModal) {
+    tableModal.style.position = 'fixed';
+    tableModal.style.top = '120px';
+    tableModal.style.right = '15px';
+    tableModal.style.left = 'auto';
+    tableModal.style.bottom = 'auto';
     tableModal.style.maxWidth = '420px';
-    tableModal.style.margin = '2rem auto';
+    tableModal.style.margin = '0';
+    tableModal.style.transform = 'none';
   }
   
   const tableModalContent = document.querySelector('#tableSelectModal .modal-content');
   if (tableModalContent) {
     tableModalContent.style.borderRadius = '10px';
-    tableModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+    tableModalContent.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
+    tableModalContent.style.background = 'rgba(26, 26, 26, 0.98)';
   }
   
-  const tableHeader = document.querySelector('#tableSelectModal .modal-header');
-  if (tableHeader) {
-    tableHeader.style.padding = '10px 18px';
-    tableHeader.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
-    tableHeader.style.borderRadius = '10px 10px 0 0';
-  }
-  
-  const tableTitle = document.querySelector('#tableSelectModal .modal-title');
-  if (tableTitle) {
-    tableTitle.style.fontSize = '16px';
-    tableTitle.style.color = '#fff';
-    tableTitle.style.fontWeight = '600';
-  }
-  
-  const tableBody = document.querySelector('#tableSelectModal .modal-body');
-  if (tableBody) {
-    tableBody.style.padding = '12px 18px';
-  }
-  
-  const tableFooter = document.querySelector('#tableSelectModal .modal-footer');
-  if (tableFooter) {
-    tableFooter.style.padding = '8px 18px';
-    tableFooter.style.borderTop = '1px solid rgba(255,255,255,0.1)';
-  }
-  
-  document.querySelectorAll('#tableSelectModal .form-select').forEach(select => {
-    select.style.padding = '5px 10px';
-    select.style.fontSize = '13px';
-    select.style.height = '32px';
-    select.style.background = '#2a2a2a';
-    select.style.color = '#fff';
-    select.style.border = '1px solid #555';
+  // Compact all form groups
+  document.querySelectorAll('#dbConnectModal .mb-3, #tableSelectModal .mb-3').forEach(group => {
+    group.style.marginBottom = '8px';
   });
-  
-  document.querySelectorAll('#tableSelectModal label').forEach(label => {
-    label.style.fontSize = '12px';
-    label.style.fontWeight = '500';
-    label.style.marginBottom = '3px';
-    label.style.color = '#00d4ff';
-  });
-  
-  const columnSelectors = document.getElementById('columnSelectors');
-  if (columnSelectors) {
-    columnSelectors.style.background = 'rgba(255,255,255,0.05)';
-    columnSelectors.style.padding = '10px';
-    columnSelectors.style.borderRadius = '6px';
-    columnSelectors.style.marginTop = '8px';
-    columnSelectors.style.border = '1px solid rgba(255,255,255,0.1)';
-  }
 }
 
+// Force top-right positioning when modals open
+document.getElementById('dbConnectModal')?.addEventListener('show.bs.modal', function() {
+  setTimeout(() => {
+    const modalDialog = this.querySelector('.modal-dialog');
+    if (modalDialog) {
+      modalDialog.style.position = 'fixed';
+      modalDialog.style.top = '120px';
+      modalDialog.style.right = '15px';
+      modalDialog.style.left = 'auto';
+      modalDialog.style.margin = '0';
+      modalDialog.style.transform = 'none';
+    }
+    applyCompactModalStyle();
+  }, 50);
+});
+
+document.getElementById('tableSelectModal')?.addEventListener('show.bs.modal', function() {
+  setTimeout(() => {
+    const modalDialog = this.querySelector('.modal-dialog');
+    if (modalDialog) {
+      modalDialog.style.position = 'fixed';
+      modalDialog.style.top = '120px';
+      modalDialog.style.right = '15px';
+      modalDialog.style.left = 'auto';
+      modalDialog.style.margin = '0';
+      modalDialog.style.transform = 'none';
+    }
+    applyCompactModalStyle();
+  }, 50);
+});
 // Make Database Modal Draggable
 function makeModalDraggable() {
   const modal = document.getElementById('dbConnectModal');
@@ -5342,7 +5415,6 @@ function setupModalReset() {
     dbHeader.title = 'Drag to move | Double-click to reset | Resize from corner';
   }
 }
-
 // Apply styles when page loads
 document.addEventListener('DOMContentLoaded', () => {
   applyCompactModalStyle();
