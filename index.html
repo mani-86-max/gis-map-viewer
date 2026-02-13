@@ -277,7 +277,7 @@ html, body {
   }
 }
 
-/* RESPONSIVE - MOBILE PORTRAIT */
+/* RESPONSIVE - MOBILE PORTRAIT 
 @media (max-width: 576px) {
   .sidebar {
     width: 45px;
@@ -308,6 +308,68 @@ html, body {
   
   .search-bar input {
     width: 240px;
+  }
+}
+*/
+
+/* RESPONSIVE - MOBILE PORTRAIT */
+@media (max-width: 576px) {
+  .sidebar {
+    width: 45px;
+    top: 56px;
+  }
+  
+  .sidebar-btn {
+    width: 45px;
+    height: 45px;
+    min-height: 45px;
+    font-size: 16px;
+  }
+  
+  .sidebar-btn i {
+    font-size: 18px;
+  }
+  
+  .map {
+    margin-left: 45px;
+    width: calc(100% - 45px);
+  }
+  
+  /* FIX: Search bar positioning for mobile */
+  .search-bar {
+    left: 55px; /* Position after sidebar */
+    transform: none; /* Remove centering */
+    top: 64px;
+    z-index: 450;
+  }
+  
+  .search-bar input {
+    width: calc(100vw - 170px); /* Dynamic width */
+    min-width: 180px;
+    max-width: 280px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .suggestion-box {
+    width: calc(100vw - 170px);
+    min-width: 180px;
+    max-width: 280px;
+  }
+}
+
+/* EXTRA SMALL SCREENS */
+@media (max-width: 400px) {
+  .search-bar input {
+    width: calc(100vw - 140px);
+    min-width: 150px;
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+  
+  .suggestion-box {
+    width: calc(100vw - 140px);
+    min-width: 150px;
   }
 }
 
