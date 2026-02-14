@@ -799,59 +799,29 @@ html, body {
   font-size: 13px; 
   font-weight: 500; 
 }
+/* Editor Box 
 .editor-box { 
   display: none; 
   position: fixed; 
   top: 120px; 
   right: 15px; 
   background: rgba(26, 26, 26, 0.98);
-  padding: 12px; 
+  padding: 16px; 
   border: 2px solid #00e5ff;
+  border-radius: 12px;
   z-index: 500; 
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
-  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
+  min-width: 240px;
+  max-width: 280px;
 }
+
 .editor-box .box-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 10px; 
-    padding-bottom: 8px; 
-    border-bottom: 1px solid rgba(0,299,255,0.3); 
-}
-.editor-buttons { display: flex; 
-    gap: 8px; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-}
-
-.editor-btn { 
-  width: 50px; 
-  height: 50px; 
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 8px; 
-  cursor: pointer; 
-  font-size: 20px;
   display: flex; 
+  justify-content: space-between; 
   align-items: center; 
-  justify-content: center; 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  transition: all 0.2s; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-.editor-btn:hover { 
-  opacity: 0.9; 
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  border-color: #00e5ff;
-}
-
-.editor-btn.active { 
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  border-color: #38ef7d;
-  box-shadow: 0 0 20px rgba(56, 239, 125, 0.5);
+  margin-bottom: 12px; 
+  padding-bottom: 10px; 
+  border-bottom: 2px solid rgba(0,229,255,0.3); 
 }
 
 .editor-box h6 {
@@ -859,11 +829,345 @@ html, body {
   color: #00e5ff;
   font-size: 16px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .editor-box #closeEditor {
   color: #fff;
+  font-size: 18px;
 }
+
+.editor-buttons { 
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.editor-btn { 
+  width: 50px; 
+  height: 50px; 
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 10px; 
+  cursor: pointer; 
+  font-size: 22px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  transition: all 0.3s ease; 
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.editor-btn:hover { 
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+  border-color: #00e5ff;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.editor-btn.active { 
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border-color: #38ef7d;
+  box-shadow: 0 0 25px rgba(56, 239, 125, 0.6);
+  transform: scale(1.08);
+}
+
+.editor-btn.active::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  background: #00ff00;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Tool Labels 
+.editor-labels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.editor-labels span {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 0;
+}
+
+/* Icon-specific adjustments 
+#drawPoint i { font-size: 24px; }
+#drawLine i { font-size: 26px; font-weight: bold; }
+#drawPolygon i { font-size: 22px; }
+#modifyFeature i { font-size: 20px; }
+#dragFeature i { font-size: 22px; }
+#deleteFeature i { font-size: 20px; }
+#exportDrawing i { font-size: 20px; }
+*/
+
+
+/* ===== EDITOR BOX - COMPLETE FIXED VERSION ===== */
+
+.editor-box { 
+  display: none; 
+  position: fixed; 
+  top: 120px; 
+  right: 15px; 
+  background: rgba(26, 26, 26, 0.98);
+  padding: 16px; 
+  border: 2px solid #00e5ff;
+  border-radius: 12px;
+  z-index: 500; 
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
+  min-width: 240px;
+  max-width: 280px;
+  overflow: visible; /* Allows tooltips to show */
+}
+
+.editor-box .box-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 12px; 
+  padding-bottom: 10px; 
+  border-bottom: 2px solid rgba(0,229,255,0.3); 
+  cursor: move; /* For dragging */
+}
+
+.editor-box .box-header:active {
+  cursor: grabbing;
+}
+
+.editor-box h6 {
+  margin: 0; 
+  color: #00e5ff;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editor-box #closeEditor {
+  color: #fff;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.editor-box #closeEditor:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== EDITOR BUTTONS GRID ===== */
+
+.editor-buttons { 
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 10px;
+  margin-bottom: 8px;
+  position: relative; /* ⚡ CRITICAL: Keeps children in place */
+  width: 100%; /* ⚡ CRITICAL: Prevents overflow */
+}
+
+/* ===== INDIVIDUAL BUTTON STYLES ===== */
+
+.editor-btn { 
+  width: 50px; 
+  height: 50px; 
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 10px; 
+  cursor: pointer; 
+  font-size: 22px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  transition: all 0.3s ease; 
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  position: relative; /* ⚡ CRITICAL: Prevents absolute positioning */
+  /* ⚡ CRITICAL: Override any external positioning */
+  left: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none; /* Reset transforms */
+}
+
+.editor-btn:hover { 
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+  border-color: #00e5ff;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* ===== ACTIVE STATE (When tool is selected) ===== */
+
+.editor-btn.active { 
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+  border-color: #38ef7d !important;
+  box-shadow: 0 0 25px rgba(56, 239, 125, 0.6) !important;
+  transform: scale(1.08) !important;
+}
+
+.editor-btn.active::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  background: #00ff00;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* ===== TOOL LABELS BELOW BUTTONS ===== */
+
+.editor-labels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Match button grid */
+  gap: 10px;
+  text-align: center;
+  margin-top: 8px;
+  position: relative; /* ⚡ CRITICAL */
+}
+
+.editor-labels span {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 0;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== ICON SIZE ADJUSTMENTS ===== */
+
+#drawPoint i { font-size: 24px; }
+#drawLine i { font-size: 26px; font-weight: bold; }
+#drawPolygon i { font-size: 22px; }
+#modifyFeature i { font-size: 20px; }
+#dragFeature i { font-size: 22px; }
+#deleteFeature i { font-size: 20px; }
+#exportDrawing i { font-size: 20px; }
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) {
+  .editor-box {
+    top: 70px;
+    right: 10px;
+    max-width: 260px;
+    min-width: 220px;
+  }
+  
+  .editor-buttons {
+    gap: 8px;
+  }
+  
+  .editor-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  
+  .editor-labels span {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .editor-box {
+    top: 64px;
+    right: 5px;
+    max-width: 240px;
+    min-width: 200px;
+  }
+  
+  .editor-buttons {
+    gap: 6px;
+  }
+  
+  .editor-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  
+  .editor-labels span {
+    font-size: 9px;
+  }
+}
+
+/* ===== DRAGGABLE FUNCTIONALITY ===== */
+
+.editor-box.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* ===== PREVENT ANY EXTERNAL POSITIONING CONFLICTS ===== */
+
+.editor-box * {
+  box-sizing: border-box; /* Consistent sizing */
+}
+
+/* Force all editor buttons to stay in grid - Nuclear option */
+.editor-buttons > .editor-btn {
+  position: static !important; /* ⚡ MOST CRITICAL LINE */
+  float: none !important;
+  margin: 0 !important;
+}
+
+/* ===== END OF EDITOR BOX CSS ===== */
+
+
+
 
 /* Geoprocessing Box - Enhanced */
 .geoprocessing-box {
@@ -1342,9 +1646,6 @@ html, body {
   transform: translateY(-2px); 
   box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
 }
-
-
-
 /* Custom Magnetic North Arrow */
 .north-arrow {
   position: fixed;
@@ -1935,7 +2236,7 @@ html, body {
   <div id="layersList" class="layers-list">
   </div>
 </div>
-<!-- EDITOR BOX -->
+<!-- EDITOR BOX 
 <div id="editorContainer" class="editor-box">
   <div class="box-header">
     <h6 style="margin:0; color:#333;">Editor Tools</h6>
@@ -1950,7 +2251,54 @@ html, body {
     <button id="deleteFeature" class="editor-btn" title="Delete"><i class="fas fa-trash"></i></button>
     <button id="exportDrawing" class="editor-btn" title="Export Drawing Only"><i class="fas fa-download"></i></button>
   </div>
+</div>*/-->
+
+<!-- EDITOR BOX -->
+<div id="editorContainer" class="editor-box">
+  <div class="box-header">
+    <h6>✏️ Editor Tools</h6>
+    <button id="closeEditor" class="attr-small-btn" title="Close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="editor-buttons">
+    <button id="drawPoint" class="editor-btn" title="Draw Point">
+      <i class="fas fa-map-marker-alt"></i>
+    </button>
+    <button id="drawLine" class="editor-btn" title="Draw Line">
+      <i class="fas fa-minus"></i>
+    </button>
+    <button id="drawPolygon" class="editor-btn" title="Draw Polygon">
+      <i class="fas fa-draw-polygon"></i>
+    </button>
+    <button id="modifyFeature" class="editor-btn" title="Modify Feature">
+      <i class="fas fa-pencil-alt"></i>
+    </button>
+    <button id="dragFeature" class="editor-btn" title="Move Feature">
+      <i class="fas fa-arrows-alt"></i>
+    </button>
+    <button id="deleteFeature" class="editor-btn" title="Delete Feature">
+      <i class="fas fa-trash-alt"></i>
+    </button>
+    <button id="exportDrawing" class="editor-btn" title="Export Drawing">
+      <i class="fas fa-file-download"></i>
+    </button>
+  </div>
+  
+  <!-- NEW: Tool Labels Below Icons -->
+  <div class="editor-labels">
+    <span>Point</span>
+    <span>Line</span>
+    <span>Polygon</span>
+    <span>Edit</span>
+    <span>Move</span>
+    <span>Delete</span>
+    <span>Export</span>
+  </div>
 </div>
+
+
+
 <!-- GEOPROCESSING BOX -->
 <div id="geoprocessingContainer" class="geoprocessing-box">
   <div class="box-header" id="geoprocessingHeader">
