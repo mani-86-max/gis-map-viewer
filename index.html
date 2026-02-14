@@ -55,17 +55,25 @@ html, body {
   transform: translateX(-50%); 
 }
 .app-header .logo { 
-  width: 40px; 
-  height: 40px; 
-  border-radius: 6px; 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+  width: 48px; 
+  height: 48px; 
+  border-radius: 50%; 
+  background: white; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  font-size: 20px; 
-  font-weight: bold; 
-  color: white;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  object-fit: contain;
 }
+
+.app-header .logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+
 .app-header .app-title {
    font-size: 20px; 
    font-weight: 700; 
@@ -276,42 +284,6 @@ html, body {
     font-size: 14px;
   }
 }
-
-/* RESPONSIVE - MOBILE PORTRAIT 
-@media (max-width: 576px) {
-  .sidebar {
-    width: 45px;
-    top: 56px;
-  }
-  
-  .sidebar-btn {
-    width: 45px;
-    height: 45px;
-    min-height: 45px;
-    font-size: 16px;
-  }
-  
-  .sidebar-btn i {
-    font-size: 18px;
-  }
-  
-  .map {
-    margin-left: 45px;
-    width: calc(100% - 45px);
-  }
-  
-  .search-bar {
-    left: 50%;
-    transform: translateX(-50%);
-    top: 64px;
-  }
-  
-  .search-bar input {
-    width: 240px;
-  }
-}
-*/
-
 /* RESPONSIVE - MOBILE PORTRAIT */
 @media (max-width: 576px) {
   .sidebar {
@@ -337,14 +309,14 @@ html, body {
   
   /* FIX: Search bar positioning for mobile */
   .search-bar {
-    left: 55px; /* Position after sidebar */
-    transform: none; /* Remove centering */
+    left: 55px; 
+    transform: none; 
     top: 64px;
     z-index: 450;
   }
   
   .search-bar input {
-    width: calc(100vw - 170px); /* Dynamic width */
+    width: calc(100vw - 170px); 
     min-width: 180px;
     max-width: 280px;
     padding: 6px 10px;
@@ -416,7 +388,7 @@ html, body {
 }
 
 
-/* Database Modal - Top Right Positioning (NEW) */
+/* Database Modal - Top Right Positioning  */
 #dbConnectModal .modal-dialog,
 #tableSelectModal .modal-dialog {
   position: fixed !important;
@@ -453,7 +425,7 @@ html, body {
   border: none !important;
 }
 
-/* Modal Headers - Matching other panels */
+/* Modal Headers  */
 #dbConnectModal .modal-header,
 #tableSelectModal .modal-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -561,10 +533,6 @@ html, body {
     max-width: 90vw !important;
   }
 }
-
-
-
-
 /*  ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
   .drawer,
@@ -574,9 +542,6 @@ html, body {
     transition: none !important;
   }
 }
-
-
-
 /* Attribute Box */
 .attribute-box { 
   display: none; 
@@ -596,15 +561,19 @@ html, body {
   overflow: auto;
   min-width: 350px; 
   min-height: 200px;
+  transition: height 0.3s ease;
 }
 .attribute-box.minimized { 
     height: 50px !important; 
     max-height: 50px !important; 
+    min-height: 50px !important;
     overflow: hidden; 
     resize: none; 
 }
 .attribute-box.minimized .table-wrapper, .attribute-box.minimized .attr-footer { 
-    display: none !important; 
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important; 
 }
 .attribute-box .box-header { 
   display: flex; 
@@ -780,6 +749,43 @@ html, body {
     cursor: pointer; 
     border-radius: 4px; 
 }
+
+/* Color Picker Styling */
+.color-picker-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-picker-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 4px;
+}
+
+.color-picker-input::-webkit-color-swatch {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+
+.color-picker-input::-moz-color-swatch {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+
+.color-picker-input:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,229,255,0.4);
+  border-color: #00e5ff;
+}
+
+.color-picker-input:focus {
+  outline: 2px solid #00e5ff;
+  outline-offset: 2px;
+}
+
 
 .attr-footer { 
   display: flex; 
@@ -1235,7 +1241,7 @@ html, body {
   font-size: 12px;
   color: rgba(255,255,255,0.6);
 }
-/* NEW - Search Bar Left Side (After Sidebar) - EXTRA SMALL */
+/*  Search Bar Left Side  */
 .search-bar { 
   position: fixed; 
   top: 66px; 
@@ -1551,30 +1557,6 @@ html, body {
   overflow: visible !important;
 }
 
-/*@media(max-width: 768px) {
-  .search-bar input { 
-    width: 250px; 
-    padding: 10px 16px; 
-  }
-  .suggestion-box { 
-    width: 250px; 
-  }
-  .attribute-box { 
-    width: 90%; 
-    right: 5%; 
-    left: 5%; 
-    bottom: 50px;
-   }
-  .editor-box { 
-    left: 5%; 
-    right: 5%; 
-    width: auto; 
-  }
-  .app-title { 
-    font-size: 16px !important; 
-  }
-}*/
-
 /* Left resizer */
 .resizer-left {
   width: 14px;
@@ -1860,11 +1842,10 @@ html, body {
 <!-- HEADER -->
 <header class="app-header">
   <div class="header-center">
-    <img src="images/logo.png" class="logo" alt="Logo">
-    <strong class="app-title">Map Viewer</strong>
+    <img src="images/logo.png" class="logo" alt="GIS Logo">
+    <strong class="app-title">GIS Map Viewer</strong>
   </div>
 </header>
-
 <!-- MAP -->
 <div id="map" class="map"></div>
 
@@ -1877,7 +1858,7 @@ html, body {
     </div>
   </div>
 </div>
-<!-- SIDEBAR - With Better OSM-Style Icons -->
+<!-- SIDEBAR OSM-Style Icons -->
 <div class="sidebar">
   <button id="homeBtn" class="sidebar-btn" data-tooltip="Home">
     <i class="fas fa-home"></i>
@@ -2880,7 +2861,25 @@ document.getElementById("closeLayersPanel").onclick = () => {
   document.getElementById("layersPanel").style.display = "none";
   document.getElementById("toggleLayers").classList.remove('active');
 };
+// MINIMIZE BUTTON - Collapse but keep header visible
+document.getElementById("minimizeAttr").onclick = () => {
+  const box = document.getElementById("attributeContainer");
+  const icon = document.getElementById("minimizeAttr").querySelector('i');
+  
+  box.classList.toggle("minimized");
+  
+  if (box.classList.contains("minimized")) {
+    // Collapsed state
+    icon.className = "fas fa-window-maximize";
+    icon.parentElement.title = "Maximize";
+  } else {
+    // Expanded state
+    icon.className = "fas fa-minus";
+    icon.parentElement.title = "Minimize";
+  }
+};
 
+//Completely hide panel
 document.getElementById("closeAttributes").onclick = () => {
   attributeBox.style.display = "none";
   document.getElementById("toggleAttributes").classList.remove('active');
@@ -3556,7 +3555,7 @@ const tdCheck = document.createElement("td");
 
 
 
-    keys.forEach(col => {
+    /*keys.forEach(col => {
   const td = document.createElement("td");
   let val = f.get(col);
   if (typeof val === "object") val = JSON.stringify(val);
@@ -3710,7 +3709,205 @@ const tdCheck = document.createElement("td");
 
   td.appendChild(input);
   tr.appendChild(td);
+});*/
+
+
+keys.forEach(col => {
+  const td = document.createElement("td");
+  let val = f.get(col);
+  if (typeof val === "object") val = JSON.stringify(val);
+  let type = attributeTypes[col] || "text";
+  
+  if (!attributeTypes[col]) {
+    if (col.toLowerCase().includes("date")) type = "date";
+    else if (!isNaN(val) && val !== "" && val !== null) type = "number";
+    else if (val === true || val === false) type = "checkbox";
+  }
+
+  // ✨ COLOR COLUMN - SPECIAL HANDLING ✨
+  if (col === 'color') {
+    const colorPicker = document.createElement("input");
+    colorPicker.type = "color";
+    colorPicker.value = val || '#0d6efd';
+    colorPicker.classList.add('color-picker-input');
+    colorPicker.style.cssText = `
+      width: 60px;
+      height: 32px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      background: ${val || '#0d6efd'};
+      padding: 0;
+    `;
+    
+    colorPicker.onchange = () => {
+      const newColor = colorPicker.value;
+      f.set('color', newColor);
+      colorPicker.style.background = newColor;
+      
+      // Update feature style on map
+      f.setStyle(featureStyle(f));
+      
+      // Refresh map
+      const sourceLayer = findFeatureSource(f);
+      if (sourceLayer) {
+        sourceLayer.changed();
+      }
+      
+      showTempPopup(`✓ Color changed to ${newColor}`);
+    };
+    
+    td.appendChild(colorPicker);
+    tr.appendChild(td);
+    return; // ⚡ Important: Skip normal input creation for color
+  }
+
+  let input = document.createElement("input");
+  input.classList.add("attr-input");
+
+  // DATE INPUT WITH VALIDATION
+  if (type === "date") {
+    input.type = "date";
+    input.setAttribute('max', '2100-12-31');
+    input.setAttribute('min', '1900-01-01');
+    
+    if (val && isValidDate(val)) {
+      input.value = val;
+    } else if (val) {
+      try {
+        const date = new Date(val);
+        if (!isNaN(date.getTime())) {
+          input.value = date.toISOString().split("T")[0];
+        }
+      } catch (e) {
+        input.value = "";
+      }
+    }
+    
+    input.onchange = () => {
+      if (input.value && !isValidDate(input.value)) {
+        input.style.border = "2px solid #dc3545";
+        input.style.background = "#ffe6e6";
+        input.value = "";
+        showTempPopup("⚠ Invalid date format (YYYY-MM-DD)");
+      } else {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, input.value);
+      }
+    };
+  }
+
+  // NUMBER INPUT WITH VALIDATION
+  else if (type === "number") {
+    input.type = "number";
+    input.step = "any";
+    input.setAttribute('inputmode', 'decimal');
+    
+    if (val !== null && val !== undefined && val !== '') {
+      if (isValidNumber(val)) {
+        input.value = val;
+      } else {
+        input.value = "";
+      }
+    }
+    
+    input.oninput = () => {
+      const value = input.value.trim();
+      
+      if (value === '') {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, null);
+      } else if (!isValidNumber(value)) {
+        input.style.border = "2px solid #dc3545";
+        input.style.background = "#ffe6e6";
+      } else {
+        input.style.border = "2px solid #28a745";
+        input.style.background = "";
+        f.set(col, parseFloat(value));
+        
+        setTimeout(() => {
+          input.style.border = "";
+        }, 1000);
+      }
+    };
+    
+    input.onkeypress = (e) => {
+      const char = String.fromCharCode(e.which);
+      if (!/[\d.\-]/.test(char)) {
+        e.preventDefault();
+      }
+    };
+  }
+
+  // CHECKBOX
+  else if (type === "checkbox") {
+    input = document.createElement("input");
+    input.type = "checkbox";
+    input.classList.add('form-check-input');
+    input.style.width = '20px';
+    input.style.height = '20px';
+    input.style.cursor = 'pointer';
+    
+    if (typeof val === 'boolean') {
+      input.checked = val;
+    } else if (typeof val === 'string') {
+      input.checked = (val.toLowerCase() === 'true' || val === '1' || val === 'yes');
+    } else if (typeof val === 'number') {
+      input.checked = val !== 0;
+    } else {
+      input.checked = !!val;
+    }
+    
+    input.onchange = () => {
+      f.set(col, input.checked); 
+    };
+  }
+
+  // TEXT INPUT
+  else {
+    input.type = "text";
+    input.maxLength = 500;
+    input.value = val ?? "";
+    
+    input.oninput = () => {
+      const value = input.value;
+      
+      if (value.length > 500) {
+        input.style.border = "2px solid #dc3545";
+        input.value = value.substring(0, 500);
+        showTempPopup("⚠ Max 500 characters allowed");
+        return;
+      }
+      
+      if (value.trim() === "") {
+        input.style.border = "1px solid #ffc107";
+        input.style.background = "#fff9e6";
+      } else {
+        input.style.border = "";
+        input.style.background = "";
+        f.set(col, sanitizeText(value));
+      }
+    };
+    
+    input.onfocus = () => {
+      if (input.value.trim() === "") {
+        input.style.border = "";
+        input.style.background = "";
+      }
+    };
+  }
+
+  td.appendChild(input);
+  tr.appendChild(td);
 });
+
+
+
+
+
+
 
     const actionTd = document.createElement("td");
     actionTd.innerHTML = `
@@ -3723,19 +3920,63 @@ const tdCheck = document.createElement("td");
     attrBody.appendChild(tr);
   });
 
-  document.querySelectorAll(".btn-focus").forEach(btn => {
-    btn.onclick = function (ev) {
-      ev.stopPropagation();
-      const fid = this.closest("tr").dataset.fid;
-      const f = findByIdAcrossSources(fid);
-      if (!f) return;
-      const geom = f.getGeometry();
-      const center = geom.getType() === "Point"
-        ? geom.getCoordinates()
-        : ol.extent.getCenter(geom.getExtent());
-      map.getView().animate({ center, zoom: 15, duration: 600 });
-    };
-  });
+document.querySelectorAll(".btn-focus").forEach(btn => {
+  btn.onclick = function (ev) {
+    ev.stopPropagation();
+    const fid = this.closest("tr").dataset.fid;
+    const f = findByIdAcrossSources(fid);
+    if (!f) return;
+    
+    const geom = f.getGeometry();
+    if (!geom) return;
+    
+    const geomType = geom.getType();
+    
+    if (geomType === "Point") {
+      // For points, center and zoom to fixed level
+      const center = geom.getCoordinates();
+      map.getView().animate({ 
+        center: center, 
+        zoom: 17,  
+        duration: 600 
+      });
+    } else {
+      // For polygons/lines, fit to extent with padding
+      const extent = geom.getExtent();
+      map.getView().fit(extent, { 
+        padding: [80, 80, 80, 80],  
+        duration: 600,
+        maxZoom: 18 
+      });
+    }
+
+    document.querySelectorAll(".btn-focus").forEach(btn => {
+  btn.onclick = function (ev) {
+    ev.stopPropagation();
+    const fid = this.closest("tr").dataset.fid;
+    const f = findByIdAcrossSources(fid);
+    if (!f) return;
+    
+    const geom = f.getGeometry();
+    const extent = geom.getExtent();
+    
+    map.getView().fit(extent, { 
+      padding: [100, 100, 100, 100],
+      duration: 600,
+      maxZoom: 17
+    });
+  };
+});
+
+    
+    // Highlight the feature
+    selectInteraction.getFeatures().clear();
+    selectInteraction.getFeatures().push(f);
+    selectedFeature = f;
+    
+    showTempPopup(`✓ Centered on ${f.get('name') || 'feature'}`);
+  };
+});
 
   document.querySelectorAll(".btn-delete").forEach(btn => {
     btn.onclick = function (ev) {
