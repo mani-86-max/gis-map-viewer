@@ -4576,10 +4576,17 @@ document.getElementById("saveChangesBtn").onclick = () => {
 document.getElementById("deleteSelectedBtn").onclick = () => {
   const checkedBoxes = document.querySelectorAll('.select-checkbox:checked');
   
-  if (checkedBoxes.length === 0) {
+  /*if (checkedBoxes.length === 0) {
     alert('Please select at least one feature to delete');
     return;
+  }*/
+
+
+if (checkedBoxes.length === 0) {
+    alert('Please check at least one feature checkbox in the Attribute Table to delete!');
+    return;
   }
+
   
   if (!confirm(`Delete ${checkedBoxes.length} selected feature(s)?`)) return;
   
@@ -5074,7 +5081,7 @@ function turfToOlGeometry(turfGeometry) {
   });
 }
 //select features from attribute box
-function getSelectedFeaturesFromTable() {
+/*function getSelectedFeaturesFromTable() {
   const selected = [];
   const checkboxes = document.querySelectorAll('.select-checkbox:checked');
   checkboxes.forEach(cb => {
@@ -5083,15 +5090,48 @@ function getSelectedFeaturesFromTable() {
     if (feature) selected.push(feature);
   });
   return selected;
+}*/
+
+function getSelectedFeaturesFromTable() {
+  const selected = [];
+  
+  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+  checkboxes.forEach(cb => {
+    const fid = cb.dataset.fid;
+    const feature = findByIdAcrossSources(fid);
+    if (feature) selected.push(feature);
+  });
+  
+  if (selected.length === 0 && selectInteraction) {
+    selectInteraction.getFeatures().forEach(f => {
+      selected.push(f);
+    });
+  }
+  
+  if (selected.length === 0 && selectedFeature) {
+    selected.push(selectedFeature);
+  }
+  
+  return selected;
 }
+
+
+
 // buffer tools
 document.getElementById("runBuffer").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length === 0) {
+  /*if (selectedFeatures.length === 0) {
     alert('Please select at least one feature from the attribute table!');
     return;
+  }*/
+
+
+if (selectedFeatures.length === 0) {
+    alert('Please select at least one feature!\n\nEither:\n1. Click on a feature on the map\n2. Check a feature in the Attribute Table');
+    return;
   }
+
 
   const distance = parseFloat(document.getElementById("bufferDistance").value);
   const unit = document.getElementById("bufferUnit").value;
@@ -5173,8 +5213,14 @@ selectedFeatures.forEach(feature => {
 document.getElementById("removeBuffer").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length === 0) {
+  /*if (selectedFeatures.length === 0) {
     alert('Please select at least one buffer feature from the attribute table!');
+    return;
+  }*/
+
+
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one buffer feature!\n\nEither:\n1. Click on buffer feature on the map\n2. Check buffer feature in the Attribute Table');
     return;
   }
   
@@ -5214,11 +5260,19 @@ document.getElementById("removeBuffer").onclick = () => {
 document.getElementById("runIntersect").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length < 2) {
+  /*if (selectedFeatures.length < 2) {
     alert('Please select at least 2 features to find intersection!');
     return;
   }
-  
+  */
+
+if (selectedFeatures.length < 2) {
+    alert('Please select at least 2 features!\n\nEither:\n1. Click on features on the map\n2. Check features in the Attribute Table');
+    return;
+  }
+
+
+
   // Validate geometry types
   const geometryTypes = selectedFeatures.map(f => {
     const geom = f.getGeometry();
@@ -5312,8 +5366,14 @@ document.getElementById("runIntersect").onclick = () => {
 document.getElementById("removeIntersection").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length === 0) {
+  /*if (selectedFeatures.length === 0) {
     alert('Please select at least one intersection feature from the attribute table!');
+    return;
+  }*/
+
+
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one intersection feature!\n\nEither:\n1. Click on intersection feature on the map\n2. Check feature in the Attribute Table');
     return;
   }
   
@@ -5356,8 +5416,14 @@ document.getElementById("removeIntersection").onclick = () => {
 document.getElementById("runDissolve").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length < 2) {
+ /* if (selectedFeatures.length < 2) {
     alert('Please select at least 2 features to dissolve!');
+    return;
+  }*/
+
+
+  if (selectedFeatures.length < 2) {
+    alert('Please select at least 2 features!\n\nEither:\n1. Click on features on the map\n2. Check features in the Attribute Table');
     return;
   }
   
@@ -5493,8 +5559,13 @@ document.getElementById("runDissolve").onclick = () => {
 document.getElementById("removeDissolve").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  if (selectedFeatures.length === 0) {
+  /*if (selectedFeatures.length === 0) {
     alert('Please select at least one dissolved feature from the attribute table!');
+    return;
+  }*/
+
+  if (selectedFeatures.length === 0) {
+    alert('Please select at least one dissolved feature!\n\nEither:\n1. Click on dissolved feature on the map\n2. Check feature in the Attribute Table');
     return;
   }
   
