@@ -987,18 +987,18 @@ html, body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* ===== EDITOR BUTTONS GRID ===== */
+/*  EDITOR BUTTONS GRID */
 
 .editor-buttons { 
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 10px;
   margin-bottom: 8px;
-  position: relative; /* ⚡ CRITICAL: Keeps children in place */
-  width: 100%; /* ⚡ CRITICAL: Prevents overflow */
+  position: relative; 
+  width: 100%; 
 }
 
-/* ===== INDIVIDUAL BUTTON STYLES ===== */
+/* INDIVIDUAL BUTTON STYLES  */
 
 .editor-btn { 
   width: 50px; 
@@ -1014,8 +1014,8 @@ html, body {
   color: #fff;
   transition: all 0.3s ease; 
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-  position: relative; /* ⚡ CRITICAL: Prevents absolute positioning */
-  /* ⚡ CRITICAL: Override any external positioning */
+  position: relative; 
+  
   left: auto !important;
   top: auto !important;
   right: auto !important;
@@ -1144,14 +1144,14 @@ html, body {
   }
 }
 
-/* ===== DRAGGABLE FUNCTIONALITY ===== */
+/* DRAGGABLE FUNCTIONALITY  */
 
 .editor-box.dragging {
   cursor: grabbing;
   user-select: none;
 }
 
-/* ===== PREVENT ANY EXTERNAL POSITIONING CONFLICTS ===== */
+/* PREVENT ANY EXTERNAL POSITIONING CONFLICTS */
 
 .editor-box * {
   box-sizing: border-box; /* Consistent sizing */
@@ -1159,15 +1159,10 @@ html, body {
 
 /* Force all editor buttons to stay in grid - Nuclear option */
 .editor-buttons > .editor-btn {
-  position: static !important; /* ⚡ MOST CRITICAL LINE */
+  position: static !important;
   float: none !important;
   margin: 0 !important;
 }
-
-/* ===== END OF EDITOR BOX CSS ===== */
-
-
-
 
 /* Geoprocessing Box - Enhanced */
 .geoprocessing-box {
@@ -2135,6 +2130,176 @@ html, body {
     opacity: 1;
   }
 }
+/*ANNOTATION TOOL*/
+.annotation-box {
+  position: fixed; 
+  top: 120px; 
+  right: 15px; 
+  width: 300px;
+  background: rgba(26,26,26,0.98); 
+  color: #fff; border-radius: 10px;
+  padding: 12px; z-index: 400; 
+  display: none; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
+  border: 2px solid #00e5ff;
+}
+.annotation-box .box-header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 10px; 
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1); 
+  cursor: move;
+}
+.annotation-box h6 { 
+  margin:0; 
+  font-size:16px; 
+  color:#00e5ff; 
+  font-weight:600; 
+}
+.ann-section { 
+  margin-bottom: 12px; 
+}
+.ann-section label { 
+  display:block; 
+  font-size:12px; 
+  color:#00e5ff; 
+  margin-bottom:6px; 
+  font-weight:600; 
+}
+.emoji-grid { 
+  display:grid; 
+  grid-template-columns:repeat(6,1fr); 
+  gap:4px; 
+  margin-bottom:8px; 
+}
+.emoji-btn {
+  width:36px; 
+  height:36px; 
+  border:2px solid transparent; 
+  border-radius:6px;
+  background:rgba(255,255,255,0.08); 
+  cursor:pointer; 
+  font-size:18px;
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  transition:all 0.2s;
+}
+.emoji-btn:hover, .emoji-btn.selected { 
+  border-color:#00e5ff; 
+  background:rgba(0,229,255,0.2); 
+}
+.icon-grid { 
+  display:grid; 
+  grid-template-columns:repeat(5,1fr); 
+  gap:4px; 
+  margin-bottom:8px; 
+}
+.ann-icon-btn {
+  width:40px; 
+  height:40px; 
+  border:2px solid transparent; 
+  border-radius:6px;
+  background:rgba(255,255,255,0.08); 
+  cursor:pointer; 
+  color:#fff; 
+  font-size:16px;
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  transition:all 0.2s;
+}
+.ann-icon-btn:hover, .ann-icon-btn.selected { 
+  border-color:#00e5ff; 
+  background:rgba(0,229,255,0.2); 
+  color:#00e5ff; 
+}
+.ann-text-controls { 
+  display:flex; 
+  gap:6px; 
+  margin-bottom:8px; 
+}
+.ann-text-controls input[type="text"] {
+  flex:1; 
+  padding:6px 8px; 
+  background:rgba(255,255,255,0.1);
+  color:#fff; 
+  border:1px solid rgba(255,255,255,0.2); 
+  border-radius:4px; 
+  font-size:13px;
+}
+.ann-text-controls input[type="color"] {
+  width:36px; 
+  height:32px; 
+  border:none; 
+  border-radius:4px; 
+  cursor:pointer; 
+  padding:0;
+}
+.ann-text-controls select {
+  width:60px;
+   padding:4px; 
+   background:rgba(255,255,255,0.1);
+  color:#fff; 
+  border:1px solid rgba(255,255,255,0.2); 
+  border-radius:4px; 
+  font-size:12px;
+}
+.ann-mode-btns { 
+  display:flex; 
+  gap:6px; 
+  margin-bottom:10px; 
+}
+.ann-mode-btn {
+  flex:1;
+   padding:8px; 
+   border:2px solid rgba(255,255,255,0.2); 
+   border-radius:6px;
+  background:rgba(255,255,255,0.08); 
+  color:#fff; 
+  cursor:pointer; 
+  font-size:12px;
+  font-weight:600;
+   transition:all 0.2s; 
+   text-align:center;
+}
+.ann-mode-btn.active { 
+  border-color:#00e5ff; 
+  background:rgba(0,229,255,0.2); 
+  color:#00e5ff; 
+}
+.ann-footer { 
+  display:flex; 
+  gap:6px; 
+  padding-top:8px; 
+  border-top:1px solid rgba(255,255,255,0.1); 
+  flex-wrap:wrap; 
+}
+.ann-footer button {
+  flex:1; 
+  padding:7px; 
+  border:none; 
+  border-radius:5px;
+  cursor:pointer; 
+  font-size:12px; 
+  font-weight:600; 
+  color:#fff; 
+  transition:all 0.2s;
+}
+.ann-clear-btn { 
+  background:#dc3545; 
+}
+.ann-export-btn { 
+  background:#28a745; 
+}
+.ann-status { 
+  font-size:11px; 
+  color:rgba(255,255,255,0.6); 
+  text-align:center; 
+  margin-top:6px; 
+}
 
 </style>
 </head>
@@ -2193,6 +2358,11 @@ html, body {
     <i class="fas fa-wrench"></i>
   </button>
   
+   <button id="toggleAnnotation" class="sidebar-btn" data-tooltip="Annotate">
+    <i class="fas fa-map-marker-alt"></i>
+  </button>
+
+
   <div class="sidebar-separator"></div>
   
   <button id="connectDbBtn" class="sidebar-btn" data-tooltip="Database">
@@ -2236,27 +2406,11 @@ html, body {
   <div id="layersList" class="layers-list">
   </div>
 </div>
-<!-- EDITOR BOX 
-<div id="editorContainer" class="editor-box">
-  <div class="box-header">
-    <h6 style="margin:0; color:#333;">Editor Tools</h6>
-    <button id="closeEditor" class="attr-small-btn" style="color:#333;" title="Close"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="editor-buttons">
-    <button id="drawPoint" class="editor-btn" title="Draw Point"><i class="fas fa-circle"></i></button>
-    <button id="drawLine" class="editor-btn" title="Draw Line"><i class="fas fa-grip-lines"></i></button>
-    <button id="drawPolygon" class="editor-btn" title="Draw Polygon"><i class="fas fa-vector-square"></i></button>
-    <button id="modifyFeature" class="editor-btn" title="Modify"><i class="fas fa-edit"></i></button>
-    <button id="dragFeature" class="editor-btn" title="Drag/Move Feature"><i class="fas fa-arrows-alt"></i></button>
-    <button id="deleteFeature" class="editor-btn" title="Delete"><i class="fas fa-trash"></i></button>
-    <button id="exportDrawing" class="editor-btn" title="Export Drawing Only"><i class="fas fa-download"></i></button>
-  </div>
-</div>*/-->
 
 <!-- EDITOR BOX -->
 <div id="editorContainer" class="editor-box">
   <div class="box-header">
-    <h6>✏️ Editor Tools</h6>
+    <h6>Editor Tools</h6>
     <button id="closeEditor" class="attr-small-btn" title="Close">
       <i class="fas fa-times"></i>
     </button>
@@ -2458,6 +2612,99 @@ html, body {
   </div>
 </div>
 
+<!-- ANNOTATION PANEL -->
+<div id="annotationContainer" class="annotation-box">
+  <div class="box-header" id="annotationHeader">
+    <h6> Annotations</h6>
+    <button id="closeAnnotation" class="attr-small-btn" title="Close"><i class="fas fa-times"></i></button>
+  </div>
+
+  <!-- MODE SELECTOR -->
+  <div class="ann-mode-btns">
+    <button class="ann-mode-btn active" data-mode="emoji">😀 Emoji</button>
+    <button class="ann-mode-btn" data-mode="icon">📌 Icon</button>
+    <button class="ann-mode-btn" data-mode="text">🔤 Text</button>
+  </div>
+
+  <!-- EMOJI SECTION -->
+  <div class="ann-section" id="annEmojiSection">
+    <label>Pick Emoji</label>
+    <div class="emoji-grid">
+      <button class="emoji-btn" data-emoji="📍">📍</button>
+      <button class="emoji-btn" data-emoji="🏠">🏠</button>
+      <button class="emoji-btn" data-emoji="🏢">🏢</button>
+      <button class="emoji-btn" data-emoji="🏫">🏫</button>
+      <button class="emoji-btn" data-emoji="🏥">🏥</button>
+      <button class="emoji-btn" data-emoji="⭐">⭐</button>
+      <button class="emoji-btn" data-emoji="❤️">❤️</button>
+      <button class="emoji-btn" data-emoji="🔥">🔥</button>
+      <button class="emoji-btn" data-emoji="💡">💡</button>
+      <button class="emoji-btn" data-emoji="🎯">🎯</button>
+      <button class="emoji-btn" data-emoji="🚗">🚗</button>
+      <button class="emoji-btn" data-emoji="🌳">🌳</button>
+      <button class="emoji-btn" data-emoji="⚠️">⚠️</button>
+      <button class="emoji-btn" data-emoji="✅">✅</button>
+      <button class="emoji-btn" data-emoji="❌">❌</button>
+      <button class="emoji-btn" data-emoji="🔴">🔴</button>
+      <button class="emoji-btn" data-emoji="🟢">🟢</button>
+      <button class="emoji-btn" data-emoji="🔵">🔵</button>
+    </div>
+    <label>Label (optional)</label>
+    <input type="text" id="emojiLabel" placeholder="Enter label..." style="width:100%;padding:6px 8px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:4px;font-size:13px;">
+  </div>
+
+  <!-- ICON SECTION -->
+  <div class="ann-section" id="annIconSection" style="display:none">
+    <label>Pick Icon</label>
+    <div class="icon-grid">
+      <button class="ann-icon-btn" data-icon="fa-map-marker-alt" title="Marker"><i class="fas fa-map-marker-alt"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-home" title="Home"><i class="fas fa-home"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-building" title="Building"><i class="fas fa-building"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-school" title="School"><i class="fas fa-school"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-hospital" title="Hospital"><i class="fas fa-hospital"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-star" title="Star"><i class="fas fa-star"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-flag" title="Flag"><i class="fas fa-flag"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-car" title="Car"><i class="fas fa-car"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-tree" title="Tree"><i class="fas fa-tree"></i></button>
+      <button class="ann-icon-btn" data-icon="fa-parking" title="Parking"><i class="fas fa-parking"></i></button>
+    </div>
+    <div class="ann-text-controls">
+      <label style="margin:0;line-height:32px;font-size:12px;">Color:</label>
+      <input type="color" id="iconColor" value="#00e5ff">
+      <label style="margin:0;line-height:32px;font-size:12px;">Label:</label>
+      <input type="text" id="iconLabel" placeholder="Label..." style="flex:1">
+    </div>
+  </div>
+
+  <!-- TEXT SECTION -->
+  <div class="ann-section" id="annTextSection" style="display:none">
+    <label>Text Label</label>
+    <div class="ann-text-controls" style="margin-bottom:6px;">
+      <input type="text" id="annTextInput" placeholder="Enter text..." style="flex:1">
+    </div>
+    <div class="ann-text-controls">
+      <label style="margin:0;line-height:32px;font-size:12px;">Color:</label>
+      <input type="color" id="textColor" value="#ffffff">
+      <label style="margin:0;line-height:32px;font-size:12px;">Size:</label>
+      <select id="textSize">
+        <option value="12">12</option>
+        <option value="14" selected>14</option>
+        <option value="16">16</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="ann-status" id="annStatus">Select a mode, pick content, then click on map</p>
+
+  <div class="ann-footer">
+    <button class="ann-clear-btn" id="annClearBtn"> Clear All</button>
+    <button class="ann-export-btn" id="annExportBtn"> Export KML</button>
+  </div>
+</div>
+
+
 <!-- Keep file input -->
 <input type="file" id="fileInput" style="display:none" multiple>
 <!-- DATABASE CONNECTION MODAL -->
@@ -2559,7 +2806,6 @@ html, body {
   <button id="zoomOut" class="zoom-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
 <button id="locationBtn" class="zoom-btn" title="My Location">
   <svg class="location-icon-svg" viewBox="0 0 24 24">
-  <!-- Outer circle (location waves) - 3 concentric circles -->
   <circle cx="12" cy="12" r="10" opacity="0.3"/>
   <circle cx="12" cy="12" r="7" opacity="0.5"/>
   
@@ -2661,7 +2907,7 @@ html, body {
     localStorage.removeItem("savedFeatures");
 });
   document.getElementById('year').innerText = new Date().getFullYear();
-// Validate date format (YYYY-MM-DD)
+// Validate date format
 function isValidDate(dateString) {
   if (!dateString) return false;
   const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -2908,7 +3154,7 @@ function setActiveButton(buttonId) {
   const btn = document.getElementById(buttonId);
   if (btn) {
     btn.classList.add('active');
-    console.log('✅ Activated:', btn.getAttribute('data-tooltip'));
+    console.log(' Activated:', btn.getAttribute('data-tooltip'));
   }
 }
 
@@ -3151,9 +3397,6 @@ document.getElementById("toggleGeoprocessing").onclick = () => {
     setActiveButton("toggleGeoprocessing");
   }
 };
-
-
-
 
 // SHOW BUFFER TOOL
 document.getElementById("showBufferTool").onclick = () => {
@@ -3899,165 +4142,6 @@ const tdCheck = document.createElement("td");
     tdCheck.appendChild(cb);
     tr.appendChild(tdCheck);
 
-
-
-    /*keys.forEach(col => {
-  const td = document.createElement("td");
-  let val = f.get(col);
-  if (typeof val === "object") val = JSON.stringify(val);
-  let type = attributeTypes[col] || "text";
-  
-  if (!attributeTypes[col]) {
-    if (col.toLowerCase().includes("date")) type = "date";
-    else if (!isNaN(val) && val !== "" && val !== null) type = "number";
-    else if (val === true || val === false) type = "checkbox";
-  }
-
-  let input = document.createElement("input");
-  input.classList.add("attr-input");
-
-  //  DATE INPUT WITH VALIDATION
-  if (type === "date") {
-    input.type = "date";
-    input.setAttribute('max', '2100-12-31');
-    input.setAttribute('min', '1900-01-01');
-    
-    if (val && isValidDate(val)) {
-      input.value = val;
-    } else if (val) {
-      try {
-        const date = new Date(val);
-        if (!isNaN(date.getTime())) {
-          input.value = date.toISOString().split("T")[0];
-        }
-      } catch (e) {
-        input.value = "";
-      }
-    }
-    
-    input.onchange = () => {
-      if (input.value && !isValidDate(input.value)) {
-        input.style.border = "2px solid #dc3545";
-        input.style.background = "#ffe6e6";
-        input.value = "";
-        showTempPopup("Invalid date format (YYYY-MM-DD)");
-      } else {
-        input.style.border = "";
-        input.style.background = "";
-        f.set(col, input.value);
-      }
-    };
-  }
-
-  // NUMBER INPUT WITH VALIDATION
-  else if (type === "number") {
-    input.type = "number";
-    input.step = "any";
-    input.setAttribute('inputmode', 'decimal');
-    
-    if (val !== null && val !== undefined && val !== '') {
-      if (isValidNumber(val)) {
-        input.value = val;
-      } else {
-        input.value = "";
-      }
-    }
-    
-    input.oninput = () => {
-      const value = input.value.trim();
-      
-      if (value === '') {
-        input.style.border = "";
-        input.style.background = "";
-        f.set(col, null);
-      } else if (!isValidNumber(value)) {
-        input.style.border = "2px solid #dc3545";
-        input.style.background = "#ffe6e6";
-      } else {
-        input.style.border = "2px solid #28a745";
-        input.style.background = "";
-        f.set(col, parseFloat(value));
-        
-        setTimeout(() => {
-          input.style.border = "";
-        }, 1000);
-      }
-    };
-    
-    // Prevent non-numeric characters
-    input.onkeypress = (e) => {
-      const char = String.fromCharCode(e.which);
-      if (!/[\d.\-]/.test(char)) {
-        e.preventDefault();
-      }
-    };
-  }
-
-  // CHECKBOX with HANDLING
-  else if (type === "checkbox") {
-    input = document.createElement("input");
-    input.type = "checkbox";
-    input.classList.add('form-check-input');
-    input.style.width = '20px';
-    input.style.height = '20px';
-    input.style.cursor = 'pointer';
-    
-    // Properly handle boolean values
-    if (typeof val === 'boolean') {
-      input.checked = val;
-    } else if (typeof val === 'string') {
-      input.checked = (val.toLowerCase() === 'true' || val === '1' || val === 'yes');
-    } else if (typeof val === 'number') {
-      input.checked = val !== 0;
-    } else {
-      input.checked = !!val;
-    }
-    
-    // Always store as proper boolean
-    input.onchange = () => {
-      f.set(col, input.checked); 
-    };
-  }
-
-  // TEXT INPUT WITH LENGTH VALIDATION
-  else {
-    input.type = "text";
-    input.maxLength = 500;
-    input.value = val ?? "";
-    
-    input.oninput = () => {
-      const value = input.value;
-      
-      if (value.length > 500) {
-        input.style.border = "2px solid #dc3545";
-        input.value = value.substring(0, 500);
-        showTempPopup(" Max 500 characters allowed");
-        return;
-      }
-      
-      if (value.trim() === "") {
-        input.style.border = "1px solid #ffc107";
-        input.style.background = "#fff9e6";
-      } else {
-        input.style.border = "";
-        input.style.background = "";
-        f.set(col, sanitizeText(value));
-      }
-    };
-    
-    input.onfocus = () => {
-      if (input.value.trim() === "") {
-        input.style.border = "";
-        input.style.background = "";
-      }
-    };
-  }
-
-  td.appendChild(input);
-  tr.appendChild(td);
-});*/
-
-
 keys.forEach(col => {
   const td = document.createElement("td");
   let val = f.get(col);
@@ -4070,7 +4154,7 @@ keys.forEach(col => {
     else if (val === true || val === false) type = "checkbox";
   }
 
-  // ✨ COLOR COLUMN - SPECIAL HANDLING ✨
+  // COLOR COLUMN - SPECIAL HANDLING 
   if (col === 'color') {
     const colorPicker = document.createElement("input");
     colorPicker.type = "color";
@@ -4105,7 +4189,7 @@ keys.forEach(col => {
     
     td.appendChild(colorPicker);
     tr.appendChild(td);
-    return; // ⚡ Important: Skip normal input creation for color
+    return;
   }
 
   let input = document.createElement("input");
@@ -4248,14 +4332,7 @@ keys.forEach(col => {
   td.appendChild(input);
   tr.appendChild(td);
 });
-
-
-
-
-
-
-
-    const actionTd = document.createElement("td");
+   const actionTd = document.createElement("td");
     actionTd.innerHTML = `
        <button class="btn-focus" title="Center"><i class="fas fa-crosshairs"></i></button>
   <button class="btn-delete" title="Delete"><i class="fas fa-trash"></i></button>
@@ -4314,7 +4391,6 @@ document.querySelectorAll(".btn-focus").forEach(btn => {
   };
 });
 
-    
     // Highlight the feature
     selectInteraction.getFeatures().clear();
     selectInteraction.getFeatures().push(f);
@@ -4574,12 +4650,6 @@ document.getElementById("saveChangesBtn").onclick = () => {
 document.getElementById("deleteSelectedBtn").onclick = () => {
   const checkedBoxes = document.querySelectorAll('.select-checkbox:checked');
   
-  /*if (checkedBoxes.length === 0) {
-    alert('Please select at least one feature to delete');
-    return;
-  }*/
-
-
 if (checkedBoxes.length === 0) {
     alert('Please check at least one feature checkbox in the Attribute Table to delete!');
     return;
@@ -4794,8 +4864,6 @@ drawInteraction.on('drawend', e => {
   showTempPopup('Modify mode active - drag features to edit');
 }
 
-
-
 //Start Move features function
 function startDragMode() {
   removeInteractions();
@@ -4868,7 +4936,7 @@ document.getElementById('dragFeature').onclick = function() {
   }
 };
 
-// Export only drawn features (from vectorSource)
+// Export only drawn features
 document.getElementById('exportDrawing').onclick = () => {
   const fmt = new ol.format.GeoJSON();
   const drawnFeatures = vectorSource.getFeatures();
@@ -5078,17 +5146,7 @@ function turfToOlGeometry(turfGeometry) {
     featureProjection: 'EPSG:3857'
   });
 }
-//select features from attribute box
-/*function getSelectedFeaturesFromTable() {
-  const selected = [];
-  const checkboxes = document.querySelectorAll('.select-checkbox:checked');
-  checkboxes.forEach(cb => {
-    const fid = cb.dataset.fid;
-    const feature = findByIdAcrossSources(fid);
-    if (feature) selected.push(feature);
-  });
-  return selected;
-}*/
+
 
 function getSelectedFeaturesFromTable() {
   const selected = [];
@@ -5119,12 +5177,6 @@ function getSelectedFeaturesFromTable() {
 document.getElementById("runBuffer").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  /*if (selectedFeatures.length === 0) {
-    alert('Please select at least one feature from the attribute table!');
-    return;
-  }*/
-
-
 if (selectedFeatures.length === 0) {
     alert('Please select at least one feature!\n\nEither:\n1. Click on a feature on the map\n2. Check a feature in the Attribute Table');
     return;
@@ -5211,11 +5263,7 @@ selectedFeatures.forEach(feature => {
 document.getElementById("removeBuffer").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  /*if (selectedFeatures.length === 0) {
-    alert('Please select at least one buffer feature from the attribute table!');
-    return;
-  }*/
-
+ 
 
   if (selectedFeatures.length === 0) {
     alert('Please select at least one buffer feature!\n\nEither:\n1. Click on buffer feature on the map\n2. Check buffer feature in the Attribute Table');
@@ -5258,18 +5306,10 @@ document.getElementById("removeBuffer").onclick = () => {
 document.getElementById("runIntersect").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  /*if (selectedFeatures.length < 2) {
-    alert('Please select at least 2 features to find intersection!');
-    return;
-  }
-  */
-
 if (selectedFeatures.length < 2) {
     alert('Please select at least 2 features!\n\nEither:\n1. Click on features on the map\n2. Check features in the Attribute Table');
     return;
   }
-
-
 
   // Validate geometry types
   const geometryTypes = selectedFeatures.map(f => {
@@ -5364,12 +5404,6 @@ if (selectedFeatures.length < 2) {
 document.getElementById("removeIntersection").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  /*if (selectedFeatures.length === 0) {
-    alert('Please select at least one intersection feature from the attribute table!');
-    return;
-  }*/
-
-
   if (selectedFeatures.length === 0) {
     alert('Please select at least one intersection feature!\n\nEither:\n1. Click on intersection feature on the map\n2. Check feature in the Attribute Table');
     return;
@@ -5414,12 +5448,6 @@ document.getElementById("removeIntersection").onclick = () => {
 document.getElementById("runDissolve").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
- /* if (selectedFeatures.length < 2) {
-    alert('Please select at least 2 features to dissolve!');
-    return;
-  }*/
-
-
   if (selectedFeatures.length < 2) {
     alert('Please select at least 2 features!\n\nEither:\n1. Click on features on the map\n2. Check features in the Attribute Table');
     return;
@@ -5557,11 +5585,6 @@ document.getElementById("runDissolve").onclick = () => {
 document.getElementById("removeDissolve").onclick = () => {
   const selectedFeatures = getSelectedFeaturesFromTable();
   
-  /*if (selectedFeatures.length === 0) {
-    alert('Please select at least one dissolved feature from the attribute table!');
-    return;
-  }*/
-
   if (selectedFeatures.length === 0) {
     alert('Please select at least one dissolved feature!\n\nEither:\n1. Click on dissolved feature on the map\n2. Check feature in the Attribute Table');
     return;
@@ -5601,7 +5624,6 @@ document.getElementById("removeDissolve").onclick = () => {
     alert('Failed to remove dissolved features.');
   }
 };
-
 
 //DRAGGABLE/RESIZABLE ATTRIBUTE BOX
 (function() {
@@ -5901,13 +5923,8 @@ setTimeout(() => {
   }
 })();
 
-
-
 // DATABASE CONNECTION FUNCTIONS - COMPACT & DRAGGABLE
 const API_BASE = 'http://localhost/gis-map/api';
-
-
-
 // NEW - Apply compact styling to modals - Top Right Position
 function applyCompactModalStyle() {
   // Database Connect Modal - Top Right Position
@@ -6284,7 +6301,7 @@ document.getElementById('confirmDbConnect').onclick = async () => {
         tableSelect.appendChild(opt);
       });
       
-      applyCompactModalStyle(); // Reapply styles for table modal
+      applyCompactModalStyle(); 
       const modal = new bootstrap.Modal(document.getElementById('tableSelectModal'));
       modal.show();
       console.log('Table modal opened');
@@ -6747,6 +6764,292 @@ document.getElementById('imageUrl')?.addEventListener('input', function() {
   }
 });
 buildAttributeTable();
+// ANNOTATION SYSTEM 
+(function() {
+  // State
+  let annMode = 'emoji';
+  let selectedEmoji = null;
+  let selectedIcon = null;
+  const annotations = []; 
+  let annClickActive = false;
+
+  // Overlay container for annotations
+  const annOverlayContainer = document.createElement('div');
+  document.body.appendChild(annOverlayContainer);
+
+  // Toggle Sidebar Button 
+  document.getElementById('toggleAnnotation').onclick = () => {
+    const box = document.getElementById('annotationContainer');
+    const isVis = box.style.display === 'flex';
+    if (isVis) {
+      box.style.display = 'none';
+      document.getElementById('toggleAnnotation').classList.remove('active');
+      deactivateAnnClick();
+    } else {
+      closeAllPanels();
+      box.style.display = 'flex';
+      setActiveButton('toggleAnnotation');
+      activateAnnClick();
+    }
+  };
+
+  document.getElementById('closeAnnotation').onclick = () => {
+    document.getElementById('annotationContainer').style.display = 'none';
+    document.getElementById('toggleAnnotation').classList.remove('active');
+    deactivateAnnClick();
+  };
+
+  // Mode Buttons 
+  document.querySelectorAll('.ann-mode-btn').forEach(btn => {
+    btn.onclick = function() {
+      document.querySelectorAll('.ann-mode-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      annMode = this.dataset.mode;
+      document.getElementById('annEmojiSection').style.display = annMode === 'emoji' ? 'block' : 'none';
+      document.getElementById('annIconSection').style.display  = annMode === 'icon'  ? 'block' : 'none';
+      document.getElementById('annTextSection').style.display  = annMode === 'text'  ? 'block' : 'none';
+      updateStatus();
+    };
+  });
+
+  //Emoji Picker 
+  document.querySelectorAll('.emoji-btn').forEach(btn => {
+    btn.onclick = function() {
+      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedEmoji = this.dataset.emoji;
+      updateStatus();
+    };
+  });
+
+  // Icon Picker 
+  document.querySelectorAll('.ann-icon-btn').forEach(btn => {
+    btn.onclick = function() {
+      document.querySelectorAll('.ann-icon-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedIcon = this.dataset.icon;
+      updateStatus();
+    };
+  });
+
+  function updateStatus() {
+    const el = document.getElementById('annStatus');
+    if (annMode === 'emoji' && !selectedEmoji) { el.textContent = 'Pick an emoji first, then click map'; return; }
+    if (annMode === 'icon' && !selectedIcon)   { el.textContent = 'Pick an icon first, then click map'; return; }
+    if (annMode === 'text') {
+      const t = document.getElementById('annTextInput').value.trim();
+      if (!t) { el.textContent = ' Enter text first, then click map'; return; }
+    }
+    el.textContent = ' Click on the map to place annotation!';
+  }
+
+  document.getElementById('annTextInput').oninput = updateStatus;
+
+  // Map Click Handler
+  function activateAnnClick() {
+    annClickActive = true;
+    map.getTargetElement().style.cursor = 'crosshair';
+  }
+  function deactivateAnnClick() {
+    annClickActive = false;
+    map.getTargetElement().style.cursor = '';
+  }
+
+  map.on('click', function(evt) {
+    if (!annClickActive) return;
+    if (document.getElementById('annotationContainer').style.display !== 'flex') return;
+
+    const coord = evt.coordinate;
+    const lonlat = ol.proj.toLonLat(coord);
+
+    if (annMode === 'emoji') {
+      if (!selectedEmoji) { showTempPopup('Pick an emoji first!'); return; }
+      const label = document.getElementById('emojiLabel').value.trim();
+      placeAnnotation({ type: 'emoji', content: selectedEmoji, coord, lonlat, label });
+    }
+    else if (annMode === 'icon') {
+      if (!selectedIcon) { showTempPopup('Pick an icon first!'); return; }
+      const color = document.getElementById('iconColor').value;
+      const label = document.getElementById('iconLabel').value.trim();
+      placeAnnotation({ type: 'icon', content: selectedIcon, coord, lonlat, color, label });
+    }
+    else if (annMode === 'text') {
+      const text = document.getElementById('annTextInput').value.trim();
+      if (!text) { showTempPopup('Enter text first!'); return; }
+      const color = document.getElementById('textColor').value;
+      const fontSize = document.getElementById('textSize').value;
+      placeAnnotation({ type: 'text', content: text, coord, lonlat, color, fontSize });
+    }
+  });
+
+  //Place Annotation on Map 
+  function placeAnnotation(ann) {
+    ann.id = 'ann-' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+    annotations.push(ann);
+
+    const el = document.createElement('div');
+    el.dataset.annId = ann.id;
+    el.style.cssText = 'position:absolute; cursor:pointer; user-select:none; display:flex; flex-direction:column; align-items:center;';
+
+    let content = '';
+    if (ann.type === 'emoji') {
+      content = `<span style="font-size:28px; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${ann.content}</span>`;
+      if (ann.label) content += `<span style="font-size:11px;color:#fff;background:rgba(0,0,0,0.7);padding:2px 5px;border-radius:3px;margin-top:2px;white-space:nowrap;">${ann.label}</span>`;
+    }
+    else if (ann.type === 'icon') {
+      content = `<span style="font-size:26px;color:${ann.color||'#00e5ff'};filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));"><i class="fas ${ann.content}"></i></span>`;
+      if (ann.label) content += `<span style="font-size:11px;color:#fff;background:rgba(0,0,0,0.7);padding:2px 5px;border-radius:3px;margin-top:2px;white-space:nowrap;">${ann.label}</span>`;
+    }
+    else if (ann.type === 'text') {
+      content = `<span style="font-size:${ann.fontSize||14}px;color:${ann.color||'#fff'};font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,0.9),0 0 8px rgba(0,0,0,0.8);white-space:nowrap;background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:3px;">${ann.content}</span>`;
+    }
+
+    // Delete button on hover
+    el.innerHTML = content + `<button data-ann-id="${ann.id}" title="Delete" style="display:none;position:absolute;top:-8px;right:-8px;width:18px;height:18px;border-radius:50%;background:#dc3545;border:none;color:#fff;font-size:10px;cursor:pointer;line-height:18px;text-align:center;padding:0;">✕</button>`;
+
+    el.addEventListener('mouseenter', () => el.querySelector('button').style.display = 'block');
+    el.addEventListener('mouseleave', () => el.querySelector('button').style.display = 'none');
+    el.querySelector('button').onclick = (e) => {
+      e.stopPropagation();
+      const idx = annotations.findIndex(a => a.id === ann.id);
+      if (idx > -1) annotations.splice(idx, 1);
+      overlay.setMap(null);
+      map.removeOverlay(overlay);
+      showTempPopup('Annotation deleted');
+    };
+
+    const overlay = new ol.Overlay({
+      element: el,
+      positioning: 'bottom-center',
+      stopEvent: true,
+      position: ann.coord
+    });
+    // Store overlay reference
+    ann.overlay = overlay;
+    map.addOverlay(overlay);
+    showTempPopup(`${ann.type} annotation placed!`);
+  }
+
+  // Clear All Annotations 
+  document.getElementById('annClearBtn').onclick = () => {
+    if (!annotations.length) { showTempPopup('No annotations to clear!'); return; }
+    if (!confirm(`Delete all ${annotations.length} annotation(s)?`)) return;
+    annotations.forEach(ann => {
+      if (ann.overlay) map.removeOverlay(ann.overlay);
+    });
+    annotations.length = 0;
+    showTempPopup('All annotations cleared!');
+  };
+
+  //  Export KML 
+  document.getElementById('annExportBtn').onclick = () => {
+    if (!annotations.length) { showTempPopup('No annotations to export!'); return; }
+
+    const placemarks = annotations.map(ann => {
+      const lon = ann.lonlat[0].toFixed(7);
+      const lat = ann.lonlat[1].toFixed(7);
+      let name = '', desc = '';
+
+      if (ann.type === 'emoji') {
+        name = ann.label ? `${ann.content} ${ann.label}` : ann.content;
+        desc = `Emoji: ${ann.content}${ann.label ? ' | Label: ' + ann.label : ''}`;
+      } else if (ann.type === 'icon') {
+        name = ann.label ? ann.label : ann.content.replace('fa-','');
+        desc = `Icon: ${ann.content}${ann.label ? ' | Label: ' + ann.label : ''} | Color: ${ann.color||'#00e5ff'}`;
+      } else if (ann.type === 'text') {
+        name = ann.content;
+        desc = `Text: ${ann.content} | Color: ${ann.color||'#fff'} | Size: ${ann.fontSize||14}px`;
+      }
+
+      // Convert hex color to KML color
+      function hexToKml(hex) {
+        hex = (hex||'#ffffff').replace('#','');
+        if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+        const r = hex.slice(0,2), g = hex.slice(2,4), b = hex.slice(4,6);
+        return `ff${b}${g}${r}`;
+      }
+
+      const kmlColor = hexToKml(ann.color || '#00e5ff');
+      const labelColor = ann.type === 'text' ? hexToKml(ann.color) : 'ffffffff';
+      const labelScale = ann.type === 'text' ? ((parseInt(ann.fontSize)||14) / 14).toFixed(2) : '0.8';
+
+      return `  <Placemark>
+    <name>${name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</name>
+    <description>${desc.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</description>
+    <ExtendedData>
+      <Data name="type"><value>${ann.type}</value></Data>
+      <Data name="content"><value>${ann.content}</value></Data>
+    </ExtendedData>
+    <Style>
+      <IconStyle>
+        <color>${kmlColor}</color>
+        <scale>1.2</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon>
+      </IconStyle>
+      <LabelStyle>
+        <color>${labelColor}</color>
+        <scale>${labelScale}</scale>
+      </LabelStyle>
+    </Style>
+    <Point>
+      <coordinates>${lon},${lat},0</coordinates>
+    </Point>
+  </Placemark>`;
+    }).join('\n');
+
+    const kml = `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Map Annotations</name>
+  <description>Exported from GIS Map Viewer - ${new Date().toLocaleString()}</description>
+${placemarks}
+</Document>
+</kml>`;
+
+    const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `annotations-${Date.now()}.kml`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showTempPopup(`Exported ${annotations.length} annotation(s) as KML!`);
+  };
+
+  //  Make Panel Draggable 
+  (function() {
+    const box = document.getElementById('annotationContainer');
+    const header = document.getElementById('annotationHeader');
+    let isDrag = false, offX = 0, offY = 0;
+    header.addEventListener('mousedown', e => {
+      if (e.target.closest('button')) return;
+      isDrag = true;
+      const r = box.getBoundingClientRect();
+      offX = e.clientX - r.left; offY = e.clientY - r.top;
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isDrag) return;
+      let l = e.clientX - offX, t = e.clientY - offY;
+      l = Math.max(8, Math.min(l, window.innerWidth - box.offsetWidth - 8));
+      t = Math.max(8, Math.min(t, window.innerHeight - box.offsetHeight - 8));
+      box.style.left = l + 'px'; box.style.top = t + 'px';
+      box.style.right = 'auto';
+    });
+    document.addEventListener('mouseup', () => { isDrag = false; document.body.style.userSelect = ''; });
+  })();
+
+  //  Integrate with closeAllPanels 
+  const origClose = window.closeAllPanels || function(){};
+  window.closeAllPanels = function() {
+    origClose();
+    const annBox = document.getElementById('annotationContainer');
+    if (annBox) annBox.style.display = 'none';
+    deactivateAnnClick();
+  };
+})();
 </script>
 </body>
 </html>
