@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<!--<meta name="viewport" content="width=device-width,initial-scale=1" />-->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -799,7 +798,8 @@ html, body {
   font-size: 13px; 
   font-weight: 500; 
 }
-/* Editor Box 
+
+/* EDITOR BOX-COMPLETE FIXED VERSION */
 .editor-box { 
   display: none; 
   position: fixed; 
@@ -813,6 +813,7 @@ html, body {
   box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
   min-width: 240px;
   max-width: 280px;
+  overflow: visible; 
 }
 
 .editor-box .box-header { 
@@ -822,140 +823,7 @@ html, body {
   margin-bottom: 12px; 
   padding-bottom: 10px; 
   border-bottom: 2px solid rgba(0,229,255,0.3); 
-}
-
-.editor-box h6 {
-  margin: 0; 
-  color: #00e5ff;
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.editor-box #closeEditor {
-  color: #fff;
-  font-size: 18px;
-}
-
-.editor-buttons { 
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.editor-btn { 
-  width: 50px; 
-  height: 50px; 
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 10px; 
-  cursor: pointer; 
-  font-size: 22px;
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  transition: all 0.3s ease; 
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-  position: relative;
-}
-
-.editor-btn:hover { 
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
-  border-color: #00e5ff;
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-.editor-btn.active { 
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  border-color: #38ef7d;
-  box-shadow: 0 0 25px rgba(56, 239, 125, 0.6);
-  transform: scale(1.08);
-}
-
-.editor-btn.active::after {
-  content: '';
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 12px;
-  height: 12px;
-  background: #00ff00;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
-}
-
-/* Tool Labels 
-.editor-labels {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  text-align: center;
-  margin-top: 8px;
-}
-
-.editor-labels span {
-  font-size: 11px;
-  color: #fff;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 4px 0;
-}
-
-/* Icon-specific adjustments 
-#drawPoint i { font-size: 24px; }
-#drawLine i { font-size: 26px; font-weight: bold; }
-#drawPolygon i { font-size: 22px; }
-#modifyFeature i { font-size: 20px; }
-#dragFeature i { font-size: 22px; }
-#deleteFeature i { font-size: 20px; }
-#exportDrawing i { font-size: 20px; }
-*/
-
-
-/* ===== EDITOR BOX - COMPLETE FIXED VERSION ===== */
-
-.editor-box { 
-  display: none; 
-  position: fixed; 
-  top: 120px; 
-  right: 15px; 
-  background: rgba(26, 26, 26, 0.98);
-  padding: 16px; 
-  border: 2px solid #00e5ff;
-  border-radius: 12px;
-  z-index: 500; 
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
-  min-width: 240px;
-  max-width: 280px;
-  overflow: visible; /* Allows tooltips to show */
-}
-
-.editor-box .box-header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  margin-bottom: 12px; 
-  padding-bottom: 10px; 
-  border-bottom: 2px solid rgba(0,229,255,0.3); 
-  cursor: move; /* For dragging */
+  cursor: move; 
 }
 
 .editor-box .box-header:active {
@@ -1020,7 +888,7 @@ html, body {
   top: auto !important;
   right: auto !important;
   bottom: auto !important;
-  transform: none; /* Reset transforms */
+  transform: none; 
 }
 
 .editor-btn:hover { 
@@ -1029,9 +897,6 @@ html, body {
   border-color: #00e5ff;
   background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
-
-/* ===== ACTIVE STATE (When tool is selected) ===== */
-
 .editor-btn.active { 
   background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
   border-color: #38ef7d !important;
@@ -1063,15 +928,15 @@ html, body {
   }
 }
 
-/* ===== TOOL LABELS BELOW BUTTONS ===== */
+/*  TOOL LABELS BELOW BUTTONS  */
 
 .editor-labels {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Match button grid */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 10px;
   text-align: center;
   margin-top: 8px;
-  position: relative; /* ⚡ CRITICAL */
+  position: relative; 
 }
 
 .editor-labels span {
@@ -1086,7 +951,7 @@ html, body {
   text-overflow: ellipsis;
 }
 
-/* ===== ICON SIZE ADJUSTMENTS ===== */
+/* ICON SIZE ADJUSTMENTS */
 
 #drawPoint i { font-size: 24px; }
 #drawLine i { font-size: 26px; font-weight: bold; }
@@ -1152,12 +1017,11 @@ html, body {
 }
 
 /* PREVENT ANY EXTERNAL POSITIONING CONFLICTS */
-
 .editor-box * {
-  box-sizing: border-box; /* Consistent sizing */
+  box-sizing: border-box; 
 }
 
-/* Force all editor buttons to stay in grid - Nuclear option */
+/* Force all editor buttons to stay in grid */
 .editor-buttons > .editor-btn {
   position: static !important;
   float: none !important;
@@ -2704,7 +2568,6 @@ html, body {
   </div>
 </div>
 
-
 <!-- Keep file input -->
 <input type="file" id="fileInput" style="display:none" multiple>
 <!-- DATABASE CONNECTION MODAL -->
@@ -3718,7 +3581,57 @@ fileInput.onchange = async (e) => {
   });
       } else if (name.endsWith('.kml')) {
         const text = await f.text();
+
+        // Parse KML to restore annotations separately
+        const parser = new DOMParser();
+        const kmlDoc = parser.parseFromString(text, 'text/xml');
+        const annotationPlacemarks = [];
+
+        kmlDoc.querySelectorAll('Placemark').forEach(pm => {
+          const gisType = pm.querySelector('Data[name="gis_type"] value')?.textContent;
+          if (gisType === 'annotation') {
+            const annType    = pm.querySelector('Data[name="ann_type"] value')?.textContent || 'emoji';
+            const annContent = pm.querySelector('Data[name="ann_content"] value')?.textContent || '';
+            const annColor   = pm.querySelector('Data[name="ann_color"] value')?.textContent || '#00e5ff';
+            const annLabel   = pm.querySelector('Data[name="ann_label"] value')?.textContent || '';
+            const annSize    = pm.querySelector('Data[name="ann_fontSize"] value')?.textContent || '14';
+            const coordText  = pm.querySelector('Point coordinates')?.textContent?.trim() || '';
+            if (coordText) {
+              const parts = coordText.split(',');
+              const lon = parseFloat(parts[0]);
+              const lat = parseFloat(parts[1]);
+              if (!isNaN(lon) && !isNaN(lat)) {
+                annotationPlacemarks.push({
+                  type: annType, content: annContent, color: annColor,
+                  label: annLabel, fontSize: annSize,
+                  coord: ol.proj.fromLonLat([lon, lat]), lonlat: [lon, lat]
+                });
+              }
+            }
+          }
+        });
+
+        // Load all features via standard KML reader
         features = new ol.format.KML().readFeatures(text, { featureProjection: 'EPSG:3857' });
+
+        // Restore colors and remove annotation-only placemarks from feature list
+        features = features.filter(f => f.get('gis_type') !== 'annotation');
+        features.forEach(f => {
+          const savedColor = f.get('feature_color');
+          if (savedColor) f.set('color', savedColor);
+          else if (!f.get('color')) f.set('color', randomColor());
+        });
+
+        // Re-place annotations on map after short delay
+        if (annotationPlacemarks.length > 0) {
+          setTimeout(() => {
+            annotationPlacemarks.forEach(ann => {
+              if (window._placeAnnotation) window._placeAnnotation(ann);
+            });
+            showTempPopup(`Restored ${annotationPlacemarks.length} annotation(s)!`);
+          }, 900);
+        }
+
       } else {
         alert("Unsupported file: " + f.name);
         continue;
@@ -3808,8 +3721,6 @@ fileInput.onchange = async (e) => {
       alert(errorMsg);
     }
   }
-
-
   // Show attribute table and layers panel after all files loaded
   buildAttributeTable();
   document.getElementById("attributeContainer").style.display = "flex";
@@ -4002,7 +3913,7 @@ function getAllFeatures() {
   geojsonLayer.getSource().getFeatures().forEach(addFeature);
   kmlLayer.getSource().getFeatures().forEach(addFeature);
   
-  // Collect from uploaded layers (these might overlap with standard layers)
+  // Collect from uploaded layers
   if (window.uploadedLayers && Array.isArray(window.uploadedLayers)) {
     window.uploadedLayers.forEach(layer => {
       if (layer && layer.getSource && typeof layer.getSource === 'function') {
@@ -4364,7 +4275,7 @@ document.querySelectorAll(".btn-focus").forEach(btn => {
         duration: 600 
       });
     } else {
-      // For polygons/lines, fit to extent with padding
+      // For polygons/lines, 
       const extent = geom.getExtent();
       map.getView().fit(extent, { 
         padding: [80, 80, 80, 80],  
@@ -4767,9 +4678,6 @@ function removeInteractions() {
   //reset curesor
   map.getTargetElement().style.cursor = '';
 }
-
-
-
 function addDraw(type, button) {
   removeInteractions();
   drawInteraction = new ol.interaction.Draw({ source: vectorSource, type });
@@ -5017,7 +4925,7 @@ function saveToLocal() {
     console.error('Save error', e);
     if (e.name === 'QuotaExceededError') {
       alert(' Storage full!\n\nYour browser storage is full. Please:\n1. Export your data\n2. Clear browser cache\n3. Delete unused features');
-      // Try to save at least custom attributes
+      // Try to savecustom attributes
       try {
         localStorage.setItem("customAttributes", JSON.stringify(customAttributes||[]));
         localStorage.setItem("attributeTypes", JSON.stringify(attributeTypes||{}));
@@ -5025,7 +4933,6 @@ function saveToLocal() {
     }
   }
 }
-
 
 function loadFromLocal() {
   try {
@@ -5085,7 +4992,7 @@ function getFeatureLayer(feature) {
   if (shapefileLayer.getSource().getFeatureById(fid)) return shapefileLayer.getSource();
   if (geojsonLayer.getSource().getFeatureById(fid)) return geojsonLayer.getSource();
   if (kmlLayer.getSource().getFeatureById(fid)) return kmlLayer.getSource();
-  return vectorSource;//default fall back
+  return vectorSource;
 }
 
 //Get geometry type from feature
@@ -5147,7 +5054,6 @@ function turfToOlGeometry(turfGeometry) {
   });
 }
 
-
 function getSelectedFeaturesFromTable() {
   const selected = [];
   
@@ -5170,8 +5076,6 @@ function getSelectedFeaturesFromTable() {
   
   return selected;
 }
-
-
 
 // buffer tools
 document.getElementById("runBuffer").onclick = () => {
@@ -5203,7 +5107,6 @@ selectedFeatures.forEach(feature => {
       
       if (buffered && buffered.geometry) {
         const bufferedGeom = turfToOlGeometry(buffered.geometry);
-        
         // Generate deterministic ID based on source feature + distance
         const sourceId = feature.getId();
         const bufferId = `buffer-${sourceId}-${distance}${unit}`;
@@ -5702,7 +5605,7 @@ document.getElementById("removeDissolve").onclick = () => {
   
 })();
 
-// ATTRIBUTE MODAL - Custom Select Dropdown function
+// ATTRIBUTE MODAL 
 function initCustomDropdown() {
   console.log('🔧 Initializing custom dropdown...');
   
@@ -5925,7 +5828,6 @@ setTimeout(() => {
 
 // DATABASE CONNECTION FUNCTIONS - COMPACT & DRAGGABLE
 const API_BASE = 'http://localhost/gis-map/api';
-// NEW - Apply compact styling to modals - Top Right Position
 function applyCompactModalStyle() {
   // Database Connect Modal - Top Right Position
   const dbModal = document.querySelector('#dbConnectModal .modal-dialog');
@@ -6630,7 +6532,7 @@ if (confirmBtn) {
         }
       }
       
-      //  NUMBER type - no additional validation needed
+      //  NUMBER type no additional validation needed
       else if (attrType === 'number') {
         // Number type is ready, just show success
         clearValidationError(attrNameInput);
@@ -6882,7 +6784,8 @@ buildAttributeTable();
     }
   });
 
-  //Place Annotation on Map 
+  //Place Annotation on Map
+   window._placeAnnotation = function(ann) { placeAnnotation(ann); }; 
   function placeAnnotation(ann) {
     ann.id = 'ann-' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
     annotations.push(ann);
@@ -6943,66 +6846,135 @@ buildAttributeTable();
 
   //  Export KML 
   document.getElementById('annExportBtn').onclick = () => {
-    if (!annotations.length) { showTempPopup('No annotations to export!'); return; }
+    const allMapFeatures = getAllFeatures();
+    const hasFeatures = allMapFeatures.length > 0;
+    const hasAnnotations = annotations.length > 0;
 
-    const placemarks = annotations.map(ann => {
-      const lon = ann.lonlat[0].toFixed(7);
-      const lat = ann.lonlat[1].toFixed(7);
-      let name = '', desc = '';
+    if (!hasFeatures && !hasAnnotations) {
+      showTempPopup('Nothing to export! Draw features or add annotations first.');
+      return;
+    }
 
-      if (ann.type === 'emoji') {
-        name = ann.label ? `${ann.content} ${ann.label}` : ann.content;
-        desc = `Emoji: ${ann.content}${ann.label ? ' | Label: ' + ann.label : ''}`;
-      } else if (ann.type === 'icon') {
-        name = ann.label ? ann.label : ann.content.replace('fa-','');
-        desc = `Icon: ${ann.content}${ann.label ? ' | Label: ' + ann.label : ''} | Color: ${ann.color||'#00e5ff'}`;
-      } else if (ann.type === 'text') {
-        name = ann.content;
-        desc = `Text: ${ann.content} | Color: ${ann.color||'#fff'} | Size: ${ann.fontSize||14}px`;
-      }
+    const fmt = new ol.format.GeoJSON();
+    const placemarks = [];
 
-      // Convert hex color to KML color
-      function hexToKml(hex) {
-        hex = (hex||'#ffffff').replace('#','');
-        if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
-        const r = hex.slice(0,2), g = hex.slice(2,4), b = hex.slice(4,6);
-        return `ff${b}${g}${r}`;
-      }
+    allMapFeatures.forEach(f => {
+      try {
+        const geom = f.getGeometry();
+        if (!geom) return;
+        const props = f.getProperties();
+        const name = (props.name || props.NAME || f.getId() || 'Feature')
+          .toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        const color = props.color || '#0d6efd';
 
-      const kmlColor = hexToKml(ann.color || '#00e5ff');
-      const labelColor = ann.type === 'text' ? hexToKml(ann.color) : 'ffffffff';
-      const labelScale = ann.type === 'text' ? ((parseInt(ann.fontSize)||14) / 14).toFixed(2) : '0.8';
+        const extData = Object.entries(props)
+          .filter(([k]) => k !== 'geometry')
+          .map(([k, v]) => {
+            const safeK = k.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            const safeV = String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            return `      <Data name="${safeK}"><value>${safeV}</value></Data>`;
+          }).join('\n');
 
-      return `  <Placemark>
-    <name>${name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</name>
-    <description>${desc.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</description>
+        function hexToKmlColor(hex, alpha='ff') {
+          hex = (hex||'#0d6efd').replace('#','');
+          if (hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+          return `${alpha}${hex.slice(4,6)}${hex.slice(2,4)}${hex.slice(0,2)}`;
+        }
+
+        const kmlColor = hexToKmlColor(color);
+        const fillColor = hexToKmlColor(color, '88');
+        const geomType = geom.getType();
+        let geometryKml = '';
+
+        if (geomType === 'Point') {
+          const coords = ol.proj.toLonLat(geom.getCoordinates());
+          geometryKml = `<Point><coordinates>${coords[0].toFixed(7)},${coords[1].toFixed(7)},0</coordinates></Point>`;
+        } else if (geomType === 'LineString') {
+          const coordStr = geom.getCoordinates()
+            .map(c => { const ll = ol.proj.toLonLat(c); return `${ll[0].toFixed(7)},${ll[1].toFixed(7)},0`; }).join(' ');
+          geometryKml = `<LineString><coordinates>${coordStr}</coordinates></LineString>`;
+        } else if (geomType === 'Polygon') {
+          const rings = geom.getCoordinates();
+          const outer = rings[0].map(c => { const ll = ol.proj.toLonLat(c); return `${ll[0].toFixed(7)},${ll[1].toFixed(7)},0`; }).join(' ');
+          let innerRings = '';
+          for (let i=1; i<rings.length; i++) {
+            const inner = rings[i].map(c => { const ll=ol.proj.toLonLat(c); return `${ll[0].toFixed(7)},${ll[1].toFixed(7)},0`; }).join(' ');
+            innerRings += `<innerBoundaryIs><LinearRing><coordinates>${inner}</coordinates></LinearRing></innerBoundaryIs>`;
+          }
+          geometryKml = `<Polygon><outerBoundaryIs><LinearRing><coordinates>${outer}</coordinates></LinearRing></outerBoundaryIs>${innerRings}</Polygon>`;
+        } else if (geomType === 'MultiPolygon') {
+          const polygons = geom.getPolygons().map(poly => {
+            const rings = poly.getCoordinates();
+            const outer = rings[0].map(c => { const ll=ol.proj.toLonLat(c); return `${ll[0].toFixed(7)},${ll[1].toFixed(7)},0`; }).join(' ');
+            return `<Polygon><outerBoundaryIs><LinearRing><coordinates>${outer}</coordinates></LinearRing></outerBoundaryIs></Polygon>`;
+          }).join('');
+          geometryKml = `<MultiGeometry>${polygons}</MultiGeometry>`;
+        } else { return; }
+
+        const isBuffer = name.toLowerCase().includes('buffer');
+        const isIntersection = name.toLowerCase().includes('intersection');
+        const isDissolve = name.toLowerCase().includes('dissolved');
+        const featureType = isBuffer ? 'buffer' : isIntersection ? 'intersection' : isDissolve ? 'dissolve' : 'feature';
+
+        placemarks.push(`  <Placemark>
+    <name>${name}</name>
     <ExtendedData>
-      <Data name="type"><value>${ann.type}</value></Data>
-      <Data name="content"><value>${ann.content}</value></Data>
+      <Data name="gis_type"><value>${featureType}</value></Data>
+      <Data name="feature_color"><value>${color}</value></Data>
+${extData}
     </ExtendedData>
     <Style>
-      <IconStyle>
-        <color>${kmlColor}</color>
-        <scale>1.2</scale>
+      <IconStyle><color>${kmlColor}</color><scale>1.1</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>
+      </IconStyle>
+      <LineStyle><color>${kmlColor}</color><width>2</width></LineStyle>
+      <PolyStyle><color>${fillColor}</color><outline>1</outline></PolyStyle>
+    </Style>
+    ${geometryKml}
+  </Placemark>`);
+      } catch(err) { console.error('Feature export error:', err); }
+    });
+
+    annotations.forEach(ann => {
+      const lon = ann.lonlat[0].toFixed(7);
+      const lat = ann.lonlat[1].toFixed(7);
+      let annName = ann.content;
+      if (ann.label) annName += ' ' + ann.label;
+      annName = annName.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+      function hexToKmlAnn(hex, alpha='ff') {
+        hex = (hex||'#ffffff').replace('#','');
+        if (hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+        return `${alpha}${hex.slice(4,6)}${hex.slice(2,4)}${hex.slice(0,2)}`;
+      }
+
+      placemarks.push(`  <Placemark>
+    <name>${annName}</name>
+    <ExtendedData>
+      <Data name="gis_type"><value>annotation</value></Data>
+      <Data name="ann_type"><value>${ann.type}</value></Data>
+      <Data name="ann_content"><value>${ann.content.replace(/&/g,'&amp;')}</value></Data>
+      <Data name="ann_color"><value>${ann.color||''}</value></Data>
+      <Data name="ann_label"><value>${(ann.label||'').replace(/&/g,'&amp;')}</value></Data>
+      <Data name="ann_fontSize"><value>${ann.fontSize||14}</value></Data>
+    </ExtendedData>
+    <Style>
+      <IconStyle><color>${hexToKmlAnn(ann.color||'#00e5ff')}</color><scale>1.2</scale>
         <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon>
       </IconStyle>
-      <LabelStyle>
-        <color>${labelColor}</color>
-        <scale>${labelScale}</scale>
-      </LabelStyle>
     </Style>
-    <Point>
-      <coordinates>${lon},${lat},0</coordinates>
-    </Point>
-  </Placemark>`;
-    }).join('\n');
+    <Point><coordinates>${lon},${lat},0</coordinates></Point>
+  </Placemark>`);
+    });
+
+    if (placemarks.length === 0) { showTempPopup('Nothing to export!'); return; }
 
     const kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
-  <name>Map Annotations</name>
-  <description>Exported from GIS Map Viewer - ${new Date().toLocaleString()}</description>
-${placemarks}
+  <name>GIS Map Export</name>
+  <description>Exported ${new Date().toLocaleString()} | Features: ${allMapFeatures.length} | Annotations: ${annotations.length}</description>
+${placemarks.join('\n')}
 </Document>
 </kml>`;
 
@@ -7010,13 +6982,14 @@ ${placemarks}
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `annotations-${Date.now()}.kml`;
+    a.download = `gis-export-${Date.now()}.kml`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    showTempPopup(`Exported ${annotations.length} annotation(s) as KML!`);
+    showTempPopup(`Exported ${allMapFeatures.length} features + ${annotations.length} annotations!`);
   };
+
 
   //  Make Panel Draggable 
   (function() {
